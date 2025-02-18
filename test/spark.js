@@ -90,6 +90,7 @@ test('fetchCAR - http', async () => {
   assertEquals(requests, [`https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`])
 })
 
+/* Fixme: Find an active deal on a reliable graphsync provider
 test('fetchCAR - graphsync', async () => {
   // This test relies on data stored as part of a Filecoin deal which will eventually expire.
   // Also the storage provider may decide to stop serving Graphsync retrievals.
@@ -118,6 +119,7 @@ test('fetchCAR - graphsync', async () => {
   assertEquals(stats.carChecksum, '1220a8d765159d8829f2bca7df05e5cd46eb88bdaa30905d3d08c6295562ea072f0f', 'stats.carChecksum')
   assertEquals(requests, [`ipfs://${cid}?dag-scope=block&protocols=graphsync&providers=${encodeURIComponent(addr)}`])
 })
+*/
 
 /* Disabled as long as we are fetching the top-level block only
 test('fetchCAR exceeding MAX_CAR_SIZE', async () => {
