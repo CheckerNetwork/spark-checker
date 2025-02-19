@@ -16,6 +16,25 @@ jobs:
           w3up-proof: ${{ secrets.W3UP_PROOF }}
           w3name-private-key: ${{ secrets.W3NAME_PRIVATE_KEY }}
           w3name-revision: ${{ secrets.W3NAME_REVISION }}
+      - if: failure()
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            {
+              "channel": "alerts",
+              "text": "Publishing `${{ github.event.repository.name }}` failed",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":warning: *<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Publishing `${{ github.event.repository.name }}` failed>*"
+                  }
+                }
+              ]
+            } 
       - uses: slackapi/slack-github-action@v1.27.0
         with:
           channel-id: spark-public
