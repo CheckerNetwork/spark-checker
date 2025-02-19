@@ -42,9 +42,9 @@ test('retrieval check for our CID', async () => {
   assertProp('protocol', 'http')
   assertProp('timeout', false)
   assertProp('statusCode', 200)
-  // FIXME - frisbii.fly.io doesn't support HEAD requests yet
+  // Note: frisbii.fly.io doesn't support HEAD requests yet
   // https://github.com/CheckerNetwork/frisbii-on-fly/issues/3
-  // assertProp('headStatusCode', 200)
+  assertProp('headStatusCode', 405)
   assertProp('byteLength', 200)
   assertProp('carTooLarge', false)
   // TODO - spark-api does not record this field yet
