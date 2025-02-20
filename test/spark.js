@@ -72,8 +72,8 @@ test('getRetrieval', async () => {
 test('testHeadRequest', async () => {
   const requests = []
   const spark = new Spark({
-    fetch: async (url, { method }) => {
-      requests.push({ url: url.toString(), method })
+    fetch: async (url, { method, headers }) => {
+      requests.push({ url: url.toString(), method, headers })
       return {
         status: 200
       }
@@ -82,7 +82,7 @@ test('testHeadRequest', async () => {
   const stats = {}
   await spark.testHeadRequest('/dns/frisbii.fly.dev/tcp/443/https', KNOWN_CID, stats)
   assertEquals(stats.headStatusCode, 200)
-  assertEquals(requests, [{ url: `https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`, method: 'HEAD' }])
+  assertEquals(requests, [{ url: `https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`, method: 'HEAD', headers: { Accept: 'application/vnd.ipld.raw' } }])
 })
 
 test('testHeadRequest - with statusCode=500', async () => {
