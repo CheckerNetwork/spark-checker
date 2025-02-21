@@ -69,6 +69,52 @@ test('getRetrieval', async () => {
   ])
 })
 
+test('testHeadRequest', async () => {
+  const requests = []
+  const spark = new Spark({
+    fetch: async (url, { method, headers }) => {
+      requests.push({ url: url.toString(), method, headers })
+      return {
+        status: 200
+      }
+    }
+  })
+  const stats = {}
+  await spark.testHeadRequest('/dns/frisbii.fly.dev/tcp/443/https', KNOWN_CID, stats)
+  assertEquals(stats.headStatusCode, 200)
+  assertEquals(requests, [{ url: `https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`, method: 'HEAD', headers: { Accept: 'application/vnd.ipld.raw' } }])
+})
+
+test('testHeadRequest - with statusCode=500', async () => {
+  const requests = []
+  const spark = new Spark({
+    fetch: async (url, { method }) => {
+      requests.push({ url: url.toString(), method })
+      return {
+        status: 500
+      }
+    }
+  })
+  const stats = {}
+  await spark.testHeadRequest('/dns/frisbii.fly.dev/tcp/443/https', KNOWN_CID, stats)
+  assertEquals(stats.headStatusCode, 500)
+  assertEquals(requests, [{ url: `https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`, method: 'HEAD' }])
+})
+
+test('testHeadRequest - with network failure', async () => {
+  const requests = []
+  const spark = new Spark({
+    fetch: async (url, { method }) => {
+      requests.push({ url: url.toString(), method })
+      throw new Error()
+    }
+  })
+  const stats = {}
+  await spark.testHeadRequest('/dns/frisbii.fly.dev/tcp/443/https', KNOWN_CID, stats)
+  assertEquals(stats.headStatusCode, 600)
+  assertEquals(requests, [{ url: `https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`, method: 'HEAD' }])
+})
+
 test('fetchCAR - http', async () => {
   const requests = []
   const spark = new Spark({
