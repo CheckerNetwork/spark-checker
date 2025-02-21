@@ -194,6 +194,20 @@ test('fetchCAR fails with statusCode=802 (TCP connection refused)', async () => 
   assertEquals(stats.statusCode, 802, 'stats.statusCode')
 })
 
+test('fetchCAR fails with statusCode=704 (multiaddr has too many parts)', async () => {
+  const spark = new Spark()
+  const stats = newStats()
+  await spark.fetchCAR('http', '/dns/meridian.space/tcp/8080/http/http-path/%2Fipni-provider%2FproviderID', KNOWN_CID, stats)
+  assertEquals(stats.statusCode, 704, 'stats.statusCode')
+})
+
+test('fetchCAR fails with statusCode=705 (multiaddr has unsupported http-path)', async () => {
+  const spark = new Spark()
+  const stats = newStats()
+  await spark.fetchCAR('http', '/dns/meridian.space/http/http-path/invalid%path', KNOWN_CID, stats)
+  assertEquals(stats.statusCode, 705, 'stats.statusCode')
+})
+
 // TODO:
 // statusCode=901 - unsupported hash algorithm
 
