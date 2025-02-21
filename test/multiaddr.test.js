@@ -26,6 +26,7 @@ const ERROR_CASES = [
   ['/ip4/127.0.0.1/tcp/80', 'Cannot parse "/ip4/127.0.0.1/tcp/80": unsupported scheme "undefined"'],
   ['/ip4/127.0.0.1/udp/90', 'Cannot parse "/ip4/127.0.0.1/udp/90": unsupported protocol "udp"'],
   ['/ip4/127.0.0.1/tcp/8080/http/p2p/pubkey', 'Cannot parse "/ip4/127.0.0.1/tcp/8080/http/p2p/pubkey": too many parts'],
+  // NOTE: This is a valid multiaddr value that we decided to not support yet.
   ['/dns/meridian.space/tcp/8080/http/http-path/%2Fipni-provider%2FproviderID', 'Cannot parse "/dns/meridian.space/tcp/8080/http/http-path/%2Fipni-provider%2FproviderID": too many parts'],
   ['/dns/meridian.space/http/http-path/invalid%path', 'Cannot parse "/dns/meridian.space/http/http-path/invalid%path": unsupported http path']
 ]
