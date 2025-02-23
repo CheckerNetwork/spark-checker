@@ -165,12 +165,25 @@ test('fetchCAR fails with statusCode=703 (scheme is not http/https)', async () =
   await spark.fetchCAR('http', '/ip4/1.2.3.4/tcp/80/ldap', KNOWN_CID, stats)
   assertEquals(stats.statusCode, 703, 'stats.statusCode')
 })
-
-test('fetchCAR fails with statusCode=704 (multiaddr has too many parts)', async () => {
+test('fetchCAR fails with statusCode=704 (multiaddr has too many parts) - multiaddr without http-path', async () => {
   const spark = new Spark()
   const stats = newStats()
   await spark.fetchCAR('http', '/ip4/1.2.3.4/tcp/80/http/p2p/pubkey', KNOWN_CID, stats)
   assertEquals(stats.statusCode, 704, 'stats.statusCode')
+})
+
+test('fetchCAR fails with statusCode=704 (multiaddr has too many parts) - multiaddr with http-path', async () => {
+  const spark = new Spark()
+  const stats = newStats()
+  await spark.fetchCAR('http', '/dns/meridian.space/tcp/8080/http/http-path/%2Fipni-provider%2FproviderID', KNOWN_CID, stats)
+  assertEquals(stats.statusCode, 704, 'stats.statusCode')
+})
+
+test('fetchCAR fails with statusCode=705 (multiaddr has invalid http-path)', async () => {
+  const spark = new Spark()
+  const stats = newStats()
+  await spark.fetchCAR('http', '/dns/meridian.space/http/http-path/invalid%path', KNOWN_CID, stats)
+  assertEquals(stats.statusCode, 705, 'stats.statusCode')
 })
 
 test('fetchCAR fails with statusCode=801 (DNS error)', async () => {
@@ -192,20 +205,6 @@ test('fetchCAR fails with statusCode=802 (TCP connection refused)', async () => 
   const stats = newStats()
   await spark.fetchCAR('http', '/ip4/127.0.0.1/tcp/79/http', KNOWN_CID, stats)
   assertEquals(stats.statusCode, 802, 'stats.statusCode')
-})
-
-test('fetchCAR fails with statusCode=704 (multiaddr has too many parts)', async () => {
-  const spark = new Spark()
-  const stats = newStats()
-  await spark.fetchCAR('http', '/dns/meridian.space/tcp/8080/http/http-path/%2Fipni-provider%2FproviderID', KNOWN_CID, stats)
-  assertEquals(stats.statusCode, 704, 'stats.statusCode')
-})
-
-test('fetchCAR fails with statusCode=705 (multiaddr has unsupported http-path)', async () => {
-  const spark = new Spark()
-  const stats = newStats()
-  await spark.fetchCAR('http', '/dns/meridian.space/http/http-path/invalid%path', KNOWN_CID, stats)
-  assertEquals(stats.statusCode, 705, 'stats.statusCode')
 })
 
 // TODO:
