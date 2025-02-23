@@ -165,6 +165,7 @@ test('fetchCAR fails with statusCode=703 (scheme is not http/https)', async () =
   await spark.fetchCAR('http', '/ip4/1.2.3.4/tcp/80/ldap', KNOWN_CID, stats)
   assertEquals(stats.statusCode, 703, 'stats.statusCode')
 })
+
 test('fetchCAR fails with statusCode=704 (multiaddr has too many parts) - multiaddr without http-path', async () => {
   const spark = new Spark()
   const stats = newStats()
