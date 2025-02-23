@@ -173,11 +173,11 @@ test('fetchCAR fails with statusCode=704 (multiaddr has too many parts) - multia
   assertEquals(stats.statusCode, 704, 'stats.statusCode')
 })
 
-test('fetchCAR fails with statusCode=704 (multiaddr has too many parts) - multiaddr with http-path', async () => {
+test('fetchCAR fails with statusCode=704 (scheme is not http/https) - multiaddr with http-path', async () => {
   const spark = new Spark()
   const stats = newStats()
   await spark.fetchCAR('http', '/dns/meridian.space/tcp/8080/http/http-path/%2Fipni-provider%2FproviderID', KNOWN_CID, stats)
-  assertEquals(stats.statusCode, 704, 'stats.statusCode')
+  assertEquals(stats.statusCode, 703, 'stats.statusCode')
 })
 
 test('fetchCAR fails with statusCode=705 (multiaddr has invalid http-path)', async () => {
