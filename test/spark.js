@@ -166,7 +166,7 @@ test('fetchCAR fails with statusCode=703 (scheme is not http/https) - multiaddr 
   assertEquals(stats.statusCode, 703, 'stats.statusCode')
 })
 
-test('fetchCAR fails with statusCode=703 (scheme is not http/https) - multiaddr with http-path', async () => {
+test('fetchCAR fails with statusCode=703 (scheme is not supported) - multiaddr with http-path', async () => {
   const spark = new Spark()
   const stats = newStats()
   await spark.fetchCAR('http', '/dns/meridian.space/tcp/8080/http/http-path/%2Fipni-provider%2FproviderID', KNOWN_CID, stats)
