@@ -460,8 +460,6 @@ test('smart-contract-client: getMinerPeerIdFromSmartContract properly strips f0 
 test('miner-info: getMinerPeerId integration test with real miner f03303347', async () => {
   const peerId = await getMinerPeerId('f03303347')
 
-  // We don't know what the actual value is, but we can verify it's a non-empty string
-  // that looks like a valid peer ID
   assert(typeof peerId === 'string', 'Expected peerId to be a string')
   assert(peerId.length > 0, 'Expected peerId to be non-empty')
   assertEquals(peerId, '12D3KooWGQmdpbssrYHWFTwwbKmKL3i54EJC9j7RRNb47U9jUv1U')
