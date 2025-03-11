@@ -40,10 +40,10 @@ test('getMinerPeerIdFromSmartContract returns peer ID for valid miner ID', async
   assertEquals(actualPeerId, mockPeerIdResponse.peerID)
 })
 
-test('getMinerPeerId returns correct peer id for miner f03303347', async () => {
+test('getMinerPeerIdFromSmartContract returns correct peer id for miner f03303347', async () => {
   const peerId = await getMinerPeerIdFromSmartContract('f03303347')
   assertEquals(typeof peerId, 'string', 'Expected peerId to be a string')
-  assertEquals(peerId, '12D3KooWCtiN7tAjeLKL4mashteXdH4htUrzWu8bWN9kDU3qbKjQ')
+  assertEquals(peerId, '12D3KooWJ91c6xQshrNe7QAXPFAaeRrHWq2UrgXGPf8UmMZMwyZ5')
 })
 
 test('getMinerPeerIdFromSmartContract returns empty string for miner ID with no peer ID', async () => {
@@ -97,5 +97,5 @@ test('getMinerPeerId returns correct peer id for miner f03303347', async () => {
   const peerId = await getMinerPeerId('f03303347')
 
   assert(typeof peerId === 'string', 'Expected peerId to be a string')
-  assertEquals(peerId, '12D3KooWCtiN7tAjeLKL4mashteXdH4htUrzWu8bWN9kDU3qbKjQ')
+  assertEquals(peerId, '12D3KooWJ91c6xQshrNe7QAXPFAaeRrHWq2UrgXGPf8UmMZMwyZ5')
 })
