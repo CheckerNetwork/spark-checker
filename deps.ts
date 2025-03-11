@@ -10,8 +10,8 @@ export { decode as decodeVarint } from 'https://deno.land/x/varint@v2.0.0/varint
 export { retry } from 'https://deno.land/std@0.203.0/async/retry.ts';
 
 
-export { ethers } from "https://cdn.skypack.dev/ethers@5.7.2?dts";
 // Deno Bundle does not support npm dependencies, we have to load them via CDN
+export { ethers } from "https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.min.js";
 export { CarBlockIterator } from 'https://cdn.skypack.dev/@ipld/car@5.3.2/?dts'
 export {
   UnsupportedHashError,
