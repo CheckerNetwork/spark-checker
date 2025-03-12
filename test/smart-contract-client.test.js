@@ -1,4 +1,4 @@
-import { assertEquals, assertRejects, assert } from 'zinnia:assert'
+import { assertEquals, assertRejects, assert, assertStringIncludes } from 'zinnia:assert'
 import { getMinerPeerIdFromSmartContract } from '../lib/smart-contract-client.js'
 import { getMinerPeerId } from '../lib/miner-info.js'
 import { test } from 'zinnia:test'
@@ -28,12 +28,12 @@ function createMockContract (mockResponses) {
 
 test('getMinerPeerIdFromSmartContract returns peer ID for valid miner ID', async () => {
   // Create mock contract with predefined responses
-  const peerId = 12345
+  const minerId = 12345
   const mockContract = createMockContract({
-    [peerId]: mockPeerIdResponse
+    [minerId]: mockPeerIdResponse
   })
 
-  const actualPeerId = await getMinerPeerIdFromSmartContract(`f0${peerId}`, {
+  const actualPeerId = await getMinerPeerIdFromSmartContract(`f0${minerId}`, {
     smartContract: mockContract
   })
 
@@ -48,31 +48,35 @@ test('getMinerPeerIdFromSmartContract returns correct peer id for miner f0330334
 
 test('getMinerPeerIdFromSmartContract returns empty string for miner ID with no peer ID', async () => {
   // Create mock contract with predefined responses
-  const peerId = 99999
+  const minerId = 99999
   const mockContract = createMockContract({
-    [peerId]: mockEmptyPeerIdResponse
+    [minerId]: mockEmptyPeerIdResponse
   })
 
-  const actualPeerId = await getMinerPeerIdFromSmartContract(`f0${peerId}`, {
+  const actualPeerId = await getMinerPeerIdFromSmartContract(`f0${minerId}`, {
     smartContract: mockContract
   })
 
   assertEquals(actualPeerId, '')
 })
 
+test('getMinerPeerIdFromSmartContract returns an error if the miner id is not a number', async () => {
+  const err = await assertRejects(async () => getMinerPeerIdFromSmartContract('abcdef'), Error)
+  assertStringIncludes(err.cause.toString(), 'minerID must be "f0{number}"')
+})
+
 test('getMinerPeerIdFromSmartContract throws error for non-existent miner ID', async () => {
   // Create mock contract with predefined responses (empty to cause error)
   const mockContract = createMockContract({})
-
-  await assertRejects(
+  const err = await assertRejects(
     async () => {
       await getMinerPeerIdFromSmartContract('f055555', {
         smartContract: mockContract
       })
     },
-    Error,
-    'Error fetching peer ID from contract for miner f055555'
+    Error
   )
+  assertStringIncludes(err.message, 'Error fetching peer ID from contract for miner')
 })
 
 test('getMinerPeerIdFromSmartContract properly strips f0 prefix', async () => {
@@ -98,4 +102,47 @@ test('getMinerPeerId returns correct peer id for miner f03303347', async () => {
 
   assert(typeof peerId === 'string', 'Expected peerId to be a string')
   assertEquals(peerId, '12D3KooWJ91c6xQshrNe7QAXPFAaeRrHWq2UrgXGPf8UmMZMwyZ5')
+})
+
+test('getMinerPeerId returns peer ID from smart contract as the primary source', async () => {
+  const minerId = 3303347
+  const mockContract = createMockContract({
+    [minerId]: mockPeerIdResponse
+  })
+  const actualPeerId = await getMinerPeerId(`f0${minerId}`, {
+    smartContract: mockContract
+  })
+  assertEquals(actualPeerId, mockPeerIdResponse.peerID)
+})
+
+test('getMinerPeerId returns peer ID from FilecoinMinerInfo as the secondary source if smart contract peer ID is empty', async () => {
+  const minerId = 3303347
+  const mockContract = createMockContract({
+    [minerId]: mockEmptyPeerIdResponse
+  })
+  const actualPeerId = await getMinerPeerId(`f0${minerId}`, {
+    smartContract: mockContract,
+    rpcFn: () => Promise.resolve({ PeerId: mockPeerIdResponse.peerID })
+  })
+  assertEquals(actualPeerId, mockPeerIdResponse.peerID)
+})
+
+test('getMinerPeerId throws error if both sources fail', async () => {
+  const minerId = 3303347
+  const err = await assertRejects(
+    () => getMinerPeerId(`f0${minerId}`, {
+      smartContract: () => Error('SMART CONTRACT ERROR'),
+      rpcFn: () => Error('MINER INFO ERROR')
+    }),
+    Error
+  )
+  assertStringIncludes(err.message, "Failed to obtain Miner's Index Provider PeerID")
+})
+
+test('getMinerPeerId returns peer ID from FilecoinMinerInfo as the secondary source if smart contract call fails', async () => {
+  const actualPeerId = await getMinerPeerId('f03303347', {
+    smartContract: () => Error('SMART CONTRACT ERROR'),
+    rpcFn: () => Promise.resolve({ PeerId: mockPeerIdResponse.peerID })
+  })
+  assertEquals(actualPeerId, mockPeerIdResponse.peerID)
 })
