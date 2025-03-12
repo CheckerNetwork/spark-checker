@@ -127,6 +127,18 @@ test('getMinerPeerId returns peer ID from FilecoinMinerInfo as the secondary sou
   assertEquals(actualPeerId, mockPeerIdResponse.peerID)
 })
 
+test('getMinerPeerId returns peer ID from FilecoinMinerInfo as the secondary source if smart contract peer ID is undefined', async () => {
+  const minerId = 3303347
+  const mockContract = createMockContract({
+    [minerId]: { peerID: undefined }
+  })
+  const actualPeerId = await getMinerPeerId(`f0${minerId}`, {
+    smartContract: mockContract,
+    rpcFn: () => Promise.resolve({ PeerId: mockPeerIdResponse.peerID })
+  })
+  assertEquals(actualPeerId, mockPeerIdResponse.peerID)
+})
+
 test('getMinerPeerId throws error if both sources fail', async () => {
   const minerId = 3303347
   const err = await assertRejects(
