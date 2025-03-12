@@ -3,12 +3,12 @@ import { getMinerPeerIdFromSmartContract } from '../lib/smart-contract-client.js
 import { getMinerPeerId } from '../lib/miner-info.js'
 import { test } from 'zinnia:test'
 
-const mockPeerIdResponse = {
+const validPeerIdResponse = {
   peerID: '12D3KooWGQmdpbssrYHWFTwwbKmKL3i54EJC9j7RRNb47U9jUv1U',
   signature: '0x1234567890abcdef'
 }
 
-const mockEmptyPeerIdResponse = {
+const emptyPeerIdResponse = {
   peerID: '',
   signature: '0x'
 }
@@ -30,14 +30,14 @@ test('getMinerPeerIdFromSmartContract returns peer ID for valid miner ID', async
   // Create mock contract with predefined responses
   const minerId = 12345
   const mockContract = createMockContract({
-    [minerId]: mockPeerIdResponse
+    [minerId]: validPeerIdResponse
   })
 
   const actualPeerId = await getMinerPeerIdFromSmartContract(`f0${minerId}`, {
     smartContract: mockContract
   })
 
-  assertEquals(actualPeerId, mockPeerIdResponse.peerID)
+  assertEquals(actualPeerId, validPeerIdResponse.peerID)
 })
 
 test('getMinerPeerIdFromSmartContract returns correct peer id for miner f03303347', async () => {
@@ -50,7 +50,7 @@ test('getMinerPeerIdFromSmartContract returns empty string for miner ID with no 
   // Create mock contract with predefined responses
   const minerId = 99999
   const mockContract = createMockContract({
-    [minerId]: mockEmptyPeerIdResponse
+    [minerId]: emptyPeerIdResponse
   })
 
   const actualPeerId = await getMinerPeerIdFromSmartContract(`f0${minerId}`, {
@@ -86,7 +86,7 @@ test('getMinerPeerIdFromSmartContract properly strips f0 prefix', async () => {
   const mockContract = {
     getPeerData: async (minerId) => {
       receivedMinerId = minerId
-      return mockPeerIdResponse
+      return validPeerIdResponse
     }
   }
 
@@ -107,24 +107,24 @@ test('getMinerPeerId returns correct peer id for miner f03303347', async () => {
 test('getMinerPeerId returns peer ID from smart contract as the primary source', async () => {
   const minerId = 3303347
   const mockContract = createMockContract({
-    [minerId]: mockPeerIdResponse
+    [minerId]: validPeerIdResponse
   })
   const actualPeerId = await getMinerPeerId(`f0${minerId}`, {
     smartContract: mockContract
   })
-  assertEquals(actualPeerId, mockPeerIdResponse.peerID)
+  assertEquals(actualPeerId, validPeerIdResponse.peerID)
 })
 
 test('getMinerPeerId returns peer ID from FilecoinMinerInfo as the secondary source if smart contract peer ID is empty', async () => {
   const minerId = 3303347
   const mockContract = createMockContract({
-    [minerId]: mockEmptyPeerIdResponse
+    [minerId]: emptyPeerIdResponse
   })
   const actualPeerId = await getMinerPeerId(`f0${minerId}`, {
     smartContract: mockContract,
-    rpcFn: () => Promise.resolve({ PeerId: mockPeerIdResponse.peerID })
+    rpcFn: () => Promise.resolve({ PeerId: validPeerIdResponse.peerID })
   })
-  assertEquals(actualPeerId, mockPeerIdResponse.peerID)
+  assertEquals(actualPeerId, validPeerIdResponse.peerID)
 })
 
 test('getMinerPeerId returns peer ID from FilecoinMinerInfo as the secondary source if smart contract peer ID is undefined', async () => {
@@ -134,9 +134,9 @@ test('getMinerPeerId returns peer ID from FilecoinMinerInfo as the secondary sou
   })
   const actualPeerId = await getMinerPeerId(`f0${minerId}`, {
     smartContract: mockContract,
-    rpcFn: () => Promise.resolve({ PeerId: mockPeerIdResponse.peerID })
+    rpcFn: () => Promise.resolve({ PeerId: validPeerIdResponse.peerID })
   })
-  assertEquals(actualPeerId, mockPeerIdResponse.peerID)
+  assertEquals(actualPeerId, validPeerIdResponse.peerID)
 })
 
 test('getMinerPeerId throws error if both sources fail', async () => {
@@ -154,7 +154,7 @@ test('getMinerPeerId throws error if both sources fail', async () => {
 test('getMinerPeerId returns peer ID from FilecoinMinerInfo as the secondary source if smart contract call fails', async () => {
   const actualPeerId = await getMinerPeerId('f03303347', {
     smartContract: () => Error('SMART CONTRACT ERROR'),
-    rpcFn: () => Promise.resolve({ PeerId: mockPeerIdResponse.peerID })
+    rpcFn: () => Promise.resolve({ PeerId: validPeerIdResponse.peerID })
   })
-  assertEquals(actualPeerId, mockPeerIdResponse.peerID)
+  assertEquals(actualPeerId, validPeerIdResponse.peerID)
 })
