@@ -4,7 +4,7 @@
 //
 
 import Spark, { getRetrievalUrl } from './lib/spark.js'
-import { getMinerPeerId as defaultGetMinerPeerId } from './lib/miner-info.js'
+import { getIndexProviderPeerId as defaultGetMinerPeerId } from './lib/miner-info.js'
 
 // The task to check, replace with your own values
 const task = {
@@ -12,13 +12,13 @@ const task = {
   minerId: 'f0frisbii'
 }
 
-const getMinerPeerId = (minerId) =>
+const getIndexProviderPeerId = (minerId) =>
   minerId === 'f0frisbii'
     ? '12D3KooWC8gXxg9LoJ9h3hy3jzBkEAxamyHEQJKtRmAuBuvoMzpr'
     : defaultGetMinerPeerId(minerId)
 
 // Run the check
-const spark = new Spark({ getMinerPeerId })
+const spark = new Spark({ getIndexProviderPeerId })
 const stats = { ...task, indexerResult: null, statusCode: null, byteLength: 0 }
 await spark.executeRetrievalCheck(task, stats)
 console.log('Measurement: %o', stats)
