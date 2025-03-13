@@ -12,7 +12,9 @@ const HAPPY_CASES = [
   ['/dns6/meridian.space/tcp/8080/http', 'http://meridian.space:8080'],
   ['/dns/meridian.space/https/http-path/%2Fipni-provider%2FproviderID', 'https://meridian.space/ipni-provider/providerID'],
   ['/dns/meridian.space/https/http-path/', 'https://meridian.space'],
-  ['/dns/meridian.space/https/http-path', 'https://meridian.space']
+  ['/dns/meridian.space/https/http-path', 'https://meridian.space'],
+  ['/dns/meridian.space/https', 'https://meridian.space'],
+  ['/dns/meridian.space/http', 'http://meridian.space']
 ]
 
 for (const [multiaddr, expectedUri] of HAPPY_CASES) {
