@@ -97,6 +97,16 @@ test('getIndexProviderPeerIdFromSmartContract properly strips f0 prefix', async 
   assertEquals(receivedMinerId, 123456)
 })
 
+// The smart contract returns an empty string if the peer ID is not set for a given miner id.
+// See: https://github.com/filecoin-project/curio/blob/533c12950ee87c0002c342ccfb4d5e058b08b180/market/ipni/spark/sol/contracts/MinerPeerIDMapping.sol#L89
+test('getIndexProviderPeerIdFromSmartContract returns empty string if miner id does not exist in the smart contract', async () => {
+  // This is a client ID not a miner ID so it will not exist in the smart contract
+  // See: https://filecoin.tools/mainnet/deal/126288315
+  const id = 'f03495400'
+  const peerId = await getIndexProviderPeerIdFromSmartContract(id)
+  assertEquals(peerId, '')
+})
+
 test('getIndexProviderPeerId returns correct peer id for miner f03303347', async () => {
   const peerId = await getIndexProviderPeerId('f03303347')
 
@@ -115,6 +125,8 @@ test('getIndexProviderPeerId returns peer ID from smart contract as the primary 
   assertEquals(actualPeerId, validPeerIdResponse.peerID)
 })
 
+// The smart contract returns an empty string if the peer ID is not set for a given miner id.
+// See: https://github.com/filecoin-project/curio/blob/533c12950ee87c0002c342ccfb4d5e058b08b180/market/ipni/spark/sol/contracts/MinerPeerIDMapping.sol#L89
 test('getIndexProviderPeerId returns peer ID from FilecoinMinerInfo as the secondary source if smart contract peer ID is empty', async () => {
   const minerId = 3303347
   const mockContract = createMockContract({
