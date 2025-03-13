@@ -1,5 +1,5 @@
 import { assertEquals, assertRejects, assert, assertStringIncludes } from 'zinnia:assert'
-import { getIndexProviderPeerFromSmartContract } from '../lib/smart-contract-client.js'
+import { getIndexProviderPeerIdFromSmartContract } from '../lib/smart-contract-client.js'
 import { getIndexProviderPeerId } from '../lib/miner-info.js'
 import { test } from 'zinnia:test'
 
@@ -26,51 +26,51 @@ function createMockContract (mockResponses) {
   }
 }
 
-test('getIndexProviderPeerFromSmartContract returns peer ID for valid miner ID', async () => {
+test('getIndexProviderPeerIdFromSmartContract returns peer ID for valid miner ID', async () => {
   // Create mock contract with predefined responses
   const minerId = 12345
   const mockContract = createMockContract({
     [minerId]: validPeerIdResponse
   })
 
-  const actualPeerId = await getIndexProviderPeerFromSmartContract(`f0${minerId}`, {
+  const actualPeerId = await getIndexProviderPeerIdFromSmartContract(`f0${minerId}`, {
     smartContract: mockContract
   })
 
   assertEquals(actualPeerId, validPeerIdResponse.peerID)
 })
 
-test('getIndexProviderPeerFromSmartContract returns correct peer id for miner f03303347', async () => {
-  const peerId = await getIndexProviderPeerFromSmartContract('f03303347')
+test('getIndexProviderPeerIdFromSmartContract returns correct peer id for miner f03303347', async () => {
+  const peerId = await getIndexProviderPeerIdFromSmartContract('f03303347')
   assertEquals(typeof peerId, 'string', 'Expected peerId to be a string')
   assertEquals(peerId, '12D3KooWJ91c6xQshrNe7QAXPFAaeRrHWq2UrgXGPf8UmMZMwyZ5')
 })
 
-test('getIndexProviderPeerFromSmartContract returns empty string for miner ID with no peer ID', async () => {
+test('getIndexProviderPeerIdFromSmartContract returns empty string for miner ID with no peer ID', async () => {
   // Create mock contract with predefined responses
   const minerId = 99999
   const mockContract = createMockContract({
     [minerId]: emptyPeerIdResponse
   })
 
-  const actualPeerId = await getIndexProviderPeerFromSmartContract(`f0${minerId}`, {
+  const actualPeerId = await getIndexProviderPeerIdFromSmartContract(`f0${minerId}`, {
     smartContract: mockContract
   })
 
   assertEquals(actualPeerId, '')
 })
 
-test('getIndexProviderPeerFromSmartContract returns an error if the miner id is not a number', async () => {
-  const err = await assertRejects(async () => getIndexProviderPeerFromSmartContract('abcdef'), Error)
+test('getIndexProviderPeerIdFromSmartContract returns an error if the miner id is not a number', async () => {
+  const err = await assertRejects(async () => getIndexProviderPeerIdFromSmartContract('abcdef'), Error)
   assertStringIncludes(err.cause.toString(), 'minerID must be "f0{number}"')
 })
 
-test('getIndexProviderPeerFromSmartContract throws error for non-existent miner ID', async () => {
+test('getIndexProviderPeerIdFromSmartContract throws error for non-existent miner ID', async () => {
   // Create mock contract with predefined responses (empty to cause error)
   const mockContract = createMockContract({})
   const err = await assertRejects(
     async () => {
-      await getIndexProviderPeerFromSmartContract('f055555', {
+      await getIndexProviderPeerIdFromSmartContract('f055555', {
         smartContract: mockContract
       })
     },
@@ -79,7 +79,7 @@ test('getIndexProviderPeerFromSmartContract throws error for non-existent miner 
   assertStringIncludes(err.message, 'Error fetching peer ID from contract for miner')
 })
 
-test('getIndexProviderPeerFromSmartContract properly strips f0 prefix', async () => {
+test('getIndexProviderPeerIdFromSmartContract properly strips f0 prefix', async () => {
   // Create a mock that validates the minerId was correctly converted
   let receivedMinerId = null
 
@@ -90,7 +90,7 @@ test('getIndexProviderPeerFromSmartContract properly strips f0 prefix', async ()
     }
   }
 
-  await getIndexProviderPeerFromSmartContract('f0123456', {
+  await getIndexProviderPeerIdFromSmartContract('f0123456', {
     smartContract: mockContract
   })
 
