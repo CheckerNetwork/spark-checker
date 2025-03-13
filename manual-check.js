@@ -4,7 +4,7 @@
 //
 
 import Spark, { getRetrievalUrl } from './lib/spark.js'
-import { getIndexProviderPeerId as defaultGetMinerPeerId } from './lib/miner-info.js'
+import { getIndexProviderPeerId as defaultGetIndexProvider } from './lib/miner-info.js'
 
 // The task to check, replace with your own values
 const task = {
@@ -15,7 +15,7 @@ const task = {
 const getIndexProviderPeerId = (minerId) =>
   minerId === 'f0frisbii'
     ? '12D3KooWC8gXxg9LoJ9h3hy3jzBkEAxamyHEQJKtRmAuBuvoMzpr'
-    : defaultGetMinerPeerId(minerId)
+    : defaultGetIndexProvider(minerId)
 
 // Run the check
 const spark = new Spark({ getIndexProviderPeerId })

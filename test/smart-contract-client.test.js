@@ -151,17 +151,16 @@ test('getIndexProviderPeerId throws error if both sources fail', async () => {
   assertStringIncludes(err.message, 'Error fetching PeerID for miner f03303347.')
 })
 
-test('getIndexProviderPeerId throws an Error if only the smart contract call fails', async () => {
+test('getIndexProviderPeerId throws an error if only the smart contract call fails', async () => {
   const minerId = 3303347
   const err = await assertRejects(() => getIndexProviderPeerId(`f0${minerId}`, {
     smartContract: () => { throw Error('SMART CONTRACT ERROR') },
     rpcFn: () => Promise.resolve({ PeerId: validPeerIdResponse.peerID })
   }))
-  console.log(err)
   assertStringIncludes(err.message, `Error fetching PeerID for miner f0${minerId}`)
 })
 
-test('getIndexProviderPeerId throws an Error if only the FilecoinMinerInfo fails', async () => {
+test('getIndexProviderPeerId throws an error if only the FilecoinMinerInfo fails', async () => {
   const minerId = 3303347
   const mockContract = createMockContract({
     [minerId]: { peerID: undefined }
