@@ -5,3 +5,4 @@ import './test/multiaddr.test.js'
 
 import './test/integration.js'
 import './test/spark.js'
+import './test/smart-contract-client.test.js'

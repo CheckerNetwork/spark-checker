@@ -19,11 +19,11 @@ test('integration', async () => {
 
 test('retrieval check for our CID', async () => {
   const minersChecked = []
-  const getMinerPeerId = async (minerId) => {
+  const getIndexProviderPeerId = async (minerId) => {
     minersChecked.push(minerId)
     return FRISBEE_PEER_ID
   }
-  const spark = new Spark({ getMinerPeerId })
+  const spark = new Spark({ getIndexProviderPeerId })
   spark.getRetrieval = async () => ({ cid: KNOWN_CID, minerId: OUR_FAKE_MINER_ID })
 
   const measurementId = await spark.nextRetrieval()
