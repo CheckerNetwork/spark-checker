@@ -15,7 +15,8 @@ const HAPPY_CASES = [
   ['/dns/meridian.space/https/http-path', 'https://meridian.space'],
   ['/dns/meridian.space/https', 'https://meridian.space'],
   ['/dns/meridian.space/http', 'http://meridian.space'],
-  ['/ip4/127.0.0.1/http', 'http://127.0.0.1']
+  ['/ip4/127.0.0.1/http', 'http://127.0.0.1'],
+  ['/ip4/127.0.0.1/https', 'https://127.0.0.1']
 ]
 
 for (const [multiaddr, expectedUri] of HAPPY_CASES) {
