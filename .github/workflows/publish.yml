@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: curl -L ${{ github.event.release.tarball_url }} > source.tar.gz
-      - uses: filecoin-station/publish-zinnia-module-action@2e0211ca6021228bca6c33b0aa55a73260518f68
+      - uses: filecoin-station/publish-zinnia-module-action@v0
         id: publish
         with:
           source: source.tar.gz
