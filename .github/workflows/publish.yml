@@ -37,7 +37,7 @@ jobs:
             }
       - uses: slackapi/slack-github-action@v1.27.0
         with:
-          channel-id: spark-public
+          channel-id: filecoin-slack-spark
           payload: |
             {
               "text": "SPARK checker version ${{ github.event.release.tag_name }} released",
