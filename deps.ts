@@ -3,6 +3,7 @@
 // Run the following script after making change in this file:
 //   deno bundle deps.ts vendor/deno-deps.js
 //
+// You must use a 1.x version of Deno, e.g. v1.43.1
 
 export { encodeHex } from 'https://deno.land/std@0.203.0/encoding/hex.ts'
 export { decodeBase64 } from 'https://deno.land/std@0.203.0/encoding/base64.ts'
