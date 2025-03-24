@@ -420,3 +420,32 @@ test('calculateDelayBeforeNextTask() introduces random jitter for zero tasks in 
     `expected delay values to be within 1 second of each other. Actual values: ${delay1} <> ${delay2}`
   )
 })
+
+// Should abort after hitting maxRequestDurationMs and set requestIdleTimeout = true
+test('fetchCAR triggers timeout after long retrieval', async () => {
+  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+  const fetch = async (_url, { signal }) => {
+    return {
+      status: 200,
+      ok: true,
+      body: (async function * () {
+        while (true) {
+          if (signal.aborted) {
+            throw new DOMException('Aborted', 'AbortError')
+          }
+          yield new Uint8Array([0])
+          await sleep(500)
+        }
+      })()
+    }
+  }
+  
+  const spark = new Spark({ fetch })
+  const stats = newStats()
+  
+  await spark.fetchCAR('http', '/dns/example.com/tcp/80/http', KNOWN_CID, stats, {
+  maxRequestDurationMs: 0
+})
+
+assertEquals(stats.timeout, true)
+})
