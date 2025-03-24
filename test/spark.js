@@ -363,3 +363,48 @@ test('calculateDelayBeforeNextTask() handles one task per round', () => {
   })
   assertEquals(delay, 60_000)
 })
+test('fetchCAR triggers maxTimeout after long retrieval', async () => {
+  const MAX_TIMEOUT_MS = 1000 // 1 second max duration for testing
+  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+
+  // Simulate a fetch() that keeps sending data slowly forever
+  const fetch = async (_url, { signal }) => {
+    return {
+      status: 200,
+      ok: true,
+      body: (async function * () {
+        // Simulate long, slow stream
+        let i = 0
+        while (true) {
+          if (signal.aborted) {
+            throw new DOMException('Aborted', 'AbortError')
+          }
+          yield new Uint8Array([i++])
+          await sleep(500) // emit a chunk every 500ms
+        }
+      })()
+    }
+  }
+
+  const spark = new Spark({ fetch })
+  const stats = newStats()
+
+  // Monkey-patch the timeout duration to 1 second for test
+  const original = globalThis.setTimeout
+  const timers = []
+  globalThis.setTimeout = (fn, ms) => {
+    const id = original(fn, ms)
+    timers.push(id)
+    return id
+  }
+
+  await spark.fetchCAR('http', '/dns/example.com/tcp/80/http', KNOWN_CID, stats)
+
+  // Clean up
+  timers.forEach(clearTimeout)
+  globalThis.setTimeout = original
+
+  assertEquals(stats.maxTimeout, true)
+  assertEquals(stats.timeout, false)
+})
+
