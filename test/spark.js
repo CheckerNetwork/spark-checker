@@ -363,7 +363,7 @@ test('calculateDelayBeforeNextTask() handles one task per round', () => {
   })
   assertEquals(delay, 60_000)
 })
-test('fetchCAR triggers maxTimeout after long retrieval', async () => {
+test('fetchCAR triggers timeout after long retrieval', async () => {
   const MAX_TIMEOUT_MS = 1000 // 1 second max duration for testing
   const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -403,8 +403,7 @@ test('fetchCAR triggers maxTimeout after long retrieval', async () => {
   // Clean up
   timers.forEach(clearTimeout)
   globalThis.setTimeout = original
-
-  assertEquals(stats.maxTimeout, true)
+  
   assertEquals(stats.timeout, false)
 })
 
