@@ -364,7 +364,7 @@ test('calculateDelayBeforeNextTask() handles one task per round', () => {
   assertEquals(delay, 60_000)
 })
 
-  // Should abort after hitting maxFetchDurationMs and set requestIdleTimeout = true
+  // Should abort after hitting maxRequestDurationMs and set requestIdleTimeout = true
 test('fetchCAR triggers timeout after long retrieval', async () => {
   const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
   const fetch = async (_url, { signal }) => {
@@ -387,7 +387,7 @@ test('fetchCAR triggers timeout after long retrieval', async () => {
   const stats = newStats()
 
   await spark.fetchCAR('http', '/dns/example.com/tcp/80/http', KNOWN_CID, stats, {
-    maxFetchDurationMs: 1000
+    maxRequestDurationMs: 0
   })
 
   assertEquals(stats.timeout, true)
