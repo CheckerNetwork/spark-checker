@@ -2,7 +2,7 @@
 
 import Spark, { calculateDelayBeforeNextTask, newStats } from '../lib/spark.js'
 import { test } from 'zinnia:test'
-import { assertInstanceOf, assertEquals, assertArrayIncludes } from 'zinnia:assert'
+import { assertInstanceOf, assertEquals, assertArrayIncludes, assertNotEquals, assertLessOrEqual } from 'zinnia:assert'
 import { SPARK_VERSION } from '../lib/constants.js'
 
 const KNOWN_CID = 'bafkreih25dih6ug3xtj73vswccw423b56ilrwmnos4cbwhrceudopdp5sq'
@@ -362,4 +362,58 @@ test('calculateDelayBeforeNextTask() handles one task per round', () => {
     lastTaskDurationInMs: 1_000
   })
   assertEquals(delay, 60_000)
+})
+
+test('calculateDelayBeforeNextTask() introduces random jitter', () => {
+  const getDelay = () => calculateDelayBeforeNextTask({
+    lastTaskDurationInMs: 3_000,
+
+    // one task every 10 seconds (on average)
+    roundLengthInMs: 60_000,
+    maxTasksPerRound: 6,
+
+    // jitter up to 1 second
+    maxJitterInMs: 1_000
+  })
+
+  const delay1 = getDelay()
+  const delay2 = getDelay()
+
+  assertNotEquals(
+    delay1,
+    delay2,
+    `Expected delay values to be different because of jitter. Actual value: ${delay1}`
+  )
+  assertLessOrEqual(
+    Math.abs(delay1 - delay2),
+    1_000,
+    `expected delay values to be within 1 second of each other. Actual values: ${delay1} <> ${delay2}`
+  )
+})
+
+test('calculateDelayBeforeNextTask() introduces random jitter for zero tasks in round', () => {
+  const getDelay = () => calculateDelayBeforeNextTask({
+    maxTasksPerRound: 0,
+
+    // jitter up to 1 second
+    maxJitterInMs: 1_000,
+
+    // the values below are not important
+    roundLengthInMs: 12345,
+    lastTaskDurationInMs: 12
+  })
+
+  const delay1 = getDelay()
+  const delay2 = getDelay()
+
+  assertNotEquals(
+    delay1,
+    delay2,
+    `Expected delay values to be different because of jitter. Actual value: ${delay1}`
+  )
+  assertLessOrEqual(
+    Math.abs(delay1 - delay2),
+    1_000,
+    `expected delay values to be within 1 second of each other. Actual values: ${delay1} <> ${delay2}`
+  )
 })
