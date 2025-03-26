@@ -2,7 +2,7 @@
 
 import Spark, { calculateDelayBeforeNextTask, newStats } from '../lib/spark.js'
 import { test } from 'zinnia:test'
-import { assertInstanceOf, assertEquals, assertArrayIncludes, assertNotEquals, assertLessOrEqual } from 'zinnia:assert'
+import { assertInstanceOf, assertEquals, assertArrayIncludes, assertNotEquals, assertLessOrEqual, assertGreaterOrEqual } from 'zinnia:assert'
 import { SPARK_VERSION } from '../lib/constants.js'
 
 const KNOWN_CID = 'bafkreih25dih6ug3xtj73vswccw423b56ilrwmnos4cbwhrceudopdp5sq'
@@ -378,6 +378,9 @@ test('calculateDelayBeforeNextTask() introduces random jitter', () => {
 
   const delay1 = getDelay()
   const delay2 = getDelay()
+
+  assertGreaterOrEqual(delay1, 7_000)
+  assertLessOrEqual(delay1, 7_000 + 1_000)
 
   assertNotEquals(
     delay1,
