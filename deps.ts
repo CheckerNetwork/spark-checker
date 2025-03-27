@@ -28,3 +28,5 @@ export {
 } from 'https://cdn.jsdelivr.net/npm/drand-client@1.2.6/index.js/+esm'
 
 export { assertOkResponse } from 'https://cdn.skypack.dev/assert-ok-response@1.0.0/?dts'
+import pRetry from 'https://cdn.skypack.dev/p-retry@6.2.1/?dts'
+export { pRetry }
