@@ -439,13 +439,13 @@ test('fetchCAR triggers timeout after long retrieval', async () => {
       })()
     }
   }
-  
+
   const spark = new Spark({ fetch })
   const stats = newStats()
-  
-  await spark.fetchCAR('http', '/dns/example.com/tcp/80/http', KNOWN_CID, stats, {
-  maxRequestDurationMs: 0
-})
 
-assertEquals(stats.timeout, true)
+  await spark.fetchCAR('http', '/dns/example.com/tcp/80/http', KNOWN_CID, stats, {
+    maxRequestDurationMs: 0
+  })
+
+  assertEquals(stats.timeout, true)
 })
