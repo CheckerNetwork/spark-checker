@@ -421,7 +421,6 @@ test('calculateDelayBeforeNextTask() introduces random jitter for zero tasks in 
   )
 })
 
-// Should abort after hitting maxRequestDurationMs and set requestIdleTimeout = true
 test('fetchCAR triggers timeout after long retrieval', async () => {
   const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
   const fetch = async (_url, { signal }) => {
