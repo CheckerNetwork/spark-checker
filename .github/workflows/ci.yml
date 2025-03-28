@@ -8,7 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: curl -L https://github.com/filecoin-station/zinnia/releases/download/${{ env.ZINNIA_VERSION }}/zinnia-linux-x64.tar.gz | tar -xz
+      - run:
+          curl -L https://github.com/filecoin-station/zinnia/releases/download/${{
+          env.ZINNIA_VERSION }}/zinnia-linux-x64.tar.gz | tar -xz
       - run: ./zinnia run test.js
 
   test-windows:
@@ -31,4 +33,3 @@ jobs:
       - uses: actions/setup-node@v4
       - run: npm ci
       - run: npm lint
-
