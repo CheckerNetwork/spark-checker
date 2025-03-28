@@ -11,8 +11,8 @@ test('query advertised CID', async () => {
     indexerResult: 'OK',
     provider: {
       address: '/dns/frisbii.fly.dev/tcp/443/https',
-      protocol: 'http'
-    }
+      protocol: 'http',
+    },
   })
 })
 

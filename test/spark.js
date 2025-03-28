@@ -2,7 +2,14 @@
 
 import Spark, { calculateDelayBeforeNextTask, newStats } from '../lib/spark.js'
 import { test } from 'zinnia:test'
-import { assertInstanceOf, assertEquals, assertArrayIncludes, assertNotEquals, assertLessOrEqual, assertGreaterOrEqual } from 'zinnia:assert'
+import {
+  assertInstanceOf,
+  assertEquals,
+  assertArrayIncludes,
+  assertNotEquals,
+  assertLessOrEqual,
+  assertGreaterOrEqual,
+} from 'zinnia:assert'
 import { SPARK_VERSION } from '../lib/constants.js'
 
 const KNOWN_CID = 'bafkreih25dih6ug3xtj73vswccw423b56ilrwmnos4cbwhrceudopdp5sq'
@@ -15,13 +22,13 @@ test('getRetrieval', async () => {
     retrievalTasks: [
       {
         cid: 'bafkreidysaugf7iuvemebpzwxxas5rctbyiryykagup2ygkojmx7ag64gy',
-        minerId: 'f010'
+        minerId: 'f010',
       },
       {
         cid: 'QmUMpWycKJ7GUDJp9GBRX4qWUFUePUmHzri9Tm1CQHEzbJ',
-        minerId: 'f020'
-      }
-    ]
+        minerId: 'f020',
+      },
+    ],
   }
   const requests = []
   const fetch = async (url, allOpts) => {
@@ -33,16 +40,16 @@ test('getRetrieval', async () => {
       return {
         status: 302,
         ok: false,
-        headers
+        headers,
       }
     }
 
     return {
       status: 200,
       ok: true,
-      async json () {
+      async json() {
         return round
-      }
+      },
     }
   }
   const spark = new Spark({ fetch })
@@ -54,18 +61,18 @@ test('getRetrieval', async () => {
       opts: {
         method: 'GET',
         redirect: 'manual',
-        headers: { 'Content-Type': 'application/json' }
-      }
+        headers: { 'Content-Type': 'application/json' },
+      },
     },
     {
       url: 'https://api.filspark.com/rounds/meridian/0x84607/115',
       opts: {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        method: 'GET'
-      }
-    }
+        method: 'GET',
+      },
+    },
   ])
 })
 
@@ -75,14 +82,20 @@ test('testHeadRequest', async () => {
     fetch: async (url, { method, headers }) => {
       requests.push({ url: url.toString(), method, headers })
       return {
-        status: 200
+        status: 200,
       }
-    }
+    },
   })
   const stats = {}
   await spark.testHeadRequest('/dns/frisbii.fly.dev/tcp/443/https', KNOWN_CID, stats)
   assertEquals(stats.headStatusCode, 200)
-  assertEquals(requests, [{ url: `https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`, method: 'HEAD', headers: { Accept: 'application/vnd.ipld.raw' } }])
+  assertEquals(requests, [
+    {
+      url: `https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`,
+      method: 'HEAD',
+      headers: { Accept: 'application/vnd.ipld.raw' },
+    },
+  ])
 })
 
 test('testHeadRequest - with statusCode=500', async () => {
@@ -91,14 +104,16 @@ test('testHeadRequest - with statusCode=500', async () => {
     fetch: async (url, { method }) => {
       requests.push({ url: url.toString(), method })
       return {
-        status: 500
+        status: 500,
       }
-    }
+    },
   })
   const stats = {}
   await spark.testHeadRequest('/dns/frisbii.fly.dev/tcp/443/https', KNOWN_CID, stats)
   assertEquals(stats.headStatusCode, 500)
-  assertEquals(requests, [{ url: `https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`, method: 'HEAD' }])
+  assertEquals(requests, [
+    { url: `https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`, method: 'HEAD' },
+  ])
 })
 
 test('testHeadRequest - with network failure', async () => {
@@ -107,12 +122,14 @@ test('testHeadRequest - with network failure', async () => {
     fetch: async (url, { method }) => {
       requests.push({ url: url.toString(), method })
       throw new Error()
-    }
+    },
   })
   const stats = {}
   await spark.testHeadRequest('/dns/frisbii.fly.dev/tcp/443/https', KNOWN_CID, stats)
   assertEquals(stats.headStatusCode, 600)
-  assertEquals(requests, [{ url: `https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`, method: 'HEAD' }])
+  assertEquals(requests, [
+    { url: `https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`, method: 'HEAD' },
+  ])
 })
 
 test('fetchCAR - http', async () => {
@@ -121,7 +138,7 @@ test('fetchCAR - http', async () => {
     fetch: async (url) => {
       requests.push(url.toString())
       return fetch(url)
-    }
+    },
   })
   const stats = newStats()
   await spark.fetchCAR('http', '/dns/frisbii.fly.dev/tcp/443/https', KNOWN_CID, stats)
@@ -132,7 +149,11 @@ test('fetchCAR - http', async () => {
   assertInstanceOf(stats.endAt, Date)
   assertEquals(stats.carTooLarge, false, 'stats.carTooLarge')
   assertEquals(stats.byteLength, 200, 'stats.byteLength')
-  assertEquals(stats.carChecksum, '122069f03061f7ad4c14a5691b7e96d3ddd109023a6539a0b4230ea3dc92050e7136', 'stats.carChecksum')
+  assertEquals(
+    stats.carChecksum,
+    '122069f03061f7ad4c14a5691b7e96d3ddd109023a6539a0b4230ea3dc92050e7136',
+    'stats.carChecksum',
+  )
   assertEquals(requests, [`https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`])
 })
 
@@ -215,7 +236,12 @@ test('fetchCAR fails with statusCode=703 (scheme is not http/https) - multiaddr 
 test('fetchCAR fails with statusCode=703 (scheme is not supported) - multiaddr with http-path', async () => {
   const spark = new Spark()
   const stats = newStats()
-  await spark.fetchCAR('http', '/dns/meridian.space/tcp/8080/http/http-path/%2Fipni-provider%2FproviderID', KNOWN_CID, stats)
+  await spark.fetchCAR(
+    'http',
+    '/dns/meridian.space/tcp/8080/http/http-path/%2Fipni-provider%2FproviderID',
+    KNOWN_CID,
+    stats,
+  )
   assertEquals(stats.statusCode, 703, 'stats.statusCode')
 })
 
@@ -264,14 +290,14 @@ test('fetchCAR fails with statusCode=902 (hash mismatch)', async () => {
       return {
         status: res.status,
         ok: res.ok,
-        body: (async function * () {
+        body: (async function* () {
           const bytes = new Uint8Array(await res.arrayBuffer())
           // manipulate one byte inside the CAR block
           bytes[bytes.length - 1] = bytes[bytes.length - 1] ^ 0x88
           yield bytes
-        })()
+        })(),
       }
-    }
+    },
   })
   const stats = newStats()
   await spark.fetchCAR('http', '/dns/frisbii.fly.dev/tcp/443/https', KNOWN_CID, stats)
@@ -281,9 +307,10 @@ test('fetchCAR fails with statusCode=902 (hash mismatch)', async () => {
 test('fetchCAR fails with statusCode=903 (unexpected CAR block)', async () => {
   const spark = new Spark({
     // Fetch the root block of a different CID
-    fetch: (_url) => fetch(
-      'https://frisbii.fly.dev/ipfs/bafkreih5zasorm4tlfga4ztwvm2dlnw6jxwwuvgnokyt3mjamfn3svvpyy?dag-scope=block'
-    )
+    fetch: (_url) =>
+      fetch(
+        'https://frisbii.fly.dev/ipfs/bafkreih5zasorm4tlfga4ztwvm2dlnw6jxwwuvgnokyt3mjamfn3svvpyy?dag-scope=block',
+      ),
   })
   const stats = newStats()
   await spark.fetchCAR('http', '/ip4/127.0.0.1/tcp/80/http', KNOWN_CID, stats)
@@ -296,11 +323,11 @@ test('fetchCAR fails with statusCode=904 (cannot parse CAR)', async () => {
       return {
         status: 200,
         ok: true,
-        body: (async function * () {
+        body: (async function* () {
           yield new Uint8Array([1, 2, 3])
-        })()
+        })(),
       }
-    }
+    },
   })
   const stats = newStats()
   await spark.fetchCAR('http', '/ip4/127.0.0.1/tcp/80/http', KNOWN_CID, stats)
@@ -312,7 +339,13 @@ test('submitRetrieval', async () => {
   const fetch = async (url, allOpts) => {
     const { signal, ...opts } = allOpts
     requests.push({ url, opts })
-    return { status: 200, ok: true, async json () { return { id: 123 } } }
+    return {
+      status: 200,
+      ok: true,
+      async json() {
+        return { id: 123 }
+      },
+    }
   }
   const spark = new Spark({ fetch })
   await spark.submitMeasurement({ cid: 'bafytest' }, {})
@@ -326,11 +359,11 @@ test('submitRetrieval', async () => {
           zinniaVersion: Zinnia.versions.zinnia,
           cid: 'bafytest',
           participantAddress: Zinnia.walletAddress,
-          stationId: Zinnia.stationId
+          stationId: Zinnia.stationId,
         }),
-        headers: { 'Content-Type': 'application/json' }
-      }
-    }
+        headers: { 'Content-Type': 'application/json' },
+      },
+    },
   ])
 })
 
@@ -340,7 +373,7 @@ test('calculateDelayBeforeNextTask() returns value based on average task duratio
 
     // one task every 10 seconds (on average)
     roundLengthInMs: 60_000,
-    maxTasksPerRound: 6
+    maxTasksPerRound: 6,
   })
   assertEquals(delay, 7_000)
 })
@@ -350,7 +383,7 @@ test('calculateDelayBeforeNextTask() handles zero tasks per round', () => {
     maxTasksPerRound: 0,
     // the values below are not important
     roundLengthInMs: 12345,
-    lastTaskDurationInMs: 12
+    lastTaskDurationInMs: 12,
   })
   assertEquals(delay, 60_000)
 })
@@ -359,22 +392,23 @@ test('calculateDelayBeforeNextTask() handles one task per round', () => {
   const delay = calculateDelayBeforeNextTask({
     roundLengthInMs: 20 * 60_000,
     maxTasksPerRound: 1,
-    lastTaskDurationInMs: 1_000
+    lastTaskDurationInMs: 1_000,
   })
   assertEquals(delay, 60_000)
 })
 
 test('calculateDelayBeforeNextTask() introduces random jitter', () => {
-  const getDelay = () => calculateDelayBeforeNextTask({
-    lastTaskDurationInMs: 3_000,
+  const getDelay = () =>
+    calculateDelayBeforeNextTask({
+      lastTaskDurationInMs: 3_000,
 
-    // one task every 10 seconds (on average)
-    roundLengthInMs: 60_000,
-    maxTasksPerRound: 6,
+      // one task every 10 seconds (on average)
+      roundLengthInMs: 60_000,
+      maxTasksPerRound: 6,
 
-    // jitter up to 1 second
-    maxJitterInMs: 1_000
-  })
+      // jitter up to 1 second
+      maxJitterInMs: 1_000,
+    })
 
   const delay1 = getDelay()
   const delay2 = getDelay()
@@ -385,26 +419,27 @@ test('calculateDelayBeforeNextTask() introduces random jitter', () => {
   assertNotEquals(
     delay1,
     delay2,
-    `Expected delay values to be different because of jitter. Actual value: ${delay1}`
+    `Expected delay values to be different because of jitter. Actual value: ${delay1}`,
   )
   assertLessOrEqual(
     Math.abs(delay1 - delay2),
     1_000,
-    `expected delay values to be within 1 second of each other. Actual values: ${delay1} <> ${delay2}`
+    `expected delay values to be within 1 second of each other. Actual values: ${delay1} <> ${delay2}`,
   )
 })
 
 test('calculateDelayBeforeNextTask() introduces random jitter for zero tasks in round', () => {
-  const getDelay = () => calculateDelayBeforeNextTask({
-    maxTasksPerRound: 0,
+  const getDelay = () =>
+    calculateDelayBeforeNextTask({
+      maxTasksPerRound: 0,
 
-    // jitter up to 1 second
-    maxJitterInMs: 1_000,
+      // jitter up to 1 second
+      maxJitterInMs: 1_000,
 
-    // the values below are not important
-    roundLengthInMs: 12345,
-    lastTaskDurationInMs: 12
-  })
+      // the values below are not important
+      roundLengthInMs: 12345,
+      lastTaskDurationInMs: 12,
+    })
 
   const delay1 = getDelay()
   const delay2 = getDelay()
@@ -412,22 +447,22 @@ test('calculateDelayBeforeNextTask() introduces random jitter for zero tasks in 
   assertNotEquals(
     delay1,
     delay2,
-    `Expected delay values to be different because of jitter. Actual value: ${delay1}`
+    `Expected delay values to be different because of jitter. Actual value: ${delay1}`,
   )
   assertLessOrEqual(
     Math.abs(delay1 - delay2),
     1_000,
-    `expected delay values to be within 1 second of each other. Actual values: ${delay1} <> ${delay2}`
+    `expected delay values to be within 1 second of each other. Actual values: ${delay1} <> ${delay2}`,
   )
 })
 
 test('fetchCAR triggers timeout after long retrieval', async () => {
-  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
   const fetch = async (_url, { signal }) => {
     return {
       status: 200,
       ok: true,
-      body: (async function * () {
+      body: (async function* () {
         while (true) {
           if (signal.aborted) {
             throw new DOMException('Aborted', 'AbortError')
@@ -435,7 +470,7 @@ test('fetchCAR triggers timeout after long retrieval', async () => {
           yield new Uint8Array([0])
           await sleep(500)
         }
-      })()
+      })(),
     }
   }
 
@@ -443,7 +478,7 @@ test('fetchCAR triggers timeout after long retrieval', async () => {
   const stats = newStats()
 
   await spark.fetchCAR('http', '/dns/example.com/tcp/80/http', KNOWN_CID, stats, {
-    maxRequestDurationMs: 0
+    maxRequestDurationMs: 0,
   })
 
   assertEquals(stats.timeout, true)

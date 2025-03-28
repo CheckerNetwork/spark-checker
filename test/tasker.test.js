@@ -7,10 +7,7 @@ import { getStationKey, getTaskKey, pickTasks } from '../lib/tasker.js'
 const RANDOMNESS = 'fc90e50dcdf20886b56c038b30fa921a5e57c532ea448dadcc209e44eec0445e'
 
 test('getTaskKey', async () => {
-  const key = await getTaskKey(
-    { cid: 'bafyone', minerId: 'f0123' },
-    RANDOMNESS
-  )
+  const key = await getTaskKey({ cid: 'bafyone', minerId: 'f0123' }, RANDOMNESS)
   assertEquals(key, 19408172415633384483144889917969030396168570904487614072975030553911283422991n)
 })
 
@@ -29,19 +26,19 @@ test('pickTasksForNode', async () => {
     { cid: 'bafytwo', minerId: 'f010' },
     { cid: 'bafytwo', minerId: 'f020' },
     { cid: 'bafytwo', minerId: 'f030' },
-    { cid: 'bafytwo', minerId: 'f040' }
+    { cid: 'bafytwo', minerId: 'f040' },
   ]
 
   const selectedTasks = await pickTasks({
     tasks: allTasks,
     stationId: 'some-station-id',
     randomness: RANDOMNESS,
-    maxTasksPerRound: 3
+    maxTasksPerRound: 3,
   })
 
   assertEquals(selectedTasks, [
     { cid: 'bafyone', minerId: 'f020' },
     { cid: 'bafyone', minerId: 'f010' },
-    { cid: 'bafytwo', minerId: 'f020' }
+    { cid: 'bafytwo', minerId: 'f020' },
   ])
 })

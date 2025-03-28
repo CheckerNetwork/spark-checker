@@ -6,9 +6,9 @@ test('assertRedirectResponse - 302', async () => {
   const responseMock = {
     status: 302,
     headers: new Headers({ location: '/new-location' }),
-    async text () {
+    async text() {
       throw new AssertionError('res.text() should not have been called')
-    }
+    },
   }
 
   await assertRedirectResponse(responseMock)
@@ -18,9 +18,9 @@ test('assertRedirectResponse - mission Location header', async () => {
   const responseMock = {
     status: 302,
     headers: new Headers(),
-    async text () {
+    async text() {
       throw new AssertionError('res.text() should not have been called')
-    }
+    },
   }
 
   const err = await assertRejects(() => assertRedirectResponse(responseMock))
@@ -31,9 +31,9 @@ test('assertRedirectResponse - not redirect', async () => {
   const responseMock = {
     status: 200,
     headers: new Headers(),
-    async text () {
+    async text() {
       return 'RESPONSE BODY'
-    }
+    },
   }
 
   const err = await assertRejects(() => assertRedirectResponse(responseMock, 'NOT REDIRECT'))
