@@ -9,8 +9,12 @@ SP Retrieval Checker Module
 Install [Zinnia CLI](https://github.com/filecoin-station/zinnia).
 
 ```bash
+$ # Install dev tooling
+$ npm ci
 $ # Lint
-$ npx standard
+$ npm run lint
+$ # Fix linting issues
+$ npm run lint:fix
 $ # Run module
 $ zinnia run main.js
 $ # Test module
