@@ -13,8 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: curl -L https://github.com/filecoin-station/zinnia/releases/download/${{ env.ZINNIA_VERSION }}/zinnia-linux-x64.tar.gz | tar -xz
-      - uses: actions/setup-node@v4
-      - run: npx standard
       - run: ./zinnia run test.js
 
   test-windows:
@@ -29,3 +27,10 @@ jobs:
           extract: true
           token: ${{ secrets.GITHUB_TOKEN }}
       - run: ./zinnia.exe run test.js
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - run: npx standard
