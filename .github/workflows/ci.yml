@@ -3,7 +3,6 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
 
 env:
   ZINNIA_VERSION: v0.20.2
