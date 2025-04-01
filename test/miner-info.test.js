@@ -13,7 +13,7 @@ test('get peer id of a miner that does not exist', async () => {
   try {
     const result = await getIndexProviderPeerId('f010', { maxAttempts: 1 })
     throw new AssertionError(
-      `Expected "getIndexProviderPeerId()" to fail, but it resolved with "${result}" instead.`
+      `Expected "getIndexProviderPeerId()" to fail, but it resolved with "${result}" instead.`,
     )
   } catch (err) {
     assertMatch(err.cause.toString(), /\bf010\b.*\bactor code is not miner/)
