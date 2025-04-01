@@ -1,0 +1,12 @@
+{
+  "name": "spark-checker",
+  "scripts": {
+    "lint": "eslint && prettier --check .",
+    "lint:fix": "eslint --fix && prettier --write ."
+  },
+  "devDependencies": {
+    "eslint": "^9.23.0",
+    "neostandard": "^0.12.1",
+    "prettier": "^3.5.3"
+  }
+}
