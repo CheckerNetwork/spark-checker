@@ -8,13 +8,13 @@ import { getIndexProviderPeerId as defaultGetIndexProvider } from './lib/miner-i
 
 // The task to check, replace with your own values
 const task = {
-  cid: 'bafkreih25dih6ug3xtj73vswccw423b56ilrwmnos4cbwhrceudopdp5sq',
-  minerId: 'f0frisbii'
+  cid: 'baguqeerain5md44iwzfii2xkorih4oabktvzxrg3in32e4ll7r6diliyvsga',
+  minerId: 'f02620'
 }
 
 const getIndexProviderPeerId = (minerId) =>
-  minerId === 'f0frisbii'
-    ? '12D3KooWC8gXxg9LoJ9h3hy3jzBkEAxamyHEQJKtRmAuBuvoMzpr'
+  minerId === 'f02620'
+    ? '12D3KooWNXvbyvLUUd1qQEqhzjTpVoT5fdYUZEv4RJSxZ3rDF2c7'
     : defaultGetIndexProvider(minerId)
 
 // Run the check

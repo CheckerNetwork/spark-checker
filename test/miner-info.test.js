@@ -16,6 +16,6 @@ test('get peer id of a miner that does not exist', async () => {
       `Expected "getIndexProviderPeerId()" to fail, but it resolved with "${result}" instead.`
     )
   } catch (err) {
-    assertMatch(err.cause.toString(), /\bf010\b.*\bactor code is not miner/)
+    assertMatch(err.toString(), /Error fetching index provider PeerID for miner f010/)
   }
 })

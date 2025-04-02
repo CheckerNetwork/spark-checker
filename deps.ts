@@ -12,6 +12,11 @@ export { retry } from 'https://deno.land/std@0.203.0/async/retry.ts';
 
 // Deno Bundle does not support npm dependencies, we have to load them via CDN
 export { ethers } from "https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.min.js";
+export {
+  getIndexProviderPeerId,
+  MINER_TO_PEERID_CONTRACT_ADDRESS,
+  MINER_TO_PEERID_CONTRACT_ABI,
+} from 'https://cdn.jsdelivr.net/npm/index-provider-peer-id@1.0.0/index.js/+esm'
 export { CarBlockIterator } from 'https://cdn.skypack.dev/@ipld/car@5.3.2/?dts'
 export {
   UnsupportedHashError,
