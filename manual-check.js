@@ -8,13 +8,13 @@ import { getMinerPeerId as defaultGetIndexProvider } from './lib/miner-info.js'
 
 // The task to check, replace with your own values
 const task = {
-  cid: 'baguqeerain5md44iwzfii2xkorih4oabktvzxrg3in32e4ll7r6diliyvsga',
-  minerId: 'f02620'
+  cid: 'bafkreih25dih6ug3xtj73vswccw423b56ilrwmnos4cbwhrceudopdp5sq',
+  minerId: 'f0frisbii',
 }
 
 const getIndexProviderPeerId = (minerId) =>
-  minerId === 'f02620'
-    ? '12D3KooWNXvbyvLUUd1qQEqhzjTpVoT5fdYUZEv4RJSxZ3rDF2c7'
+  minerId === 'f0frisbii'
+    ? '12D3KooWC8gXxg9LoJ9h3hy3jzBkEAxamyHEQJKtRmAuBuvoMzpr'
     : defaultGetIndexProvider(minerId)
 
 // Run the check
@@ -31,9 +31,11 @@ if (stats.providerAddress && stats.statusCode !== 200) {
       console.log(
         '  lassie fetch -o /dev/null -vv --dag-scope block --protocols graphsync --providers %s %s',
         JSON.stringify(stats.providerAddress),
-        task.cid
+        task.cid,
       )
-      console.log('\nHow to install Lassie: https://github.com/filecoin-project/lassie?tab=readme-ov-file#installation')
+      console.log(
+        '\nHow to install Lassie: https://github.com/filecoin-project/lassie?tab=readme-ov-file#installation',
+      )
       break
     case 'http':
       try {
@@ -46,11 +48,17 @@ if (stats.providerAddress && stats.statusCode !== 200) {
         console.log(
           '  lassie fetch -o /dev/null -vv --dag-scope block --protocols http --providers %s %s',
           JSON.stringify(stats.providerAddress),
-          task.cid
+          task.cid,
         )
-        console.log('\nHow to install Lassie: https://github.com/filecoin-project/lassie?tab=readme-ov-file#installation')
+        console.log(
+          '\nHow to install Lassie: https://github.com/filecoin-project/lassie?tab=readme-ov-file#installation',
+        )
       } catch (err) {
-        console.log('The provider address %j cannot be converted to a URL: %s', stats.providerAddress, err.message ?? err)
+        console.log(
+          'The provider address %j cannot be converted to a URL: %s',
+          stats.providerAddress,
+          err.message ?? err,
+        )
       }
       break
   }
