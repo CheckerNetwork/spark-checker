@@ -4,7 +4,7 @@
 //
 
 import Spark, { getRetrievalUrl } from './lib/spark.js'
-import { getMinerPeerId as defaultGetIndexProvider } from './lib/miner-info.js'
+import { getIndexProviderPeerId as defaultGetIndexProvider } from './lib/miner-info.js'
 
 // The task to check, replace with your own values
 const task = {
