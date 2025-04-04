@@ -24097,31 +24097,31 @@ function u1() {
     for(var t = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", r = 0; r < 64; ++r)e3[r] = t[r], n2[t.charCodeAt(r)] = r;
     n2["-".charCodeAt(0)] = 62, n2["_".charCodeAt(0)] = 63;
 }
-function f1(t, r, n) {
-    for(var o, i, u = [], f = r; f < n; f += 3)o = (t[f] << 16) + (t[f + 1] << 8) + t[f + 2], u.push(e3[(i = o) >> 18 & 63] + e3[i >> 12 & 63] + e3[i >> 6 & 63] + e3[63 & i]);
+function a(t, r, n) {
+    for(var o, i, u = [], a = r; a < n; a += 3)o = (t[a] << 16) + (t[a + 1] << 8) + t[a + 2], u.push(e3[(i = o) >> 18 & 63] + e3[i >> 12 & 63] + e3[i >> 6 & 63] + e3[63 & i]);
     return u.join("");
 }
-function a(t) {
+function f1(t) {
     var r;
     i1 || u1();
-    for(var n = t.length, o = n % 3, a = "", s = [], c = 16383, h = 0, l = n - o; h < l; h += c)s.push(f1(t, h, h + c > l ? l : h + c));
-    return 1 === o ? (r = t[n - 1], a += e3[r >> 2], a += e3[r << 4 & 63], a += "==") : 2 === o && (r = (t[n - 2] << 8) + t[n - 1], a += e3[r >> 10], a += e3[r >> 4 & 63], a += e3[r << 2 & 63], a += "="), s.push(a), s.join("");
+    for(var n = t.length, o = n % 3, f = "", s = [], c = 16383, h = 0, l = n - o; h < l; h += c)s.push(a(t, h, h + c > l ? l : h + c));
+    return 1 === o ? (r = t[n - 1], f += e3[r >> 2], f += e3[r << 4 & 63], f += "==") : 2 === o && (r = (t[n - 2] << 8) + t[n - 1], f += e3[r >> 10], f += e3[r >> 4 & 63], f += e3[r << 2 & 63], f += "="), s.push(f), s.join("");
 }
 function s2(t, r, e, n, o) {
-    var i, u, f = 8 * o - n - 1, a = (1 << f) - 1, s = a >> 1, c = -7, h = e ? o - 1 : 0, l = e ? -1 : 1, p = t[r + h];
-    for(h += l, i = p & (1 << -c) - 1, p >>= -c, c += f; c > 0; i = 256 * i + t[r + h], h += l, c -= 8);
+    var i, u, a = 8 * o - n - 1, f = (1 << a) - 1, s = f >> 1, c = -7, h = e ? o - 1 : 0, l = e ? -1 : 1, p = t[r + h];
+    for(h += l, i = p & (1 << -c) - 1, p >>= -c, c += a; c > 0; i = 256 * i + t[r + h], h += l, c -= 8);
     for(u = i & (1 << -c) - 1, i >>= -c, c += n; c > 0; u = 256 * u + t[r + h], h += l, c -= 8);
     if (0 === i) i = 1 - s;
     else {
-        if (i === a) return u ? NaN : 1 / 0 * (p ? -1 : 1);
+        if (i === f) return u ? NaN : 1 / 0 * (p ? -1 : 1);
         u += Math.pow(2, n), i -= s;
     }
     return (p ? -1 : 1) * u * Math.pow(2, i - n);
 }
 function c(t, r, e, n, o, i) {
-    var u, f, a, s = 8 * i - o - 1, c = (1 << s) - 1, h = c >> 1, l = 23 === o ? Math.pow(2, -24) - Math.pow(2, -77) : 0, p = n ? 0 : i - 1, g = n ? 1 : -1, y = r < 0 || 0 === r && 1 / r < 0 ? 1 : 0;
-    for(r = Math.abs(r), isNaN(r) || r === 1 / 0 ? (f = isNaN(r) ? 1 : 0, u = c) : (u = Math.floor(Math.log(r) / Math.LN2), r * (a = Math.pow(2, -u)) < 1 && (u--, a *= 2), (r += u + h >= 1 ? l / a : l * Math.pow(2, 1 - h)) * a >= 2 && (u++, a /= 2), u + h >= c ? (f = 0, u = c) : u + h >= 1 ? (f = (r * a - 1) * Math.pow(2, o), u += h) : (f = r * Math.pow(2, h - 1) * Math.pow(2, o), u = 0)); o >= 8; t[e + p] = 255 & f, p += g, f /= 256, o -= 8);
-    for(u = u << o | f, s += o; s > 0; t[e + p] = 255 & u, p += g, u /= 256, s -= 8);
+    var u, a, f, s = 8 * i - o - 1, c = (1 << s) - 1, h = c >> 1, l = 23 === o ? Math.pow(2, -24) - Math.pow(2, -77) : 0, p = n ? 0 : i - 1, g = n ? 1 : -1, y = r < 0 || 0 === r && 1 / r < 0 ? 1 : 0;
+    for(r = Math.abs(r), isNaN(r) || r === 1 / 0 ? (a = isNaN(r) ? 1 : 0, u = c) : (u = Math.floor(Math.log(r) / Math.LN2), r * (f = Math.pow(2, -u)) < 1 && (u--, f *= 2), (r += u + h >= 1 ? l / f : l * Math.pow(2, 1 - h)) * f >= 2 && (u++, f /= 2), u + h >= c ? (a = 0, u = c) : u + h >= 1 ? (a = (r * f - 1) * Math.pow(2, o), u += h) : (a = r * Math.pow(2, h - 1) * Math.pow(2, o), u = 0)); o >= 8; t[e + p] = 255 & a, p += g, a /= 256, o -= 8);
+    for(u = u << o | a, s += o; s > 0; t[e + p] = 255 & u, p += g, u /= 256, s -= 8);
     t[e + p - g] |= 128 * y;
 }
 var h = {}.toString, l = Array.isArray || function(t) {
@@ -24269,21 +24269,21 @@ function _(t, r, e, n, o) {
     throw new TypeError("val must be string, number or Buffer");
 }
 function S2(t, r, e, n, o) {
-    var i, u = 1, f = t.length, a = r.length;
+    var i, u = 1, a = t.length, f = r.length;
     if (void 0 !== n && ("ucs2" === (n = String(n).toLowerCase()) || "ucs-2" === n || "utf16le" === n || "utf-16le" === n)) {
         if (t.length < 2 || r.length < 2) return -1;
-        u = 2, f /= 2, a /= 2, e /= 2;
+        u = 2, a /= 2, f /= 2, e /= 2;
     }
     function s(t, r) {
         return 1 === u ? t[r] : t.readUInt16BE(r * u);
     }
     if (o) {
         var c = -1;
-        for(i = e; i < f; i++)if (s(t, i) === s(r, -1 === c ? 0 : i - c)) {
-            if (-1 === c && (c = i), i - c + 1 === a) return c * u;
+        for(i = e; i < a; i++)if (s(t, i) === s(r, -1 === c ? 0 : i - c)) {
+            if (-1 === c && (c = i), i - c + 1 === f) return c * u;
         } else -1 !== c && (i -= i - c), c = -1;
-    } else for(e + a > f && (e = f - a), i = e; i >= 0; i--){
-        for(var h = !0, l = 0; l < a; l++)if (s(t, i + l) !== s(r, l)) {
+    } else for(e + f > a && (e = a - f), i = e; i >= 0; i--){
+        for(var h = !0, l = 0; l < f; l++)if (s(t, i + l) !== s(r, l)) {
             h = !1;
             break;
         }
@@ -24299,9 +24299,9 @@ function T(t, r, e, n) {
     if (i % 2 != 0) throw new TypeError("Invalid hex string");
     n > i / 2 && (n = i / 2);
     for(var u = 0; u < n; ++u){
-        var f = parseInt(r.substr(2 * u, 2), 16);
-        if (isNaN(f)) return u;
-        t[e + u] = f;
+        var a = parseInt(r.substr(2 * u, 2), 16);
+        if (isNaN(a)) return u;
+        t[e + u] = a;
     }
     return u;
 }
@@ -24327,24 +24327,24 @@ function B(t, r, e, n) {
     }(r, t.length - e), t, e, n);
 }
 function D(t, r, e) {
-    return 0 === r && e === t.length ? a(t) : a(t.slice(r, e));
+    return 0 === r && e === t.length ? f1(t) : f1(t.slice(r, e));
 }
 function C(t, r, e) {
     e = Math.min(t.length, e);
     for(var n = [], o = r; o < e;){
-        var i, u, f, a, s = t[o], c = null, h = s > 239 ? 4 : s > 223 ? 3 : s > 191 ? 2 : 1;
+        var i, u, a, f, s = t[o], c = null, h = s > 239 ? 4 : s > 223 ? 3 : s > 191 ? 2 : 1;
         if (o + h <= e) switch(h){
             case 1:
                 s < 128 && (c = s);
                 break;
             case 2:
-                128 == (192 & (i = t[o + 1])) && (a = (31 & s) << 6 | 63 & i) > 127 && (c = a);
+                128 == (192 & (i = t[o + 1])) && (f = (31 & s) << 6 | 63 & i) > 127 && (c = f);
                 break;
             case 3:
-                i = t[o + 1], u = t[o + 2], 128 == (192 & i) && 128 == (192 & u) && (a = (15 & s) << 12 | (63 & i) << 6 | 63 & u) > 2047 && (a < 55296 || a > 57343) && (c = a);
+                i = t[o + 1], u = t[o + 2], 128 == (192 & i) && 128 == (192 & u) && (f = (15 & s) << 12 | (63 & i) << 6 | 63 & u) > 2047 && (f < 55296 || f > 57343) && (c = f);
                 break;
             case 4:
-                i = t[o + 1], u = t[o + 2], f = t[o + 3], 128 == (192 & i) && 128 == (192 & u) && 128 == (192 & f) && (a = (15 & s) << 18 | (63 & i) << 12 | (63 & u) << 6 | 63 & f) > 65535 && a < 1114112 && (c = a);
+                i = t[o + 1], u = t[o + 2], a = t[o + 3], 128 == (192 & i) && 128 == (192 & u) && 128 == (192 & a) && (f = (15 & s) << 18 | (63 & i) << 12 | (63 & u) << 6 | 63 & a) > 65535 && f < 1114112 && (c = f);
         }
         null === c ? (c = 65533, h = 1) : c > 65535 && (c -= 65536, n.push(c >>> 10 & 1023 | 55296), c = 56320 | 1023 & c), n.push(c), o += h;
     }
@@ -24436,8 +24436,8 @@ y.TYPED_ARRAY_SUPPORT = void 0 === r2.TYPED_ARRAY_SUPPORT || r2.TYPED_ARRAY_SUPP
     if (n >= o) return -1;
     if (r >= e) return 1;
     if (this === t) return 0;
-    for(var i = (o >>>= 0) - (n >>>= 0), u = (e >>>= 0) - (r >>>= 0), f = Math.min(i, u), a = this.slice(n, o), s = t.slice(r, e), c = 0; c < f; ++c)if (a[c] !== s[c]) {
-        i = a[c], u = s[c];
+    for(var i = (o >>>= 0) - (n >>>= 0), u = (e >>>= 0) - (r >>>= 0), a = Math.min(i, u), f = this.slice(n, o), s = t.slice(r, e), c = 0; c < a; ++c)if (f[c] !== s[c]) {
+        i = f[c], u = s[c];
         break;
     }
     return i < u ? -1 : u < i ? 1 : 0;
@@ -24617,16 +24617,16 @@ y.prototype.slice = function(t, r) {
         var o = Math.pow(2, 8 * e - 1);
         N1(this, t, r, e, o - 1, -o);
     }
-    var i = 0, u = 1, f = 0;
-    for(this[r] = 255 & t; ++i < e && (u *= 256);)t < 0 && 0 === f && 0 !== this[r + i - 1] && (f = 1), this[r + i] = (t / u | 0) - f & 255;
+    var i = 0, u = 1, a = 0;
+    for(this[r] = 255 & t; ++i < e && (u *= 256);)t < 0 && 0 === a && 0 !== this[r + i - 1] && (a = 1), this[r + i] = (t / u | 0) - a & 255;
     return r + e;
 }, y.prototype.writeIntBE = function(t, r, e, n) {
     if (t = +t, r |= 0, !n) {
         var o = Math.pow(2, 8 * e - 1);
         N1(this, t, r, e, o - 1, -o);
     }
-    var i = e - 1, u = 1, f = 0;
-    for(this[r + i] = 255 & t; --i >= 0 && (u *= 256);)t < 0 && 0 === f && 0 !== this[r + i + 1] && (f = 1), this[r + i] = (t / u | 0) - f & 255;
+    var i = e - 1, u = 1, a = 0;
+    for(this[r + i] = 255 & t; --i >= 0 && (u *= 256);)t < 0 && 0 === a && 0 !== this[r + i + 1] && (a = 1), this[r + i] = (t / u | 0) - a & 255;
     return r + e;
 }, y.prototype.writeInt8 = function(t, r, e) {
     return t = +t, r |= 0, e || N1(this, t, r, 1, 127, -128), y.TYPED_ARRAY_SUPPORT || (t = Math.floor(t)), t < 0 && (t = 255 + t + 1), this[r] = 255 & t, r + 1;
@@ -24672,8 +24672,8 @@ y.prototype.slice = function(t, r) {
     var i;
     if (r >>>= 0, e = void 0 === e ? this.length : e >>> 0, t || (t = 0), "number" == typeof t) for(i = r; i < e; ++i)this[i] = t;
     else {
-        var u = E(t) ? t : Z(new y(t, n).toString()), f = u.length;
-        for(i = 0; i < e - r; ++i)this[i + r] = u[i % f];
+        var u = E(t) ? t : Z(new y(t, n).toString()), a = u.length;
+        for(i = 0; i < e - r; ++i)this[i + r] = u[i % a];
     }
     return this;
 };
@@ -24723,14 +24723,14 @@ function Z(t, r) {
 }
 function K(t) {
     return function(t) {
-        var r, e, f, a, s, c;
+        var r, e, a, f, s, c;
         i1 || u1();
         var h = t.length;
         if (h % 4 > 0) throw new Error("Invalid string. Length must be a multiple of 4");
-        s = "=" === t[h - 2] ? 2 : "=" === t[h - 1] ? 1 : 0, c = new o2(3 * h / 4 - s), f = s > 0 ? h - 4 : h;
+        s = "=" === t[h - 2] ? 2 : "=" === t[h - 1] ? 1 : 0, c = new o2(3 * h / 4 - s), a = s > 0 ? h - 4 : h;
         var l = 0;
-        for(r = 0, e = 0; r < f; r += 4, e += 3)a = n2[t.charCodeAt(r)] << 18 | n2[t.charCodeAt(r + 1)] << 12 | n2[t.charCodeAt(r + 2)] << 6 | n2[t.charCodeAt(r + 3)], c[l++] = a >> 16 & 255, c[l++] = a >> 8 & 255, c[l++] = 255 & a;
-        return 2 === s ? (a = n2[t.charCodeAt(r)] << 2 | n2[t.charCodeAt(r + 1)] >> 4, c[l++] = 255 & a) : 1 === s && (a = n2[t.charCodeAt(r)] << 10 | n2[t.charCodeAt(r + 1)] << 4 | n2[t.charCodeAt(r + 2)] >> 2, c[l++] = a >> 8 & 255, c[l++] = 255 & a), c;
+        for(r = 0, e = 0; r < a; r += 4, e += 3)f = n2[t.charCodeAt(r)] << 18 | n2[t.charCodeAt(r + 1)] << 12 | n2[t.charCodeAt(r + 2)] << 6 | n2[t.charCodeAt(r + 3)], c[l++] = f >> 16 & 255, c[l++] = f >> 8 & 255, c[l++] = 255 & f;
+        return 2 === s ? (f = n2[t.charCodeAt(r)] << 2 | n2[t.charCodeAt(r + 1)] >> 4, c[l++] = 255 & f) : 1 === s && (f = n2[t.charCodeAt(r)] << 10 | n2[t.charCodeAt(r + 1)] << 4 | n2[t.charCodeAt(r + 2)] >> 2, c[l++] = f >> 8 & 255, c[l++] = 255 & f), c;
     }(function(t) {
         if ((t = (function(t) {
             return t.trim ? t.trim() : t.replace(/^\s+|\s+$/g, "");
@@ -24770,7 +24770,7 @@ function rt(t, r) {
         seen: [],
         stylize: nt
     };
-    return arguments.length >= 3 && (e.depth = arguments[2]), arguments.length >= 4 && (e.colors = arguments[3]), ft(r) ? e.showHidden = r : r && function(t, r) {
+    return arguments.length >= 3 && (e.depth = arguments[2]), arguments.length >= 4 && (e.colors = arguments[3]), at(r) ? e.showHidden = r : r && function(t, r) {
         if (!r || !lt(r)) return t;
         var e = Object.keys(r), n = e.length;
         for(; n--;)t[e[n]] = r[e[n]];
@@ -24796,8 +24796,8 @@ function ot(t, r, e) {
         }
         if (n = r, "number" == typeof n) return t.stylize("" + r, "number");
         var n;
-        if (ft(r)) return t.stylize("" + r, "boolean");
-        if (at(r)) return t.stylize("null", "null");
+        if (at(r)) return t.stylize("" + r, "boolean");
+        if (ft(r)) return t.stylize("null", "null");
     }(t, r);
     if (o) return o;
     var i = Object.keys(r), u = function(t) {
@@ -24809,23 +24809,23 @@ function ot(t, r, e) {
     if (t.showHidden && (i = Object.getOwnPropertyNames(r)), gt(r) && (i.indexOf("message") >= 0 || i.indexOf("description") >= 0)) return it(r);
     if (0 === i.length) {
         if (yt(r)) {
-            var f = r.name ? ": " + r.name : "";
-            return t.stylize("[Function" + f + "]", "special");
+            var a = r.name ? ": " + r.name : "";
+            return t.stylize("[Function" + a + "]", "special");
         }
         if (ht(r)) return t.stylize(RegExp.prototype.toString.call(r), "regexp");
         if (pt(r)) return t.stylize(Date.prototype.toString.call(r), "date");
         if (gt(r)) return it(r);
     }
-    var a, s, c = "", h = !1, l = [
+    var f, s, c = "", h = !1, l = [
         "{",
         "}"
     ];
-    (a = r, Array.isArray(a) && (h = !0, l = [
+    (f = r, Array.isArray(f) && (h = !0, l = [
         "[",
         "]"
     ]), yt(r)) && (c = " [Function" + (r.name ? ": " + r.name : "") + "]");
     return ht(r) && (c = " " + RegExp.prototype.toString.call(r)), pt(r) && (c = " " + Date.prototype.toUTCString.call(r)), gt(r) && (c = " " + it(r)), 0 !== i.length || h && 0 != r.length ? e < 0 ? ht(r) ? t.stylize(RegExp.prototype.toString.call(r), "regexp") : t.stylize("[Object]", "special") : (t.seen.push(r), s = h ? function(t, r, e, n, o) {
-        for(var i = [], u = 0, f = r.length; u < f; ++u)vt(r, String(u)) ? i.push(ut1(t, r, e, n, String(u), !0)) : i.push("");
+        for(var i = [], u = 0, a = r.length; u < a; ++u)vt(r, String(u)) ? i.push(ut1(t, r, e, n, String(u), !0)) : i.push("");
         return o.forEach(function(o) {
             o.match(/^\d+$/) || i.push(ut1(t, r, e, n, o, !0));
         }), i;
@@ -24843,23 +24843,23 @@ function it(t) {
     return "[" + Error.prototype.toString.call(t) + "]";
 }
 function ut1(t, r, e, n, o, i) {
-    var u, f, a;
-    if ((a = Object.getOwnPropertyDescriptor(r, o) || {
+    var u, a, f;
+    if ((f = Object.getOwnPropertyDescriptor(r, o) || {
         value: r[o]
-    }).get ? f = a.set ? t.stylize("[Getter/Setter]", "special") : t.stylize("[Getter]", "special") : a.set && (f = t.stylize("[Setter]", "special")), vt(n, o) || (u = "[" + o + "]"), f || (t.seen.indexOf(a.value) < 0 ? (f = at(e) ? ot(t, a.value, null) : ot(t, a.value, e - 1)).indexOf("\n") > -1 && (f = i ? f.split("\n").map(function(t) {
+    }).get ? a = f.set ? t.stylize("[Getter/Setter]", "special") : t.stylize("[Getter]", "special") : f.set && (a = t.stylize("[Setter]", "special")), vt(n, o) || (u = "[" + o + "]"), a || (t.seen.indexOf(f.value) < 0 ? (a = ft(e) ? ot(t, f.value, null) : ot(t, f.value, e - 1)).indexOf("\n") > -1 && (a = i ? a.split("\n").map(function(t) {
         return "  " + t;
-    }).join("\n").substr(2) : "\n" + f.split("\n").map(function(t) {
+    }).join("\n").substr(2) : "\n" + a.split("\n").map(function(t) {
         return "   " + t;
-    }).join("\n")) : f = t.stylize("[Circular]", "special")), ct(u)) {
-        if (i && o.match(/^\d+$/)) return f;
+    }).join("\n")) : a = t.stylize("[Circular]", "special")), ct(u)) {
+        if (i && o.match(/^\d+$/)) return a;
         (u = JSON.stringify("" + o)).match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/) ? (u = u.substr(1, u.length - 2), u = t.stylize(u, "name")) : (u = u.replace(/'/g, "\\'").replace(/\\"/g, '"').replace(/(^"|"$)/g, "'"), u = t.stylize(u, "string"));
     }
-    return u + ": " + f;
-}
-function ft(t) {
-    return "boolean" == typeof t;
+    return u + ": " + a;
 }
 function at(t) {
+    return "boolean" == typeof t;
+}
+function ft(t) {
     return null === t;
 }
 function st(t) {
@@ -25045,10 +25045,10 @@ function Yt(t, r, e, n) {
             var o = jt(t), i = jt(r);
             if (o && !i || !o && i) return !1;
             if (o) return Yt(t = Rt.call(t), r = Rt.call(r), e);
-            var u, f, a = At(t), s = At(r);
-            if (a.length !== s.length) return !1;
-            for(a.sort(), s.sort(), f = a.length - 1; f >= 0; f--)if (a[f] !== s[f]) return !1;
-            for(f = a.length - 1; f >= 0; f--)if (!Yt(t[u = a[f]], r[u], e, n)) return !1;
+            var u, a, f = At(t), s = At(r);
+            if (f.length !== s.length) return !1;
+            for(f.sort(), s.sort(), a = f.length - 1; a >= 0; a--)if (f[a] !== s[a]) return !1;
+            for(a = f.length - 1; a >= 0; a--)if (!Yt(t[u = f[a]], r[u], e, n)) return !1;
             return !0;
         }(t, r, e, n));
     }
@@ -25150,10 +25150,10 @@ class Nt extends Error {
 const Ft = "0x14183aD016Ddc83D638425D6328009aa390339Ce", qt = [
     "function getPeerData(uint64 minerID) view returns (tuple(string peerID, bytes signature))"
 ];
-async function $t(t, r, { maxAttempts: e = 5, rpcUrl: n, rpcAuth: o, rpcFn: i } = {}) {
+async function $t(t, r, { maxAttempts: e = 5, rpcUrl: n, rpcAuth: o, rpcFn: i, signal: u } = {}) {
     try {
         Tt.ok(!(n && i), "Cannot provide both rpcUrl and rpcFn");
-        const [u, f] = await Promise.all([
+        const [a, f] = await Promise.all([
             Lt(t, r),
             zt(t, i ?? async function(t, r) {
                 return await async function(t, r, e, { rpcAuth: n, fetch: o = globalThis.fetch, signal: i } = {}) {
@@ -25165,7 +25165,7 @@ async function $t(t, r, { maxAttempts: e = 5, rpcUrl: n, rpcAuth: o, rpcFn: i } 
                         ...u,
                         Authorization: `Bearer ${n}`
                     });
-                    const f = new Request(e, {
+                    const a = new Request(e, {
                         method: "POST",
                         headers: u,
                         body: JSON.stringify({
@@ -25174,22 +25174,23 @@ async function $t(t, r, { maxAttempts: e = 5, rpcUrl: n, rpcAuth: o, rpcFn: i } 
                             method: t,
                             params: r
                         })
-                    }), a = await o(f, {
+                    }), f = await o(a, {
                         signal: i
-                    }), s = await a.json();
+                    }), s = await f.json();
                     if (!s || "object" != typeof s) throw new Nt("INVALID_RPC_RESPONSE", `Response body is not an object: ${s}`, t);
                     if ("error" in s) throw new Nt("RPC_ERROR", `Error while calling RPC method ${t}: ${JSON.stringify(s.error)}`, t);
                     if (!("result" in s)) throw new Nt("NO_RESULT_IN_RESPONSE", `Response body does not contain result: ${s}`, t);
                     return s.result;
                 }(t, r, n ?? "https://api.node.glif.io/", {
-                    rpcAuth: o
+                    rpcAuth: o,
+                    signal: u
                 });
             }, {
                 maxAttempts: e
             })
         ]);
-        return u ? (console.log("Using PeerID from the smart contract."), {
-            peerId: u,
+        return a ? (console.log("Using PeerID from the smart contract."), {
+            peerId: a,
             source: "smartContract"
         }) : {
             peerId: f,
