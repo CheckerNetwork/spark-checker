@@ -17,8 +17,8 @@ test('get peer id of a miner that does not exist', async () => {
     )
   } catch (err) {
     assert(err instanceof Error, 'Expected error to be an instance of Error')
-    assert(err.message.toString().includes('Failed to get peer Id for miner f010'))
-    assert(err.cause.toString().includes('Error fetching index provider PeerID for miner f010'))
+    assert(err.message.toString().includes('Error fetching index provider PeerID for miner f010'))
+    assert(err.cause.toString().includes('Error fetching PeerID for miner f010'))
   }
 })
 
