@@ -16,7 +16,7 @@ export {
   getIndexProviderPeerId,
   MINER_TO_PEERID_CONTRACT_ADDRESS,
   MINER_TO_PEERID_CONTRACT_ABI,
-} from 'https://cdn.jsdelivr.net/npm/index-provider-peer-id@1.0.0/index.js/+esm'
+} from 'https://cdn.jsdelivr.net/npm/index-provider-peer-id@1.0.1/index.js/+esm'
 export { CarBlockIterator } from 'https://cdn.skypack.dev/@ipld/car@5.3.2/?dts'
 export {
   UnsupportedHashError,
