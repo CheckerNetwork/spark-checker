@@ -155,6 +155,61 @@ test('fetchCAR - http', async () => {
     'stats.carChecksum',
   )
   assertEquals(requests, [`https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`])
+  assertEquals(stats.networkRetrievalStatusCode, null, 'stats.networkRetrievalStatusCode')
+  assertEquals(stats.networkRetrievalEndAt, null, 'stats.networkRetrievalEndAt')
+  assertEquals(stats.networkRetrievalCarTooLarge, false, 'stats.networkRetrievalCarTooLarge')
+  assertEquals(stats.networkRetrievalTimeout, false, 'stats.networkRetrievalTimeout')
+})
+
+test('testNetworkRetrieval - http', async () => {
+  const requests = []
+  const spark = new Spark({
+    fetch: async (url) => {
+      requests.push(url.toString())
+      return fetch(url)
+    },
+  })
+  const stats = newStats()
+  const providers = [
+    {
+      address: '/dns/frisbii.fly.dev/tcp/443/https',
+      protocol: 'http',
+      contextId: 'ZnJpc2JpaQ==',
+    },
+  ]
+
+  await spark.testNetworkRetrieval(providers, KNOWN_CID, stats)
+  assertEquals(stats.networkRetrievalStatusCode, 200, 'stats.networkRetrievalStatusCode')
+  assertEquals(stats.networkRetrievalTimeout, false, 'stats.networkRetrievalTimeout')
+  assertInstanceOf(stats.networkRetrievalEndAt, Date, 'stats.networkRetrievalEndAt')
+  assertEquals(stats.networkRetrievalCarTooLarge, false, 'stats.networkRetrievalCarTooLarge')
+  assertEquals(stats.byteLength, 0, 'stats.byteLength')
+  assertEquals(stats.carChecksum, null, 'stats.carChecksum')
+  assertEquals(requests, [`https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`])
+  assertEquals(stats.statusCode, null, 'stats.statusCode')
+  assertEquals(stats.timeout, false, 'stats.timeout')
+  assertEquals(stats.startAt, null, 'stats.startAt')
+  assertEquals(stats.firstByteAt, null, 'stats.firstByteAt')
+  assertEquals(stats.endAt, null, 'stats.endAt')
+  assertEquals(stats.carTooLarge, false, 'stats.carTooLarge')
+})
+
+test('testNetworkRetrieval - no providers', async () => {
+  const requests = []
+  const spark = new Spark({
+    fetch: async (url) => {
+      requests.push(url.toString())
+      return fetch(url)
+    },
+  })
+  const stats = newStats()
+  const providers = []
+
+  await spark.testNetworkRetrieval(providers, KNOWN_CID, stats)
+  assertEquals(stats.networkRetrievalStatusCode, null, 'stats.networkRetrievalStatusCode')
+  assertEquals(stats.networkRetrievalEndAt, null, 'stats.networkRetrievalEndAt')
+  assertEquals(stats.networkRetrievalCarTooLarge, false, 'stats.networkRetrievalCarTooLarge')
+  assertEquals(stats.networkRetrievalTimeout, false, 'stats.networkRetrievalTimeout')
 })
 
 /* Fixme: Find an active deal on a reliable graphsync provider
