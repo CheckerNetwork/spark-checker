@@ -14,7 +14,6 @@ test('query advertised CID', async () => {
       protocol: 'http',
       contextId: 'ZnJpc2JpaQ==',
     },
-    providers: [],
   })
 })
 
