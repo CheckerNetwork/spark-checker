@@ -12,7 +12,9 @@ test('query advertised CID', async () => {
     provider: {
       address: '/dns/frisbii.fly.dev/tcp/443/https',
       protocol: 'http',
+      contextId: "ZnJpc2JpaQ==",
     },
+    providers: [],
   })
 })
 
