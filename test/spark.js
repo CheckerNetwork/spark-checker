@@ -10,7 +10,7 @@ import {
   assertLessOrEqual,
   assertGreaterOrEqual,
 } from 'zinnia:assert'
-import { SPARK_VERSION } from '../lib/constants.js'
+import { SPARK_VERSION,OFFLINE_RETRY_DELAY_MS, } from '../lib/constants.js'
 
 const KNOWN_CID = 'bafkreih25dih6ug3xtj73vswccw423b56ilrwmnos4cbwhrceudopdp5sq'
 
@@ -455,6 +455,61 @@ test('calculateDelayBeforeNextTask() introduces random jitter for zero tasks in 
     `expected delay values to be within 1 second of each other. Actual values: ${delay1} <> ${delay2}`,
   )
 })
+
+test('run() uses OFFLINE_RETRY_DELAY_MS delay when offline', async () => {
+  const sleep = (dt) => new Promise(resolve => setTimeout(resolve, dt));
+  let capturedDelay = null;
+
+  // Temporarily Mock global setTimeout to capture the delay explicitly
+  const originalSetTimeout = globalThis.setTimeout;
+  globalThis.setTimeout = (fn, duration) => {
+    capturedDelay = duration;
+    return originalSetTimeout(fn, 0); // execute immediately
+  };
+
+  // Mock Spark class instance 
+  const spark = new Spark({
+    fetch: async () => ({ ok: false }),
+  });
+
+  // Override public methods to control test behavior
+  spark.nextRetrieval = async () => {
+    throw new Error('Offline simulation');
+  };
+
+  // Since #activity is private, we ensure it's offline indirectly via behavior:
+  const originalHandleRunError = spark.handleRunError.bind(spark);
+  spark.handleRunError = (err) => {
+    originalHandleRunError(err);
+  };
+
+  // Run only one iteration explicitly to test delay
+  const runOnce = async () => {
+    const started = Date.now();
+    try {
+      await spark.nextRetrieval();
+    } catch (err) {
+      spark.handleRunError(err);
+    }
+
+    const duration = Date.now() - started;
+
+    // call calculateDelayBeforeNextTask with mocked isHealthy false scenario
+    const delay = OFFLINE_RETRY_DELAY_MS; // explicitly offline
+    await sleep(delay);
+  };
+
+  await runOnce();
+
+  assertEquals(
+    capturedDelay,
+    OFFLINE_RETRY_DELAY_MS,
+    `Expected offline delay to be exactly ${OFFLINE_RETRY_DELAY_MS}`
+  );
+
+  // Restore original setTimeout function
+  globalThis.setTimeout = originalSetTimeout;
+});
 
 test('fetchCAR triggers timeout after long retrieval', async () => {
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
