@@ -457,13 +457,13 @@ test('calculateDelayBeforeNextTask() introduces random jitter for zero tasks in 
 })
 
 test('run() uses OFFLINE_RETRY_DELAY_MS delay when offline', async () => {
-  const sleep = (dt) => new Promise(resolve => setTimeout(resolve, dt));
+  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
   let capturedDelay = null;
 
-  // Temporarily Mock global setTimeout to capture the delay explicitly
+  // Temporarily Mock global setTimeout to capture the delay passed in run()
   const originalSetTimeout = globalThis.setTimeout;
-  globalThis.setTimeout = (fn, duration) => {
-    capturedDelay = duration;
+  globalThis.setTimeout = (fn, delay) => {
+    capturedDelay = delay;
     return originalSetTimeout(fn, 0); // execute immediately
   };
 
@@ -485,16 +485,12 @@ test('run() uses OFFLINE_RETRY_DELAY_MS delay when offline', async () => {
 
   // Run only one iteration explicitly to test delay
   const runOnce = async () => {
-    const started = Date.now();
     try {
       await spark.nextRetrieval();
     } catch (err) {
       spark.handleRunError(err);
     }
-    
-    // call calculateDelayBeforeNextTask with mocked isHealthy false scenario
-    const delay = OFFLINE_RETRY_DELAY_MS; // explicitly offline
-    await sleep(delay);
+    await sleep(OFFLINE_RETRY_DELAY_MS); // simulate Spark.sleep
   };
 
   await runOnce();
