@@ -491,9 +491,7 @@ test('run() uses OFFLINE_RETRY_DELAY_MS delay when offline', async () => {
     } catch (err) {
       spark.handleRunError(err);
     }
-
-    const duration = Date.now() - started;
-
+    
     // call calculateDelayBeforeNextTask with mocked isHealthy false scenario
     const delay = OFFLINE_RETRY_DELAY_MS; // explicitly offline
     await sleep(delay);
