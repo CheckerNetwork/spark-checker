@@ -1,6 +1,6 @@
 /* global Zinnia */
 
-import Spark, { calculateDelayBeforeNextTask, newStats } from '../lib/spark.js'
+import Spark, { calculateDelayBeforeNextTask, newStats, pickRandomProvider } from '../lib/spark.js'
 import { test } from 'zinnia:test'
 import {
   assertInstanceOf,
@@ -9,6 +9,7 @@ import {
   assertNotEquals,
   assertLessOrEqual,
   assertGreaterOrEqual,
+  assertGreater,
 } from 'zinnia:assert'
 import { SPARK_VERSION } from '../lib/constants.js'
 
@@ -536,4 +537,37 @@ test('fetchCAR triggers timeout after long retrieval', async () => {
   })
 
   assertEquals(stats.timeout, true)
+})
+
+const mockProviders = [
+  { protocol: 'http', contextId: 'ghsA123', address: 'provider1' },
+  { protocol: 'graphsync', contextId: 'ghsB456', address: 'provider2' },
+  { protocol: 'bitswap', contextId: 'ghsC789', address: 'provider3' },
+  // Serves using HTTP but contextId does not start with 'ghsA'
+  { protocol: 'http', contextId: 'ghsB987', address: 'provider4' },
+]
+
+test('pickRandomProvider - should filter out providers using the Bitswap protocol', () => {
+  const result = pickRandomProvider(mockProviders)
+  assertNotEquals(result.protocol, 'bitswap')
+})
+
+test('pickRandomProvider - should return undefined if no providers are left after filtering', () => {
+  const providers = [{ protocol: 'bitswap', contextId: 'ghsC789', address: 'provider3' }]
+  const result = pickRandomProvider(providers)
+  assertEquals(result, undefined)
+})
+
+test('pickRandomProvider - should return a provider with higher weight more frequently', () => {
+  const results = {}
+  for (let i = 0; i < 1000; i++) {
+    const result = pickRandomProvider(mockProviders)
+    if (result) {
+      results[result.address] = (results[result.address] || 0) + 1
+    }
+  }
+
+  // Providers with protocol 'http' and contextId starting with 'ghsA' should have higher counts
+  assertGreater(results['provider1'], results['provider2'])
+  assertGreater(results['provider4'], results['provider2'])
 })
