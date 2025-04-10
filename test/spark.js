@@ -155,10 +155,7 @@ test('fetchCAR - http', async () => {
     'stats.carChecksum',
   )
   assertEquals(requests, [`https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`])
-  assertEquals(stats.networkRetrievalStatusCode, null, 'stats.networkRetrievalStatusCode')
-  assertEquals(stats.networkRetrievalEndAt, null, 'stats.networkRetrievalEndAt')
-  assertEquals(stats.networkRetrievalCarTooLarge, false, 'stats.networkRetrievalCarTooLarge')
-  assertEquals(stats.networkRetrievalTimeout, false, 'stats.networkRetrievalTimeout')
+  assertEquals(stats.networkRetrieval, null, 'stats.networkRetrieval')
 })
 
 test('testNetworkRetrieval - http', async () => {
@@ -179,10 +176,10 @@ test('testNetworkRetrieval - http', async () => {
   ]
 
   await spark.testNetworkRetrieval(providers, KNOWN_CID, stats)
-  assertEquals(stats.networkRetrievalStatusCode, 200, 'stats.networkRetrievalStatusCode')
-  assertEquals(stats.networkRetrievalTimeout, false, 'stats.networkRetrievalTimeout')
-  assertInstanceOf(stats.networkRetrievalEndAt, Date, 'stats.networkRetrievalEndAt')
-  assertEquals(stats.networkRetrievalCarTooLarge, false, 'stats.networkRetrievalCarTooLarge')
+  assertEquals(stats.networkRetrieval.statusCode, 200, 'stats.networkRetrieval.statusCode')
+  assertEquals(stats.networkRetrieval.timeout, false, 'stats.networkRetrieval.timeout')
+  assertInstanceOf(stats.networkRetrieval.endAt, Date, 'stats.networkRetrieval.endAt')
+  assertEquals(stats.networkRetrieval.carTooLarge, false, 'stats.networkRetrieval.carTooLarge')
   assertEquals(stats.byteLength, 0, 'stats.byteLength')
   assertEquals(stats.carChecksum, null, 'stats.carChecksum')
   assertEquals(requests, [`https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`])
@@ -206,10 +203,7 @@ test('testNetworkRetrieval - no providers', async () => {
   const providers = []
 
   await spark.testNetworkRetrieval(providers, KNOWN_CID, stats)
-  assertEquals(stats.networkRetrievalStatusCode, null, 'stats.networkRetrievalStatusCode')
-  assertEquals(stats.networkRetrievalEndAt, null, 'stats.networkRetrievalEndAt')
-  assertEquals(stats.networkRetrievalCarTooLarge, false, 'stats.networkRetrievalCarTooLarge')
-  assertEquals(stats.networkRetrievalTimeout, false, 'stats.networkRetrievalTimeout')
+  assertEquals(stats.networkRetrieval, null, 'stats.networkRetrieval')
 })
 
 /* Fixme: Find an active deal on a reliable graphsync provider
