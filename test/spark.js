@@ -374,6 +374,7 @@ test('calculateDelayBeforeNextTask() returns value based on average task duratio
     // one task every 10 seconds (on average)
     roundLengthInMs: 60_000,
     maxTasksPerRound: 6,
+    isHealthy: true,
   })
   assertEquals(delay, 7_000)
 })
@@ -384,6 +385,7 @@ test('calculateDelayBeforeNextTask() handles zero tasks per round', () => {
     // the values below are not important
     roundLengthInMs: 12345,
     lastTaskDurationInMs: 12,
+    isHealthy: true,
   })
   assertEquals(delay, 60_000)
 })
@@ -393,6 +395,7 @@ test('calculateDelayBeforeNextTask() handles one task per round', () => {
     roundLengthInMs: 20 * 60_000,
     maxTasksPerRound: 1,
     lastTaskDurationInMs: 1_000,
+    isHealthy: true,
   })
   assertEquals(delay, 60_000)
 })
@@ -405,6 +408,7 @@ test('calculateDelayBeforeNextTask() introduces random jitter', () => {
       // one task every 10 seconds (on average)
       roundLengthInMs: 60_000,
       maxTasksPerRound: 6,
+      isHealthy: true,
 
       // jitter up to 1 second
       maxJitterInMs: 1_000,
@@ -432,6 +436,7 @@ test('calculateDelayBeforeNextTask() introduces random jitter for zero tasks in 
   const getDelay = () =>
     calculateDelayBeforeNextTask({
       maxTasksPerRound: 0,
+      isHealthy: true,
 
       // jitter up to 1 second
       maxJitterInMs: 1_000,
@@ -456,53 +461,20 @@ test('calculateDelayBeforeNextTask() introduces random jitter for zero tasks in 
   )
 })
 
-test('run() uses OFFLINE_RETRY_DELAY_MS delay when offline', async () => {
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-  let capturedDelay = null
-
-  // Temporarily Mock global setTimeout to capture the delay passed in run()
-  const originalSetTimeout = globalThis.setTimeout
-  globalThis.setTimeout = (fn, delay) => {
-    capturedDelay = delay
-    return originalSetTimeout(fn, 0) // execute immediately
-  }
-
-  // Mock Spark class instance
-  const spark = new Spark({
-    fetch: async () => ({ ok: false }),
+test('calculateDelayBeforeNextTask() returns OFFLINE_RETRY_DELAY_MS when offline', () => {
+  const delay = calculateDelayBeforeNextTask({
+    isHealthy: false,
+    roundLengthInMs: 20 * 60_000,
+    maxJitterInMs: 10_000,
+    maxTasksPerRound: 1,
+    lastTaskDurationInMs: 1000,
   })
 
-  // Override public methods to control test behavior
-  spark.nextRetrieval = async () => {
-    throw new Error('Offline simulation')
-  }
-
-  // Since #activity is private, we ensure it's offline indirectly via behavior:
-  const originalHandleRunError = spark.handleRunError.bind(spark)
-  spark.handleRunError = (err) => {
-    originalHandleRunError(err)
-  }
-
-  // Run only one iteration explicitly to test delay
-  const runOnce = async () => {
-    try {
-      await spark.nextRetrieval()
-    } catch (err) {
-      spark.handleRunError(err)
-    }
-    await sleep(OFFLINE_RETRY_DELAY_MS) // simulate Spark.sleep
-  }
-
-  await runOnce()
-
   assertEquals(
-    capturedDelay,
+    delay,
     OFFLINE_RETRY_DELAY_MS,
-    `Expected offline delay to be exactly ${OFFLINE_RETRY_DELAY_MS}`,
+    `Expected delay to match OFFLINE_RETRY_DELAY_MS (${OFFLINE_RETRY_DELAY_MS}) when offline`,
   )
-
-  // Restore original setTimeout function
-  globalThis.setTimeout = originalSetTimeout
 })
 
 test('fetchCAR triggers timeout after long retrieval', async () => {
