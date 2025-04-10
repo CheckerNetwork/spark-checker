@@ -173,6 +173,11 @@ test('testNetworkRetrieval - http', async () => {
       protocol: 'http',
       contextId: 'ZnJpc2JpaQ==',
     },
+    {
+      address: '/dns/mock.fly.dev/tcp/443/https',
+      protocol: 'bitswap',
+      contextId: 'ghA==',
+    },
   ]
 
   await spark.testNetworkRetrieval(providers, KNOWN_CID, stats)
