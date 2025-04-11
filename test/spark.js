@@ -374,7 +374,6 @@ test('calculateDelayBeforeNextTask() returns value based on average task duratio
     // one task every 10 seconds (on average)
     roundLengthInMs: 60_000,
     maxTasksPerRound: 6,
-    isHealthy: true,
   })
   assertEquals(delay, 7_000)
 })
@@ -385,7 +384,6 @@ test('calculateDelayBeforeNextTask() handles zero tasks per round', () => {
     // the values below are not important
     roundLengthInMs: 12345,
     lastTaskDurationInMs: 12,
-    isHealthy: true,
   })
   assertEquals(delay, 60_000)
 })
@@ -395,7 +393,6 @@ test('calculateDelayBeforeNextTask() handles one task per round', () => {
     roundLengthInMs: 20 * 60_000,
     maxTasksPerRound: 1,
     lastTaskDurationInMs: 1_000,
-    isHealthy: true,
   })
   assertEquals(delay, 60_000)
 })
@@ -408,7 +405,6 @@ test('calculateDelayBeforeNextTask() introduces random jitter', () => {
       // one task every 10 seconds (on average)
       roundLengthInMs: 60_000,
       maxTasksPerRound: 6,
-      isHealthy: true,
 
       // jitter up to 1 second
       maxJitterInMs: 1_000,
@@ -436,7 +432,6 @@ test('calculateDelayBeforeNextTask() introduces random jitter for zero tasks in 
   const getDelay = () =>
     calculateDelayBeforeNextTask({
       maxTasksPerRound: 0,
-      isHealthy: true,
 
       // jitter up to 1 second
       maxJitterInMs: 1_000,
