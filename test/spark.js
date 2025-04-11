@@ -9,7 +9,6 @@ import {
   assertNotEquals,
   assertLessOrEqual,
   assertGreaterOrEqual,
-  assertGreater,
 } from 'zinnia:assert'
 import { SPARK_VERSION } from '../lib/constants.js'
 
