@@ -156,10 +156,9 @@ test('fetchCAR - http', async () => {
     'stats.carChecksum',
   )
   assertEquals(requests, [`https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`])
-  assertEquals(stats.networkRetrieval, null, 'stats.networkRetrieval')
 })
 
-test('testNetworkRetrieval - http', async () => {
+test('checkRetrievalFromAlternativeProvider - http', async () => {
   const requests = []
   const spark = new Spark({
     fetch: async (url) => {
@@ -167,7 +166,6 @@ test('testNetworkRetrieval - http', async () => {
       return fetch(url)
     },
   })
-  const stats = newStats()
   const providers = [
     {
       address: '/dns/frisbii.fly.dev/tcp/443/https',
@@ -181,23 +179,14 @@ test('testNetworkRetrieval - http', async () => {
     },
   ]
 
-  await spark.checkRetrievalFromAlternativeProvider(providers, KNOWN_CID, stats)
-  assertEquals(stats.networkRetrieval.statusCode, 200, 'stats.networkRetrieval.statusCode')
-  assertEquals(stats.networkRetrieval.timeout, false, 'stats.networkRetrieval.timeout')
-  assertInstanceOf(stats.networkRetrieval.endAt, Date, 'stats.networkRetrieval.endAt')
-  assertEquals(stats.networkRetrieval.carTooLarge, false, 'stats.networkRetrieval.carTooLarge')
-  assertEquals(stats.byteLength, 0, 'stats.byteLength')
-  assertEquals(stats.carChecksum, null, 'stats.carChecksum')
-  assertEquals(requests, [`https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`])
-  assertEquals(stats.statusCode, null, 'stats.statusCode')
-  assertEquals(stats.timeout, false, 'stats.timeout')
-  assertEquals(stats.startAt, null, 'stats.startAt')
-  assertEquals(stats.firstByteAt, null, 'stats.firstByteAt')
-  assertEquals(stats.endAt, null, 'stats.endAt')
-  assertEquals(stats.carTooLarge, false, 'stats.carTooLarge')
+  const alternativeProviderRetrievalStats  = await spark.checkRetrievalFromAlternativeProvider(providers, KNOWN_CID)
+  assertEquals(alternativeProviderRetrievalStats.statusCode, 200, 'alternativeProviderRetrievalStats.statusCode')
+  assertEquals(alternativeProviderRetrievalStats.timeout, false, 'alternativeProviderRetrievalStats.timeout')
+  assertInstanceOf(alternativeProviderRetrievalStats.endAt, Date, 'alternativeProviderRetrievalStats.endAt')
+  assertEquals(alternativeProviderRetrievalStats.carTooLarge, false, 'alternativeProviderRetrievalStats.carTooLarge')
 })
 
-test('testNetworkRetrieval - no providers', async () => {
+test('checkRetrievalFromAlternativeProvider - no providers', async () => {
   const requests = []
   const spark = new Spark({
     fetch: async (url) => {
@@ -205,11 +194,10 @@ test('testNetworkRetrieval - no providers', async () => {
       return fetch(url)
     },
   })
-  const stats = newStats()
   const providers = []
 
-  await spark.checkRetrievalFromAlternativeProvider(providers, KNOWN_CID, stats)
-  assertEquals(stats.networkRetrieval, null, 'stats.networkRetrieval')
+  const alternativeProviderRetrievalStats = await spark.checkRetrievalFromAlternativeProvider(providers, KNOWN_CID)
+  assertEquals(alternativeProviderRetrievalStats, undefined, 'alternativeProviderRetrievalStats')
 })
 
 /* Fixme: Find an active deal on a reliable graphsync provider
@@ -540,34 +528,42 @@ test('fetchCAR triggers timeout after long retrieval', async () => {
 })
 
 const mockProviders = [
-  { protocol: 'http', contextId: 'ghsA123', address: 'provider1' },
-  { protocol: 'graphsync', contextId: 'ghsB456', address: 'provider2' },
-  { protocol: 'bitswap', contextId: 'ghsC789', address: 'provider3' },
-  // Serves using HTTP but contextId does not start with 'ghsA'
-  { protocol: 'http', contextId: 'ghsB987', address: 'provider4' },
+  { protocol: 'http', contextId: 'ghsA123', address: 'http-provider-1' },
+  { protocol: 'graphsync', contextId: 'ghsA456', address: 'graphsync-provider-1' },
+  { protocol: 'http', contextId: 'other123', address: 'http-provider-2' },
+  { protocol: 'graphsync', contextId: 'other456', address: 'graphsync-provider-2' },
+  { protocol: 'bitswap', contextId: 'ghsA789', address: 'bitswap-provider-1' },
 ]
 
-test('pickRandomProvider - should filter out providers using the Bitswap protocol', () => {
+test('should prioritize HTTP providers with ContextID starting with "ghsA"', () => {
   const result = pickRandomProvider(mockProviders)
-  assertNotEquals(result.protocol, 'bitswap')
+  assertEquals(result.protocol, 'http')
+  assertEquals(result.contextId.startsWith('ghsA'), true)
 })
 
-test('pickRandomProvider - should return undefined if no providers are left after filtering', () => {
-  const providers = [{ protocol: 'bitswap', contextId: 'ghsC789', address: 'provider3' }]
+test('should fall back to Graphsync providers with ContextID starting with "ghsA" if no HTTP providers are available', () => {
+  const providers = mockProviders.filter((p) => p.protocol !== 'http')
+  const result = pickRandomProvider(providers)
+  assertEquals(result.protocol, 'graphsync')
+  assertEquals(result.contextId.startsWith('ghsA'), true)
+})
+
+test('should fall back to HTTP providers if no "ghsA" ContextID providers are available', () => {
+  const providers = mockProviders.filter((p) => !p.contextId.startsWith('ghsA'))
+  const result = pickRandomProvider(providers)
+  assertEquals(result.protocol, 'http')
+  assertEquals(result.contextId.startsWith('ghsA'), false)
+})
+
+test('should fall back to Graphsync providers if no HTTP providers are available', () => {
+  const providers = mockProviders.filter((p) => p.protocol === 'graphsync' && !p.contextId.startsWith('ghsA'))
+  const result = pickRandomProvider(providers)
+  assertEquals(result.protocol, 'graphsync')
+  assertEquals(result.contextId.startsWith('ghsA'), false)
+})
+
+test('should return undefined if no valid providers are available', () => {
+  const providers = mockProviders.filter((p) => p.protocol === 'bitswap')
   const result = pickRandomProvider(providers)
   assertEquals(result, undefined)
-})
-
-test('pickRandomProvider - should return a provider with higher weight more frequently', () => {
-  const results = {}
-  for (let i = 0; i < 1000; i++) {
-    const result = pickRandomProvider(mockProviders)
-    if (result) {
-      results[result.address] = (results[result.address] || 0) + 1
-    }
-  }
-
-  // Providers with protocol 'http' and contextId starting with 'ghsA' should have higher counts
-  assertGreater(results['provider1'], results['provider2'])
-  assertGreater(results['provider4'], results['provider2'])
 })
