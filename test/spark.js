@@ -181,7 +181,7 @@ test('testNetworkRetrieval - http', async () => {
     },
   ]
 
-  await spark.testNetworkRetrieval(providers, KNOWN_CID, stats)
+  await spark.checkRetrievalFromAlternativeProvider(providers, KNOWN_CID, stats)
   assertEquals(stats.networkRetrieval.statusCode, 200, 'stats.networkRetrieval.statusCode')
   assertEquals(stats.networkRetrieval.timeout, false, 'stats.networkRetrieval.timeout')
   assertInstanceOf(stats.networkRetrieval.endAt, Date, 'stats.networkRetrieval.endAt')
@@ -208,7 +208,7 @@ test('testNetworkRetrieval - no providers', async () => {
   const stats = newStats()
   const providers = []
 
-  await spark.testNetworkRetrieval(providers, KNOWN_CID, stats)
+  await spark.checkRetrievalFromAlternativeProvider(providers, KNOWN_CID, stats)
   assertEquals(stats.networkRetrieval, null, 'stats.networkRetrieval')
 })
 
