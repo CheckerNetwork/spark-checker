@@ -332,6 +332,42 @@ async function pRetry(input, options) {
         });
     });
 }
+var t = function() {
+    function t(e) {
+        this._value = NaN, this._seed = "string" == typeof e ? this.hashCode(e) : "number" == typeof e ? this.getSafeSeed(e) : this.getSafeSeed(t.MIN + Math.floor((t.MAX - t.MIN) * Math.random())), this.reset();
+    }
+    return t.prototype.next = function(e, o) {
+        return void 0 === e && (e = 0), void 0 === o && (o = 1), this.recalculate(), this.map(this._value, t.MIN, t.MAX, e, o);
+    }, t.prototype.nextInt = function(e, o) {
+        return void 0 === e && (e = 10), void 0 === o && (o = 100), this.recalculate(), Math.floor(this.map(this._value, t.MIN, t.MAX, e, o + 1));
+    }, t.prototype.nextString = function(t, e) {
+        void 0 === t && (t = 16), void 0 === e && (e = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+        for(var o = ""; o.length < t;)o += this.nextChar(e);
+        return o;
+    }, t.prototype.nextChar = function(t) {
+        return void 0 === t && (t = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"), t.substr(this.nextInt(0, t.length - 1), 1);
+    }, t.prototype.nextArrayItem = function(t) {
+        return t[this.nextInt(0, t.length - 1)];
+    }, t.prototype.nextBoolean = function() {
+        return this.recalculate(), this._value > .5;
+    }, t.prototype.skip = function(t) {
+        for(void 0 === t && (t = 1); t-- > 0;)this.recalculate();
+    }, t.prototype.reset = function() {
+        this._value = this._seed;
+    }, t.prototype.recalculate = function() {
+        this._value = this.xorshift(this._value);
+    }, t.prototype.xorshift = function(t) {
+        return t ^= t << 13, t ^= t >> 17, t ^= t << 5;
+    }, t.prototype.map = function(t, e, o, r, n) {
+        return (t - e) / (o - e) * (n - r) + r;
+    }, t.prototype.hashCode = function(t) {
+        var e = 0;
+        if (t) for(var o = t.length, r = 0; r < o; r++)e = (e << 5) - e + t.charCodeAt(r), e |= 0, e = this.xorshift(e);
+        return this.getSafeSeed(e);
+    }, t.prototype.getSafeSeed = function(t) {
+        return 0 === t ? 1 : t;
+    }, t.MIN = -2147483648, t.MAX = 2147483647, t;
+}();
 const encoder = new TextEncoder();
 function getTypeName(value) {
     const type = typeof value;
@@ -23946,7 +23982,7 @@ var ethers = Object.freeze({
     zeroPadBytes: zeroPadBytes,
     zeroPadValue: zeroPadValue
 });
-var t = {};
+var t1 = {};
 function e(t, e) {
     "boolean" == typeof e && (e = {
         forever: e
@@ -24035,9 +24071,9 @@ e.prototype.reset = function() {
             }).bind(e, u), e[s].options = i;
         }
     };
-}(t);
-var r = t, o = r.createTimeout, n1 = r.operation, s = r.timeouts, u = r.wrap;
-const e1 = Object.prototype.toString, t1 = new Set([
+}(t1);
+var r = t1, o = r.createTimeout, n1 = r.operation, s = r.timeouts, u = r.wrap;
+const e1 = Object.prototype.toString, t2 = new Set([
     "network error",
     "Failed to fetch",
     "NetworkError when attempting to fetch resource.",
@@ -24049,7 +24085,7 @@ const e1 = Object.prototype.toString, t1 = new Set([
 ]);
 function r1(r) {
     var o;
-    return !(!r || (o = r, "[object Error]" !== e1.call(o)) || "TypeError" !== r.name || "string" != typeof r.message) && ("Load failed" === r.message ? void 0 === r.stack : t1.has(r.message));
+    return !(!r || (o = r, "[object Error]" !== e1.call(o)) || "TypeError" !== r.name || "string" != typeof r.message) && ("Load failed" === r.message ? void 0 === r.stack : t2.has(r.message));
 }
 class o1 extends Error {
     constructor(r){
@@ -33361,7 +33397,7 @@ function validateBlock(block) {
     compareDigests(result);
 }
 const o3 = "object" == typeof globalThis && "crypto" in globalThis ? globalThis.crypto : void 0;
-function t2(t1, ...e) {
+function t3(t1, ...e) {
     if (!((s = t1) instanceof Uint8Array || null != s && "object" == typeof s && "Uint8Array" === s.constructor.name)) throw new Error("Uint8Array expected");
     var s;
     if (e.length > 0 && !e.includes(t1.length)) throw new Error(`Uint8Array expected of length ${e}, not of length=${t1.length}`);
@@ -33375,7 +33411,7 @@ function i2(e) {
     return "string" == typeof e && (e = function(t) {
         if ("string" != typeof t) throw new Error("utf8ToBytes expected string, got " + typeof t);
         return new Uint8Array((new TextEncoder).encode(t));
-    }(e)), t2(e), e;
+    }(e)), t3(e), e;
 }
 new Uint8Array(new Uint32Array([
     287454020
@@ -33409,7 +33445,7 @@ class f2 extends r3 {
     }
     digestInto(n) {
         e4(this), function(e, s) {
-            t2(e);
+            t3(e);
             const n = s.outputLen;
             if (e.length < n) throw new Error(`digestInto() expects output buffer of length at least ${n}`);
         }(n, this), this.finished = !0;
@@ -33568,11 +33604,11 @@ const d1 = o4(()=>new a1), g1 = o4(()=>new p1);
 Array.from({
     length: 256
 }, (t, e)=>e.toString(16).padStart(2, "0"));
-function O1(e = 32) {
+function C1(e = 32) {
     if (o3 && "function" == typeof o3.getRandomValues) return o3.getRandomValues(new Uint8Array(e));
     throw new Error("crypto.getRandomValues must be defined");
 }
-const c2 = BigInt(0), a2 = BigInt(1), f3 = BigInt(2);
+const c2 = BigInt(0), f3 = BigInt(1), a2 = BigInt(2);
 function r4(e) {
     return e instanceof Uint8Array || null != e && "object" == typeof e && "Uint8Array" === e.constructor.name;
 }
@@ -33592,85 +33628,77 @@ function o5(e) {
     if ("string" != typeof e) throw new Error("hex string expected, got " + typeof e);
     return BigInt("" === e ? "0" : `0x${e}`);
 }
-const b2 = {
-    _0: 48,
-    _9: 57,
-    _A: 65,
-    _F: 70,
-    _a: 97,
-    _f: 102
-};
-function s4(e) {
-    return e >= b2._0 && e <= b2._9 ? e - b2._0 : e >= b2._A && e <= b2._F ? e - (b2._A - 10) : e >= b2._a && e <= b2._f ? e - (b2._a - 10) : void 0;
+function g2(e) {
+    return e >= 48 && e <= 57 ? e - 48 : e >= 65 && e <= 70 ? e - (65 - 10) : e >= 97 && e <= 102 ? e - (97 - 10) : void 0;
 }
-function u3(e) {
+function y1(e) {
     if ("string" != typeof e) throw new Error("hex string expected, got " + typeof e);
     const t = e.length, c = t / 2;
     if (t % 2) throw new Error("padded hex string expected, got unpadded hex of length " + t);
-    const a = new Uint8Array(c);
-    for(let t = 0, f = 0; t < c; t++, f += 2){
-        const c = s4(e.charCodeAt(f)), r = s4(e.charCodeAt(f + 1));
+    const f = new Uint8Array(c);
+    for(let t = 0, a = 0; t < c; t++, a += 2){
+        const c = g2(e.charCodeAt(a)), r = g2(e.charCodeAt(a + 1));
         if (void 0 === c || void 0 === r) {
-            const t = e[f] + e[f + 1];
-            throw new Error('hex string expected, got non-hex character "' + t + '" at index ' + f);
+            const t = e[a] + e[a + 1];
+            throw new Error('hex string expected, got non-hex character "' + t + '" at index ' + a);
         }
-        a[t] = 16 * c + r;
+        f[t] = 16 * c + r;
     }
-    return a;
+    return f;
 }
-function l2(e) {
+function B1(e) {
     return o5(i3(e));
 }
-function m2(e) {
+function x1(e) {
     return n4(e), o5(i3(Uint8Array.from(e).reverse()));
 }
-function p2(e, t) {
-    return u3(e.toString(16).padStart(2 * t, "0"));
+function E1(e, t) {
+    return y1(e.toString(16).padStart(2 * t, "0"));
 }
-function g2(e, t) {
-    return p2(e, t).reverse();
+function h2(e, t) {
+    return E1(e, t).reverse();
 }
-function y1(e, t, c) {
-    let a;
+function w1(e, t, c) {
+    let f;
     if ("string" == typeof t) try {
-        a = u3(t);
+        f = y1(t);
     } catch (c) {
         throw new Error(`${e} must be valid hex string, got "${t}". Cause: ${c}`);
     }
     else {
         if (!r4(t)) throw new Error(`${e} must be hex string or Uint8Array`);
-        a = Uint8Array.from(t);
+        f = Uint8Array.from(t);
     }
-    const f = a.length;
-    if ("number" == typeof c && f !== c) throw new Error(`${e} expected ${c} bytes, got ${f}`);
-    return a;
+    const a = f.length;
+    if ("number" == typeof c && a !== c) throw new Error(`${e} expected ${c} bytes, got ${a}`);
+    return f;
 }
-function B1(...e) {
+function v2(...e) {
     let t = 0;
     for(let c = 0; c < e.length; c++){
-        const a = e[c];
-        n4(a), t += a.length;
+        const f = e[c];
+        n4(f), t += f.length;
     }
     const c = new Uint8Array(t);
-    for(let t = 0, a = 0; t < e.length; t++){
-        const f = e[t];
-        c.set(f, a), a += f.length;
+    for(let t = 0, f = 0; t < e.length; t++){
+        const a = e[t];
+        c.set(a, f), f += a.length;
     }
     return c;
 }
-function x1(e) {
+function I1(e) {
     if ("string" != typeof e) throw new Error("utf8ToBytes expected string, got " + typeof e);
     return new Uint8Array((new TextEncoder).encode(e));
 }
-function E1(e) {
+function O1(e) {
     let t;
-    for(t = 0; e > c2; e >>= a2, t += 1);
+    for(t = 0; e > c2; e >>= f3, t += 1);
     return t;
 }
-function h2(e, t) {
-    return e >> BigInt(t) & a2;
+function S3(e, t) {
+    return e >> BigInt(t) & f3;
 }
-const w1 = (e)=>(f3 << BigInt(e - 1)) - a2, v2 = {
+const R1 = (e)=>(a2 << BigInt(e - 1)) - f3, q1 = {
     bigint: (e)=>"bigint" == typeof e,
     function: (e)=>"function" == typeof e,
     boolean: (e)=>"boolean" == typeof e,
@@ -33681,78 +33709,78 @@ const w1 = (e)=>(f3 << BigInt(e - 1)) - a2, v2 = {
     field: (e, t)=>t.Fp.isValid(e),
     hash: (e)=>"function" == typeof e && Number.isSafeInteger(e.outputLen)
 };
-function I1(e, t, c = {}) {
-    const a = (t, c, a)=>{
-        const f = v2[c];
-        if ("function" != typeof f) throw new Error(`Invalid validator "${c}", expected function`);
+function P1(e, t, c = {}) {
+    const f = (t, c, f)=>{
+        const a = q1[c];
+        if ("function" != typeof a) throw new Error(`Invalid validator "${c}", expected function`);
         const r = e[t];
-        if (!(a && void 0 === r || f(r, e))) throw new Error(`Invalid param ${String(t)}=${r} (${typeof r}), expected ${c}`);
+        if (!(f && void 0 === r || a(r, e))) throw new Error(`Invalid param ${String(t)}=${r} (${typeof r}), expected ${c}`);
     };
-    for (const [e, c] of Object.entries(t))a(e, c, !1);
-    for (const [e, t] of Object.entries(c))a(e, t, !0);
+    for (const [e, c] of Object.entries(t))f(e, c, !1);
+    for (const [e, t] of Object.entries(c))f(e, t, !0);
     return e;
 }
-const O2 = BigInt(0), S3 = BigInt(1), R1 = BigInt(2), q1 = BigInt(3), P1 = BigInt(4), T9 = BigInt(5), A1 = BigInt(8);
-function N10(e, t) {
+const N10 = BigInt(0), T9 = BigInt(1), A1 = BigInt(2), Z1 = BigInt(3), j1 = BigInt(4), F1 = BigInt(5), G1 = BigInt(8);
+function D1(e, t) {
     const c = e % t;
-    return c >= O2 ? c : t + c;
+    return c >= N10 ? c : t + c;
 }
-function Z1(e, t, c) {
-    if (c <= O2 || t < O2) throw new Error("Expected power/modulo > 0");
-    if (c === S3) return O2;
-    let a = S3;
-    for(; t > O2;)t & S3 && (a = a * e % c), e = e * e % c, t >>= S3;
-    return a;
+function _1(e, t, c) {
+    if (c <= N10 || t < N10) throw new Error("Expected power/modulo > 0");
+    if (c === T9) return N10;
+    let f = T9;
+    for(; t > N10;)t & T9 && (f = f * e % c), e = e * e % c, t >>= T9;
+    return f;
 }
-function _1(e, t) {
-    if (e === O2 || t <= O2) throw new Error(`invert: expected positive integers, got n=${e} mod=${t}`);
-    let c = N10(e, t), a = t, f = O2, r = S3;
-    for(; c !== O2;){
-        const e = a % c, t = f - r * (a / c);
-        a = c, c = e, f = r, r = t;
+function V2(e, t) {
+    if (e === N10 || t <= N10) throw new Error(`invert: expected positive integers, got n=${e} mod=${t}`);
+    let c = D1(e, t), f = t, a = N10, r = T9;
+    for(; c !== N10;){
+        const e = f % c, t = a - r * (f / c);
+        f = c, c = e, a = r, r = t;
     }
-    if (a !== S3) throw new Error("invert: does not exist");
-    return N10(f, t);
+    if (f !== T9) throw new Error("invert: does not exist");
+    return D1(a, t);
 }
-function j1(e) {
-    if (e % P1 === q1) {
-        const t = (e + S3) / P1;
+function M1(e) {
+    if (e % j1 === Z1) {
+        const t = (e + T9) / j1;
         return function(e, c) {
-            const a = e.pow(c, t);
-            if (!e.eql(e.sqr(a), c)) throw new Error("Cannot find square root");
-            return a;
+            const f = e.pow(c, t);
+            if (!e.eql(e.sqr(f), c)) throw new Error("Cannot find square root");
+            return f;
         };
     }
-    if (e % A1 === T9) {
-        const t = (e - T9) / A1;
+    if (e % G1 === F1) {
+        const t = (e - F1) / G1;
         return function(e, c) {
-            const a = e.mul(c, R1), f = e.pow(a, t), r = e.mul(c, f), n = e.mul(e.mul(r, R1), f), d = e.mul(r, e.sub(n, e.ONE));
+            const f = e.mul(c, A1), a = e.pow(f, t), r = e.mul(c, a), n = e.mul(e.mul(r, A1), a), d = e.mul(r, e.sub(n, e.ONE));
             if (!e.eql(e.sqr(d), c)) throw new Error("Cannot find square root");
             return d;
         };
     }
     return function(e) {
-        const t = (e - S3) / R1;
-        let c, a, f;
-        for(c = e - S3, a = 0; c % R1 === O2; c /= R1, a++);
-        for(f = R1; f < e && Z1(f, t, e) !== e - S3; f++);
-        if (1 === a) {
-            const t = (e + S3) / P1;
+        const t = (e - T9) / A1;
+        let c, f, a;
+        for(c = e - T9, f = 0; c % A1 === N10; c /= A1, f++);
+        for(a = A1; a < e && _1(a, t, e) !== e - T9; a++);
+        if (1 === f) {
+            const t = (e + T9) / j1;
             return function(e, c) {
-                const a = e.pow(c, t);
-                if (!e.eql(e.sqr(a), c)) throw new Error("Cannot find square root");
-                return a;
+                const f = e.pow(c, t);
+                if (!e.eql(e.sqr(f), c)) throw new Error("Cannot find square root");
+                return f;
             };
         }
-        const r = (c + S3) / R1;
+        const r = (c + T9) / A1;
         return function(e, n) {
             if (e.pow(n, t) === e.neg(e.ONE)) throw new Error("Cannot find square root");
-            let d = a, i = e.pow(e.mul(e.ONE, f), c), o = e.pow(n, r), b = e.pow(n, c);
+            let d = f, i = e.pow(e.mul(e.ONE, a), c), o = e.pow(n, r), b = e.pow(n, c);
             for(; !e.eql(b, e.ONE);){
                 if (e.eql(b, e.ZERO)) return e.ZERO;
                 let t = 1;
                 for(let c = e.sqr(b); t < d && !e.eql(c, e.ONE); t++)c = e.sqr(c);
-                const c = e.pow(i, S3 << BigInt(d - t - 1));
+                const c = e.pow(i, T9 << BigInt(d - t - 1));
                 i = e.sqr(c), o = e.mul(o, c), b = e.mul(b, i), d = t;
             }
             return o;
@@ -33760,7 +33788,7 @@ function j1(e) {
     }(e);
 }
 BigInt(9), BigInt(16);
-const F1 = [
+const U5 = [
     "create",
     "isValid",
     "is0",
@@ -33779,141 +33807,141 @@ const F1 = [
     "mulN",
     "sqrN"
 ];
-function G1(e) {
-    return I1(e, F1.reduce((e, t)=>(e[t] = "function", e), {
+function C2(e) {
+    return P1(e, U5.reduce((e, t)=>(e[t] = "function", e), {
         ORDER: "bigint",
         MASK: "bigint",
         BYTES: "isSafeInteger",
         BITS: "isSafeInteger"
     }));
 }
-function D1(e, t, c) {
-    if (c < O2) throw new Error("Expected power > 0");
-    if (c === O2) return e.ONE;
-    if (c === S3) return t;
-    let a = e.ONE, f = t;
-    for(; c > O2;)c & S3 && (a = e.mul(a, f)), f = e.sqr(f), c >>= S3;
-    return a;
+function Y1(e, t, c) {
+    if (c < N10) throw new Error("Expected power > 0");
+    if (c === N10) return e.ONE;
+    if (c === T9) return t;
+    let f = e.ONE, a = t;
+    for(; c > N10;)c & T9 && (f = e.mul(f, a)), a = e.sqr(a), c >>= T9;
+    return f;
 }
-function V2(e, t) {
-    const c = new Array(t.length), a = t.reduce((t, a, f)=>e.is0(a) ? t : (c[f] = t, e.mul(t, a)), e.ONE), f = e.inv(a);
-    return t.reduceRight((t, a, f)=>e.is0(a) ? t : (c[f] = e.mul(t, c[f]), e.mul(t, a)), f), c;
+function L2(e, t) {
+    const c = new Array(t.length), f = t.reduce((t, f, a)=>e.is0(f) ? t : (c[a] = t, e.mul(t, f)), e.ONE), a = e.inv(f);
+    return t.reduceRight((t, f, a)=>e.is0(f) ? t : (c[a] = e.mul(t, c[a]), e.mul(t, f)), a), c;
 }
-function M1(e, t) {
+function z1(e, t) {
     const c = void 0 !== t ? t : e.toString(2).length;
     return {
         nBitLength: c,
         nByteLength: Math.ceil(c / 8)
     };
 }
-function U5(e, t, c = !1, a = {}) {
-    if (e <= O2) throw new Error(`Expected Field ORDER > 0, got ${e}`);
-    const { nBitLength: f, nByteLength: r } = M1(e, t);
+function $1(e, t, c = !1, f = {}) {
+    if (e <= N10) throw new Error(`Expected Field ORDER > 0, got ${e}`);
+    const { nBitLength: a, nByteLength: r } = z1(e, t);
     if (r > 2048) throw new Error("Field lengths over 2048 bytes are not supported");
-    const n = j1(e), d = Object.freeze({
+    const n = M1(e), d = Object.freeze({
         ORDER: e,
-        BITS: f,
+        BITS: a,
         BYTES: r,
-        MASK: w1(f),
-        ZERO: O2,
-        ONE: S3,
-        create: (t)=>N10(t, e),
+        MASK: R1(a),
+        ZERO: N10,
+        ONE: T9,
+        create: (t)=>D1(t, e),
         isValid: (t)=>{
             if ("bigint" != typeof t) throw new Error("Invalid field element: expected bigint, got " + typeof t);
-            return O2 <= t && t < e;
+            return N10 <= t && t < e;
         },
-        is0: (e)=>e === O2,
-        isOdd: (e)=>(e & S3) === S3,
-        neg: (t)=>N10(-t, e),
+        is0: (e)=>e === N10,
+        isOdd: (e)=>(e & T9) === T9,
+        neg: (t)=>D1(-t, e),
         eql: (e, t)=>e === t,
-        sqr: (t)=>N10(t * t, e),
-        add: (t, c)=>N10(t + c, e),
-        sub: (t, c)=>N10(t - c, e),
-        mul: (t, c)=>N10(t * c, e),
-        pow: (e, t)=>D1(d, e, t),
-        div: (t, c)=>N10(t * _1(c, e), e),
+        sqr: (t)=>D1(t * t, e),
+        add: (t, c)=>D1(t + c, e),
+        sub: (t, c)=>D1(t - c, e),
+        mul: (t, c)=>D1(t * c, e),
+        pow: (e, t)=>Y1(d, e, t),
+        div: (t, c)=>D1(t * V2(c, e), e),
         sqrN: (e)=>e * e,
         addN: (e, t)=>e + t,
         subN: (e, t)=>e - t,
         mulN: (e, t)=>e * t,
-        inv: (t)=>_1(t, e),
-        sqrt: a.sqrt || ((e)=>n(d, e)),
-        invertBatch: (e)=>V2(d, e),
+        inv: (t)=>V2(t, e),
+        sqrt: f.sqrt || ((e)=>n(d, e)),
+        invertBatch: (e)=>L2(d, e),
         cmov: (e, t, c)=>c ? t : e,
-        toBytes: (e)=>c ? g2(e, r) : p2(e, r),
+        toBytes: (e)=>c ? h2(e, r) : E1(e, r),
         fromBytes: (e)=>{
             if (e.length !== r) throw new Error(`Fp.fromBytes: expected ${r}, got ${e.length}`);
-            return c ? m2(e) : l2(e);
+            return c ? x1(e) : B1(e);
         }
     });
     return Object.freeze(d);
 }
-function C1(e) {
+function K1(e) {
     if ("bigint" != typeof e) throw new Error("field order must be bigint");
     const t = e.toString(2).length;
     return Math.ceil(t / 8);
 }
-function Y1(e) {
-    const t = C1(e);
+function k1(e) {
+    const t = K1(e);
     return t + Math.ceil(t / 2);
 }
-const L2 = l2;
-function $1(e, t) {
+const H1 = B1;
+function W1(e, t) {
     if (e < 0 || e >= 1 << 8 * t) throw new Error(`bad I2OSP call: value=${e} length=${t}`);
     const c = Array.from({
         length: t
     }).fill(0);
-    for(let a = t - 1; a >= 0; a--)c[a] = 255 & e, e >>>= 8;
+    for(let f = t - 1; f >= 0; f--)c[f] = 255 & e, e >>>= 8;
     return new Uint8Array(c);
 }
-function z1(e, t) {
+function X1(e, t) {
     const c = new Uint8Array(e.length);
-    for(let a = 0; a < e.length; a++)c[a] = e[a] ^ t[a];
+    for(let f = 0; f < e.length; f++)c[f] = e[f] ^ t[f];
     return c;
 }
-function K1(e) {
+function J1(e) {
     if (!Number.isSafeInteger(e)) throw new Error("number expected");
 }
-function k1(e, t, c) {
-    I1(c, {
+function Q1(e, t, c) {
+    P1(c, {
         DST: "stringOrUint8Array",
         p: "bigint",
         m: "isSafeInteger",
         k: "isSafeInteger",
         hash: "hash"
     });
-    const { p: a, k: f, m: r, hash: d, expand: i, DST: o } = c;
-    n4(e), K1(t);
-    const b = "string" == typeof o ? x1(o) : o, s = a.toString(2).length, u = Math.ceil((s + f) / 8), l = t * r * u;
+    const { p: f, k: a, m: r, hash: d, expand: i, DST: o } = c;
+    n4(e), J1(t);
+    const b = "string" == typeof o ? I1(o) : o, s = f.toString(2).length, u = Math.ceil((s + a) / 8), l = t * r * u;
     let m;
-    if ("xmd" === i) m = function(e, t, c, a) {
-        n4(e), n4(t), K1(c), t.length > 255 && (t = a(B1(x1("H2C-OVERSIZE-DST-"), t)));
-        const { outputLen: f, blockLen: r } = a, d = Math.ceil(c / f);
+    if ("xmd" === i) m = function(e, t, c, f) {
+        n4(e), n4(t), J1(c), t.length > 255 && (t = f(v2(I1("H2C-OVERSIZE-DST-"), t)));
+        const { outputLen: a, blockLen: r } = f, d = Math.ceil(c / a);
         if (d > 255) throw new Error("Invalid xmd length");
-        const i = B1(t, $1(t.length, 1)), o = $1(0, r), b = $1(c, 2), s = new Array(d), u = a(B1(o, e, b, $1(0, 1), i));
-        s[0] = a(B1(u, $1(1, 1), i));
+        const i = v2(t, W1(t.length, 1)), o = W1(0, r), b = W1(c, 2), s = new Array(d), u = f(v2(o, e, b, W1(0, 1), i));
+        s[0] = f(v2(u, W1(1, 1), i));
         for(let e = 1; e <= d; e++){
             const t = [
-                z1(u, s[e - 1]),
-                $1(e + 1, 1),
+                X1(u, s[e - 1]),
+                W1(e + 1, 1),
                 i
             ];
-            s[e] = a(B1(...t));
+            s[e] = f(v2(...t));
         }
-        return B1(...s).slice(0, c);
+        return v2(...s).slice(0, c);
     }(e, b, l, d);
-    else if ("xof" === i) m = function(e, t, c, a, f) {
-        if (n4(e), n4(t), K1(c), t.length > 255) {
-            const e = Math.ceil(2 * a / 8);
-            t = f.create({
+    else if ("xof" === i) m = function(e, t, c, f, a) {
+        if (n4(e), n4(t), J1(c), t.length > 255) {
+            const e = Math.ceil(2 * f / 8);
+            t = a.create({
                 dkLen: e
-            }).update(x1("H2C-OVERSIZE-DST-")).update(t).digest();
+            }).update(I1("H2C-OVERSIZE-DST-")).update(t).digest();
         }
         if (c > 65535 || t.length > 255) throw new Error("expand_message_xof: invalid lenInBytes");
-        return f.create({
+        return a.create({
             dkLen: c
-        }).update(e).update($1(c, 2)).update(t).update($1(t.length, 1)).digest();
-    }(e, b, l, f, d);
+        }).update(e).update(W1(c, 2)).update(t).update(W1(t.length, 1)).digest();
+    }(e, b, l, a, d);
     else {
         if ("_internal_pass" !== i) throw new Error('expand must be "xmd" or "xof"');
         m = e;
@@ -33922,54 +33950,48 @@ function k1(e, t, c) {
     for(let e = 0; e < t; e++){
         const t = new Array(r);
         for(let c = 0; c < r; c++){
-            const f = u * (c + e * r), n = m.subarray(f, f + u);
-            t[c] = N10(L2(n), a);
+            const a = u * (c + e * r), n = m.subarray(a, a + u);
+            t[c] = D1(H1(n), f);
         }
         p[e] = t;
     }
     return p;
 }
-function H1(e, t) {
+function ee(e, t) {
     const c = t.map((e)=>Array.from(e).reverse());
-    return (t, a)=>{
-        const [f, r, n, d] = c.map((c)=>c.reduce((c, a)=>e.add(e.mul(c, t), a)));
-        return t = e.div(f, r), a = e.mul(a, e.div(n, d)), {
+    return (t, f)=>{
+        const [a, r, n, d] = c.map((c)=>c.reduce((c, f)=>e.add(e.mul(c, t), f)));
+        return t = e.div(a, r), f = e.mul(f, e.div(n, d)), {
             x: t,
-            y: a
+            y: f
         };
     };
 }
-function W1(e, t, c) {
+function te(e, t, c) {
     if ("function" != typeof t) throw new Error("mapToCurve() must be defined");
     return {
-        hashToCurve (a, f) {
-            const r = k1(a, 2, {
+        hashToCurve (f, a) {
+            const r = Q1(f, 2, {
                 ...c,
                 DST: c.DST,
-                ...f
+                ...a
             }), n = e.fromAffine(t(r[0])), d = e.fromAffine(t(r[1])), i = n.add(d).clearCofactor();
             return i.assertValidity(), i;
         },
-        encodeToCurve (a, f) {
-            const r = k1(a, 1, {
+        encodeToCurve (f, a) {
+            const r = Q1(f, 1, {
                 ...c,
                 DST: c.encodeDST,
-                ...f
+                ...a
             }), n = e.fromAffine(t(r[0])).clearCofactor();
             return n.assertValidity(), n;
-        },
-        mapToCurve (c) {
-            if (!Array.isArray(c)) throw new Error("mapToCurve: expected array of bigints");
-            for (const e of c)if ("bigint" != typeof e) throw new Error(`mapToCurve: expected array of bigints, got ${e} in array`);
-            const a = e.fromAffine(t(c)).clearCofactor();
-            return a.assertValidity(), a;
         }
     };
 }
-const X1 = BigInt(0), J1 = BigInt(1);
-function Q1(e) {
+const ce = BigInt(0), fe = BigInt(1);
+function ae(e) {
     const t = function(e) {
-        return G1(e.Fp), I1(e, {
+        return C2(e.Fp), P1(e, {
             n: "bigint",
             h: "bigint",
             Gx: "field",
@@ -33978,12 +34000,12 @@ function Q1(e) {
             nBitLength: "isSafeInteger",
             nByteLength: "isSafeInteger"
         }), Object.freeze({
-            ...M1(e.n, e.nBitLength),
+            ...z1(e.n, e.nBitLength),
             ...e,
             p: e.Fp.ORDER
         });
     }(e);
-    I1(t, {
+    P1(t, {
         a: "field",
         b: "field"
     }, {
@@ -33995,23 +34017,23 @@ function Q1(e) {
         fromBytes: "function",
         toBytes: "function"
     });
-    const { endo: c, Fp: a, a: f } = t;
+    const { endo: c, Fp: f, a: a } = t;
     if (c) {
-        if (!a.eql(f, a.ZERO)) throw new Error("Endomorphism can only be defined for Koblitz curves that have a=0");
+        if (!f.eql(a, f.ZERO)) throw new Error("Endomorphism can only be defined for Koblitz curves that have a=0");
         if ("object" != typeof c || "bigint" != typeof c.beta || "function" != typeof c.splitScalar) throw new Error("Expected endomorphism with beta: bigint and splitScalar: function");
     }
     return Object.freeze({
         ...t
     });
 }
-const ee = BigInt(0), te = BigInt(1), ce = BigInt(2), ae = BigInt(3), fe = BigInt(4);
-function re(e) {
-    const t = Q1(e), { Fp: c } = t, a = t.toBytes || ((e, t, a)=>{
-        const f = t.toAffine();
-        return B1(Uint8Array.from([
+const re = BigInt(0), ne = BigInt(1), de = BigInt(2), ie = BigInt(3), oe = BigInt(4);
+function be(e) {
+    const t = ae(e), { Fp: c } = t, f = t.toBytes || ((e, t, f)=>{
+        const a = t.toAffine();
+        return v2(Uint8Array.from([
             4
-        ]), c.toBytes(f.x), c.toBytes(f.y));
-    }), f = t.fromBytes || ((e)=>{
+        ]), c.toBytes(a.x), c.toBytes(a.y));
+    }), a = t.fromBytes || ((e)=>{
         const t = e.subarray(1);
         return {
             x: c.fromBytes(t.subarray(0, c.BYTES)),
@@ -34019,46 +34041,46 @@ function re(e) {
         };
     });
     function n(e) {
-        const { a: a, b: f } = t, r = c.sqr(e), n = c.mul(r, e);
-        return c.add(c.add(n, c.mul(e, a)), f);
+        const { a: f, b: a } = t, r = c.sqr(e), n = c.mul(r, e);
+        return c.add(c.add(n, c.mul(e, f)), a);
     }
     if (!c.eql(c.sqr(t.Gy), n(t.Gx))) throw new Error("bad generator point: equation left != right");
     function d(e) {
-        return "bigint" == typeof e && ee < e && e < t.n;
+        return "bigint" == typeof e && re < e && e < t.n;
     }
     function o(e) {
         if (!d(e)) throw new Error("Expected valid bigint: 0 < bigint < curve.n");
     }
     function b(e) {
-        const { allowedPrivateKeyLengths: c, nByteLength: a, wrapPrivateKey: f, n: n } = t;
+        const { allowedPrivateKeyLengths: c, nByteLength: f, wrapPrivateKey: a, n: n } = t;
         if (c && "bigint" != typeof e) {
             if (r4(e) && (e = i3(e)), "string" != typeof e || !c.includes(e.length)) throw new Error("Invalid key");
-            e = e.padStart(2 * a, "0");
+            e = e.padStart(2 * f, "0");
         }
         let d;
         try {
-            d = "bigint" == typeof e ? e : l2(y1("private key", e, a));
+            d = "bigint" == typeof e ? e : B1(w1("private key", e, f));
         } catch (t) {
-            throw new Error(`private key must be ${a} bytes, hex or bigint, not ${typeof e}`);
+            throw new Error(`private key must be ${f} bytes, hex or bigint, not ${typeof e}`);
         }
-        return f && (d = N10(d, n)), o(d), d;
+        return a && (d = D1(d, n)), o(d), d;
     }
     const s = new Map;
     function u(e) {
-        if (!(e instanceof m)) throw new Error("ProjectivePoint expected");
+        if (!(e instanceof l)) throw new Error("ProjectivePoint expected");
     }
-    class m {
-        constructor(e, t, a){
-            if (this.px = e, this.py = t, this.pz = a, null == e || !c.isValid(e)) throw new Error("x required");
+    class l {
+        constructor(e, t, f){
+            if (this.px = e, this.py = t, this.pz = f, null == e || !c.isValid(e)) throw new Error("x required");
             if (null == t || !c.isValid(t)) throw new Error("y required");
-            if (null == a || !c.isValid(a)) throw new Error("z required");
+            if (null == f || !c.isValid(f)) throw new Error("z required");
         }
         static fromAffine(e) {
-            const { x: t, y: a } = e || {};
-            if (!e || !c.isValid(t) || !c.isValid(a)) throw new Error("invalid affine point");
-            if (e instanceof m) throw new Error("projective point not allowed");
-            const f = (e)=>c.eql(e, c.ZERO);
-            return f(t) && f(a) ? m.ZERO : new m(t, a, c.ONE);
+            const { x: t, y: f } = e || {};
+            if (!e || !c.isValid(t) || !c.isValid(f)) throw new Error("invalid affine point");
+            if (e instanceof l) throw new Error("projective point not allowed");
+            const a = (e)=>c.eql(e, c.ZERO);
+            return a(t) && a(f) ? l.ZERO : new l(t, f, c.ONE);
         }
         get x() {
             return this.toAffine().x;
@@ -34068,14 +34090,14 @@ function re(e) {
         }
         static normalizeZ(e) {
             const t = c.invertBatch(e.map((e)=>e.pz));
-            return e.map((e, c)=>e.toAffine(t[c])).map(m.fromAffine);
+            return e.map((e, c)=>e.toAffine(t[c])).map(l.fromAffine);
         }
         static fromHex(e) {
-            const t = m.fromAffine(f(y1("pointHex", e)));
+            const t = l.fromAffine(a(w1("pointHex", e)));
             return t.assertValidity(), t;
         }
         static fromPrivateKey(e) {
-            return m.BASE.multiply(b(e));
+            return l.BASE.multiply(b(e));
         }
         _setWindowSize(e) {
             this._WINDOW_SIZE = e, s.delete(this);
@@ -34085,10 +34107,10 @@ function re(e) {
                 if (t.allowInfinityPoint && !c.is0(this.py)) return;
                 throw new Error("bad point: ZERO");
             }
-            const { x: e, y: a } = this.toAffine();
-            if (!c.isValid(e) || !c.isValid(a)) throw new Error("bad point: x or y not FE");
-            const f = c.sqr(a), r = n(e);
-            if (!c.eql(f, r)) throw new Error("bad point: equation left != right");
+            const { x: e, y: f } = this.toAffine();
+            if (!c.isValid(e) || !c.isValid(f)) throw new Error("bad point: x or y not FE");
+            const a = c.sqr(f), r = n(e);
+            if (!c.eql(a, r)) throw new Error("bad point: equation left != right");
             if (!this.isTorsionFree()) throw new Error("bad point: not in prime-order subgroup");
         }
         hasEvenY() {
@@ -34098,74 +34120,74 @@ function re(e) {
         }
         equals(e) {
             u(e);
-            const { px: t, py: a, pz: f } = this, { px: r, py: n, pz: d } = e, i = c.eql(c.mul(t, d), c.mul(r, f)), o = c.eql(c.mul(a, d), c.mul(n, f));
+            const { px: t, py: f, pz: a } = this, { px: r, py: n, pz: d } = e, i = c.eql(c.mul(t, d), c.mul(r, a)), o = c.eql(c.mul(f, d), c.mul(n, a));
             return i && o;
         }
         negate() {
-            return new m(this.px, c.neg(this.py), this.pz);
+            return new l(this.px, c.neg(this.py), this.pz);
         }
         double() {
-            const { a: e, b: a } = t, f = c.mul(a, ae), { px: r, py: n, pz: d } = this;
-            let i = c.ZERO, o = c.ZERO, b = c.ZERO, s = c.mul(r, r), u = c.mul(n, n), l = c.mul(d, d), p = c.mul(r, n);
-            return p = c.add(p, p), b = c.mul(r, d), b = c.add(b, b), i = c.mul(e, b), o = c.mul(f, l), o = c.add(i, o), i = c.sub(u, o), o = c.add(u, o), o = c.mul(i, o), i = c.mul(p, i), b = c.mul(f, b), l = c.mul(e, l), p = c.sub(s, l), p = c.mul(e, p), p = c.add(p, b), b = c.add(s, s), s = c.add(b, s), s = c.add(s, l), s = c.mul(s, p), o = c.add(o, s), l = c.mul(n, d), l = c.add(l, l), s = c.mul(l, p), i = c.sub(i, s), b = c.mul(l, u), b = c.add(b, b), b = c.add(b, b), new m(i, o, b);
+            const { a: e, b: f } = t, a = c.mul(f, ie), { px: r, py: n, pz: d } = this;
+            let i = c.ZERO, o = c.ZERO, b = c.ZERO, s = c.mul(r, r), u = c.mul(n, n), m = c.mul(d, d), p = c.mul(r, n);
+            return p = c.add(p, p), b = c.mul(r, d), b = c.add(b, b), i = c.mul(e, b), o = c.mul(a, m), o = c.add(i, o), i = c.sub(u, o), o = c.add(u, o), o = c.mul(i, o), i = c.mul(p, i), b = c.mul(a, b), m = c.mul(e, m), p = c.sub(s, m), p = c.mul(e, p), p = c.add(p, b), b = c.add(s, s), s = c.add(b, s), s = c.add(s, m), s = c.mul(s, p), o = c.add(o, s), m = c.mul(n, d), m = c.add(m, m), s = c.mul(m, p), i = c.sub(i, s), b = c.mul(m, u), b = c.add(b, b), b = c.add(b, b), new l(i, o, b);
         }
         add(e) {
             u(e);
-            const { px: a, py: f, pz: r } = this, { px: n, py: d, pz: i } = e;
+            const { px: f, py: a, pz: r } = this, { px: n, py: d, pz: i } = e;
             let o = c.ZERO, b = c.ZERO, s = c.ZERO;
-            const l = t.a, p = c.mul(t.b, ae);
-            let g = c.mul(a, n), y = c.mul(f, d), B = c.mul(r, i), x = c.add(a, f), E = c.add(n, d);
-            x = c.mul(x, E), E = c.add(g, y), x = c.sub(x, E), E = c.add(a, r);
+            const m = t.a, p = c.mul(t.b, ie);
+            let g = c.mul(f, n), y = c.mul(a, d), B = c.mul(r, i), x = c.add(f, a), E = c.add(n, d);
+            x = c.mul(x, E), E = c.add(g, y), x = c.sub(x, E), E = c.add(f, r);
             let h = c.add(n, i);
-            return E = c.mul(E, h), h = c.add(g, B), E = c.sub(E, h), h = c.add(f, r), o = c.add(d, i), h = c.mul(h, o), o = c.add(y, B), h = c.sub(h, o), s = c.mul(l, E), o = c.mul(p, B), s = c.add(o, s), o = c.sub(y, s), s = c.add(y, s), b = c.mul(o, s), y = c.add(g, g), y = c.add(y, g), B = c.mul(l, B), E = c.mul(p, E), y = c.add(y, B), B = c.sub(g, B), B = c.mul(l, B), E = c.add(E, B), g = c.mul(y, E), b = c.add(b, g), g = c.mul(h, E), o = c.mul(x, o), o = c.sub(o, g), g = c.mul(x, y), s = c.mul(h, s), s = c.add(s, g), new m(o, b, s);
+            return E = c.mul(E, h), h = c.add(g, B), E = c.sub(E, h), h = c.add(a, r), o = c.add(d, i), h = c.mul(h, o), o = c.add(y, B), h = c.sub(h, o), s = c.mul(m, E), o = c.mul(p, B), s = c.add(o, s), o = c.sub(y, s), s = c.add(y, s), b = c.mul(o, s), y = c.add(g, g), y = c.add(y, g), B = c.mul(m, B), E = c.mul(p, E), y = c.add(y, B), B = c.sub(g, B), B = c.mul(m, B), E = c.add(E, B), g = c.mul(y, E), b = c.add(b, g), g = c.mul(h, E), o = c.mul(x, o), o = c.sub(o, g), g = c.mul(x, y), s = c.mul(h, s), s = c.add(s, g), new l(o, b, s);
         }
         subtract(e) {
             return this.add(e.negate());
         }
         is0() {
-            return this.equals(m.ZERO);
+            return this.equals(l.ZERO);
         }
         wNAF(e) {
-            return g.wNAFCached(this, s, e, (e)=>{
+            return p.wNAFCached(this, s, e, (e)=>{
                 const t = c.invertBatch(e.map((e)=>e.pz));
-                return e.map((e, c)=>e.toAffine(t[c])).map(m.fromAffine);
+                return e.map((e, c)=>e.toAffine(t[c])).map(l.fromAffine);
             });
         }
         multiplyUnsafe(e) {
-            const a = m.ZERO;
-            if (e === ee) return a;
-            if (o(e), e === te) return this;
-            const { endo: f } = t;
-            if (!f) return g.unsafeLadder(this, e);
-            let { k1neg: r, k1: n, k2neg: d, k2: i } = f.splitScalar(e), b = a, s = a, u = this;
-            for(; n > ee || i > ee;)n & te && (b = b.add(u)), i & te && (s = s.add(u)), u = u.double(), n >>= te, i >>= te;
-            return r && (b = b.negate()), d && (s = s.negate()), s = new m(c.mul(s.px, f.beta), s.py, s.pz), b.add(s);
+            const f = l.ZERO;
+            if (e === re) return f;
+            if (o(e), e === ne) return this;
+            const { endo: a } = t;
+            if (!a) return p.unsafeLadder(this, e);
+            let { k1neg: r, k1: n, k2neg: d, k2: i } = a.splitScalar(e), b = f, s = f, u = this;
+            for(; n > re || i > re;)n & ne && (b = b.add(u)), i & ne && (s = s.add(u)), u = u.double(), n >>= ne, i >>= ne;
+            return r && (b = b.negate()), d && (s = s.negate()), s = new l(c.mul(s.px, a.beta), s.py, s.pz), b.add(s);
         }
         multiply(e) {
             o(e);
-            let a, f, r = e;
+            let f, a, r = e;
             const { endo: n } = t;
             if (n) {
                 const { k1neg: e, k1: t, k2neg: d, k2: i } = n.splitScalar(r);
                 let { p: o, f: b } = this.wNAF(t), { p: s, f: u } = this.wNAF(i);
-                o = g.constTimeNegate(e, o), s = g.constTimeNegate(d, s), s = new m(c.mul(s.px, n.beta), s.py, s.pz), a = o.add(s), f = b.add(u);
+                o = p.constTimeNegate(e, o), s = p.constTimeNegate(d, s), s = new l(c.mul(s.px, n.beta), s.py, s.pz), f = o.add(s), a = b.add(u);
             } else {
                 const { p: e, f: t } = this.wNAF(r);
-                a = e, f = t;
+                f = e, a = t;
             }
-            return m.normalizeZ([
-                a,
-                f
+            return l.normalizeZ([
+                f,
+                a
             ])[0];
         }
         multiplyAndAddUnsafe(e, t, c) {
-            const a = m.BASE, f = (e, t)=>t !== ee && t !== te && e.equals(a) ? e.multiply(t) : e.multiplyUnsafe(t), r = f(this, t).add(f(e, c));
+            const f = l.BASE, a = (e, t)=>t !== re && t !== ne && e.equals(f) ? e.multiply(t) : e.multiplyUnsafe(t), r = a(this, t).add(a(e, c));
             return r.is0() ? void 0 : r;
         }
         toAffine(e) {
-            const { px: t, py: a, pz: f } = this, r = this.is0();
-            null == e && (e = r ? c.ONE : c.inv(f));
-            const n = c.mul(t, e), d = c.mul(a, e), i = c.mul(f, e);
+            const { px: t, py: f, pz: a } = this, r = this.is0();
+            null == e && (e = r ? c.ONE : c.inv(a));
+            const n = c.mul(t, e), d = c.mul(f, e), i = c.mul(a, e);
             if (r) return {
                 x: c.ZERO,
                 y: c.ZERO
@@ -34178,115 +34200,115 @@ function re(e) {
         }
         isTorsionFree() {
             const { h: e, isTorsionFree: c } = t;
-            if (e === te) return !0;
-            if (c) return c(m, this);
+            if (e === ne) return !0;
+            if (c) return c(l, this);
             throw new Error("isTorsionFree() has not been declared for the elliptic curve");
         }
         clearCofactor() {
             const { h: e, clearCofactor: c } = t;
-            return e === te ? this : c ? c(m, this) : this.multiplyUnsafe(t.h);
+            return e === ne ? this : c ? c(l, this) : this.multiplyUnsafe(t.h);
         }
         toRawBytes(e = !0) {
-            return this.assertValidity(), a(m, this, e);
+            return this.assertValidity(), f(l, this, e);
         }
         toHex(e = !0) {
             return i3(this.toRawBytes(e));
         }
     }
-    m.BASE = new m(t.Gx, t.Gy, c.ONE), m.ZERO = new m(c.ZERO, c.ONE, c.ZERO);
-    const p = t.nBitLength, g = function(e, t) {
+    l.BASE = new l(t.Gx, t.Gy, c.ONE), l.ZERO = new l(c.ZERO, c.ONE, c.ZERO);
+    const m = t.nBitLength, p = function(e, t) {
         const c = (e, t)=>{
             const c = t.negate();
             return e ? c : t;
-        }, a = (e)=>({
+        }, f = (e)=>({
                 windows: Math.ceil(t / e) + 1,
                 windowSize: 2 ** (e - 1)
             });
         return {
             constTimeNegate: c,
             unsafeLadder (t, c) {
-                let a = e.ZERO, f = t;
-                for(; c > X1;)c & J1 && (a = a.add(f)), f = f.double(), c >>= J1;
-                return a;
+                let f = e.ZERO, a = t;
+                for(; c > ce;)c & fe && (f = f.add(a)), a = a.double(), c >>= fe;
+                return f;
             },
             precomputeWindow (e, t) {
-                const { windows: c, windowSize: f } = a(t), r = [];
+                const { windows: c, windowSize: a } = f(t), r = [];
                 let n = e, d = n;
                 for(let e = 0; e < c; e++){
                     d = n, r.push(d);
-                    for(let e = 1; e < f; e++)d = d.add(n), r.push(d);
+                    for(let e = 1; e < a; e++)d = d.add(n), r.push(d);
                     n = d.double();
                 }
                 return r;
             },
-            wNAF (t, f, r) {
-                const { windows: n, windowSize: d } = a(t);
+            wNAF (t, a, r) {
+                const { windows: n, windowSize: d } = f(t);
                 let i = e.ZERO, o = e.BASE;
                 const b = BigInt(2 ** t - 1), s = 2 ** t, u = BigInt(t);
                 for(let e = 0; e < n; e++){
                     const t = e * d;
-                    let a = Number(r & b);
-                    r >>= u, a > d && (a -= s, r += J1);
-                    const n = t, l = t + Math.abs(a) - 1, m = e % 2 != 0, p = a < 0;
-                    0 === a ? o = o.add(c(m, f[n])) : i = i.add(c(p, f[l]));
+                    let f = Number(r & b);
+                    r >>= u, f > d && (f -= s, r += fe);
+                    const n = t, l = t + Math.abs(f) - 1, m = e % 2 != 0, p = f < 0;
+                    0 === f ? o = o.add(c(m, a[n])) : i = i.add(c(p, a[l]));
                 }
                 return {
                     p: i,
                     f: o
                 };
             },
-            wNAFCached (e, t, c, a) {
-                const f = e._WINDOW_SIZE || 1;
+            wNAFCached (e, t, c, f) {
+                const a = e._WINDOW_SIZE || 1;
                 let r = t.get(e);
-                return r || (r = this.precomputeWindow(e, f), 1 !== f && t.set(e, a(r))), this.wNAF(f, r, c);
+                return r || (r = this.precomputeWindow(e, a), 1 !== a && t.set(e, f(r))), this.wNAF(a, r, c);
             }
         };
-    }(m, t.endo ? Math.ceil(p / 2) : p);
+    }(l, t.endo ? Math.ceil(m / 2) : m);
     return {
         CURVE: t,
-        ProjectivePoint: m,
+        ProjectivePoint: l,
         normPrivateKeyToScalar: b,
         weierstrassEquation: n,
         isWithinCurveOrder: d
     };
 }
-function ne(e, t) {
-    if (G1(e), !e.isValid(t.A) || !e.isValid(t.B) || !e.isValid(t.Z)) throw new Error("mapToCurveSimpleSWU: invalid opts");
+function se(e, t) {
+    if (C2(e), !e.isValid(t.A) || !e.isValid(t.B) || !e.isValid(t.Z)) throw new Error("mapToCurveSimpleSWU: invalid opts");
     const c = function(e, t) {
         const c = e.ORDER;
-        let a = ee;
-        for(let e = c - te; e % ce === ee; e /= ce)a += te;
-        const f = a, r = ce << f - te - te, n = r * ce, d = (c - te) / n, i = (d - te) / ce, o = n - te, b = r, s = e.pow(t, d), u = e.pow(t, (d + te) / ce);
+        let f = re;
+        for(let e = c - ne; e % de === re; e /= de)f += ne;
+        const a = f, r = de << a - ne - ne, n = r * de, d = (c - ne) / n, i = (d - ne) / de, o = n - ne, b = r, s = e.pow(t, d), u = e.pow(t, (d + ne) / de);
         let l = (t, c)=>{
-            let a = s, r = e.pow(c, o), n = e.sqr(r);
+            let f = s, r = e.pow(c, o), n = e.sqr(r);
             n = e.mul(n, c);
             let d = e.mul(t, n);
             d = e.pow(d, i), d = e.mul(d, r), r = e.mul(d, c), n = e.mul(d, t);
             let l = e.mul(n, r);
             d = e.pow(l, b);
             let m = e.eql(d, e.ONE);
-            r = e.mul(n, u), d = e.mul(l, a), n = e.cmov(r, n, m), l = e.cmov(d, l, m);
-            for(let t = f; t > te; t--){
-                let c = t - ce;
-                c = ce << c - te;
-                let f = e.pow(l, c);
-                const d = e.eql(f, e.ONE);
-                r = e.mul(n, a), a = e.mul(a, a), f = e.mul(l, a), n = e.cmov(r, n, d), l = e.cmov(f, l, d);
+            r = e.mul(n, u), d = e.mul(l, f), n = e.cmov(r, n, m), l = e.cmov(d, l, m);
+            for(let t = a; t > ne; t--){
+                let c = t - de;
+                c = de << c - ne;
+                let a = e.pow(l, c);
+                const d = e.eql(a, e.ONE);
+                r = e.mul(n, f), f = e.mul(f, f), a = e.mul(l, f), n = e.cmov(r, n, d), l = e.cmov(a, l, d);
             }
             return {
                 isValid: m,
                 value: n
             };
         };
-        if (e.ORDER % fe === ae) {
-            const c = (e.ORDER - ae) / fe, a = e.sqrt(e.neg(t));
-            l = (t, f)=>{
-                let r = e.sqr(f);
-                const n = e.mul(t, f);
+        if (e.ORDER % oe === ie) {
+            const c = (e.ORDER - ie) / oe, f = e.sqrt(e.neg(t));
+            l = (t, a)=>{
+                let r = e.sqr(a);
+                const n = e.mul(t, a);
                 r = e.mul(r, n);
                 let d = e.pow(r, c);
                 d = e.mul(d, n);
-                const i = e.mul(d, a), o = e.mul(e.sqr(d), f), b = e.eql(o, t);
+                const i = e.mul(d, f), o = e.mul(e.sqr(d), a), b = e.eql(o, t);
                 return {
                     isValid: b,
                     value: e.cmov(i, d, b)
@@ -34296,129 +34318,129 @@ function ne(e, t) {
         return l;
     }(e, t.Z);
     if (!e.isOdd) throw new Error("Fp.isOdd is not implemented!");
-    return (a)=>{
-        let f, r, n, d, i, o, b, s;
-        f = e.sqr(a), f = e.mul(f, t.Z), r = e.sqr(f), r = e.add(r, f), n = e.add(r, e.ONE), n = e.mul(n, t.B), d = e.cmov(t.Z, e.neg(r), !e.eql(r, e.ZERO)), d = e.mul(d, t.A), r = e.sqr(n), o = e.sqr(d), i = e.mul(o, t.A), r = e.add(r, i), r = e.mul(r, n), o = e.mul(o, d), i = e.mul(o, t.B), r = e.add(r, i), b = e.mul(f, n);
+    return (f)=>{
+        let a, r, n, d, i, o, b, s;
+        a = e.sqr(f), a = e.mul(a, t.Z), r = e.sqr(a), r = e.add(r, a), n = e.add(r, e.ONE), n = e.mul(n, t.B), d = e.cmov(t.Z, e.neg(r), !e.eql(r, e.ZERO)), d = e.mul(d, t.A), r = e.sqr(n), o = e.sqr(d), i = e.mul(o, t.A), r = e.add(r, i), r = e.mul(r, n), o = e.mul(o, d), i = e.mul(o, t.B), r = e.add(r, i), b = e.mul(a, n);
         const { isValid: u, value: l } = c(r, o);
-        s = e.mul(f, a), s = e.mul(s, l), b = e.cmov(b, n, u), s = e.cmov(s, l, u);
-        const m = e.isOdd(a) === e.isOdd(s);
+        s = e.mul(a, f), s = e.mul(s, l), b = e.cmov(b, n, u), s = e.cmov(s, l, u);
+        const m = e.isOdd(f) === e.isOdd(s);
         return s = e.cmov(e.neg(s), s, m), b = e.div(b, d), {
             x: b,
             y: s
         };
     };
 }
-const de = BigInt(2), ie = BigInt(3);
-const oe = BigInt(0), be = BigInt(1), se = BigInt(2), ue = BigInt(3), le = BigInt(4), me = BigInt(8), pe = BigInt(16), ge = BigInt("0x1a0111ea397fe69a4b1ba7b6434bacd764774b84f38512bf6730d2a0f6b0f6241eabfffeb153ffffb9feffffffffaaab"), ye = U5(ge), Be = U5(BigInt("0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001")), xe = ({ c0: e, c1: t }, { c0: c, c1: a })=>({
-        c0: ye.add(e, c),
-        c1: ye.add(t, a)
-    }), Ee = ({ c0: e, c1: t }, { c0: c, c1: a })=>({
-        c0: ye.sub(e, c),
-        c1: ye.sub(t, a)
-    }), he = ({ c0: e, c1: t }, c)=>{
+const ue = BigInt(2), le = BigInt(3);
+const me = BigInt(0), pe = BigInt(1), ge = BigInt(2), ye = BigInt(3), Be = BigInt(4), xe = BigInt(8), Ee = BigInt(16), he = BigInt("0x1a0111ea397fe69a4b1ba7b6434bacd764774b84f38512bf6730d2a0f6b0f6241eabfffeb153ffffb9feffffffffaaab"), we = $1(he), ve = $1(BigInt("0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001")), Ie = ({ c0: e, c1: t }, { c0: c, c1: f })=>({
+        c0: we.add(e, c),
+        c1: we.add(t, f)
+    }), Oe = ({ c0: e, c1: t }, { c0: c, c1: f })=>({
+        c0: we.sub(e, c),
+        c1: we.sub(t, f)
+    }), Se = ({ c0: e, c1: t }, c)=>{
     if ("bigint" == typeof c) return {
-        c0: ye.mul(e, c),
-        c1: ye.mul(t, c)
+        c0: we.mul(e, c),
+        c1: we.mul(t, c)
     };
-    const { c0: a, c1: f } = c;
-    let r = ye.mul(e, a), n = ye.mul(t, f);
+    const { c0: f, c1: a } = c;
+    let r = we.mul(e, f), n = we.mul(t, a);
     return {
-        c0: ye.sub(r, n),
-        c1: ye.sub(ye.mul(ye.add(e, t), ye.add(a, f)), ye.add(r, n))
+        c0: we.sub(r, n),
+        c1: we.sub(we.mul(we.add(e, t), we.add(f, a)), we.add(r, n))
     };
-}, we = ({ c0: e, c1: t })=>{
-    const c = ye.add(e, t), a = ye.sub(e, t), f = ye.add(e, e);
+}, Re = ({ c0: e, c1: t })=>{
+    const c = we.add(e, t), f = we.sub(e, t), a = we.add(e, e);
     return {
-        c0: ye.mul(c, a),
-        c1: ye.mul(f, t)
+        c0: we.mul(c, f),
+        c1: we.mul(a, t)
     };
-}, ve = ge * ge, Ie = {
-    ORDER: ve,
-    BITS: E1(ve),
-    BYTES: Math.ceil(E1(ve) / 8),
-    MASK: w1(E1(ve)),
+}, qe = he * he, Pe = {
+    ORDER: qe,
+    BITS: O1(qe),
+    BYTES: Math.ceil(O1(qe) / 8),
+    MASK: R1(O1(qe)),
     ZERO: {
-        c0: ye.ZERO,
-        c1: ye.ZERO
+        c0: we.ZERO,
+        c1: we.ZERO
     },
     ONE: {
-        c0: ye.ONE,
-        c1: ye.ZERO
+        c0: we.ONE,
+        c1: we.ZERO
     },
     create: (e)=>e,
     isValid: ({ c0: e, c1: t })=>"bigint" == typeof e && "bigint" == typeof t,
-    is0: ({ c0: e, c1: t })=>ye.is0(e) && ye.is0(t),
-    eql: ({ c0: e, c1: t }, { c0: c, c1: a })=>ye.eql(e, c) && ye.eql(t, a),
+    is0: ({ c0: e, c1: t })=>we.is0(e) && we.is0(t),
+    eql: ({ c0: e, c1: t }, { c0: c, c1: f })=>we.eql(e, c) && we.eql(t, f),
     neg: ({ c0: e, c1: t })=>({
-            c0: ye.neg(e),
-            c1: ye.neg(t)
+            c0: we.neg(e),
+            c1: we.neg(t)
         }),
-    pow: (e, t)=>D1(Ie, e, t),
-    invertBatch: (e)=>V2(Ie, e),
-    add: xe,
-    sub: Ee,
-    mul: he,
-    sqr: we,
-    addN: xe,
-    subN: Ee,
-    mulN: he,
-    sqrN: we,
-    div: (e, t)=>Ie.mul(e, "bigint" == typeof t ? ye.inv(ye.create(t)) : Ie.inv(t)),
+    pow: (e, t)=>Y1(Pe, e, t),
+    invertBatch: (e)=>L2(Pe, e),
+    add: Ie,
+    sub: Oe,
+    mul: Se,
+    sqr: Re,
+    addN: Ie,
+    subN: Oe,
+    mulN: Se,
+    sqrN: Re,
+    div: (e, t)=>Pe.mul(e, "bigint" == typeof t ? we.inv(we.create(t)) : Pe.inv(t)),
     inv: ({ c0: e, c1: t })=>{
-        const c = ye.inv(ye.create(e * e + t * t));
+        const c = we.inv(we.create(e * e + t * t));
         return {
-            c0: ye.mul(c, ye.create(e)),
-            c1: ye.mul(c, ye.create(-t))
+            c0: we.mul(c, we.create(e)),
+            c1: we.mul(c, we.create(-t))
         };
     },
     sqrt: (e)=>{
-        if (Ie.eql(e, Ie.ZERO)) return Ie.ZERO;
-        const t = Ie.pow(e, (Ie.ORDER + me) / pe), c = Ie.div(Ie.sqr(t), e), a = Re, f = [
-            a[0],
-            a[2],
-            a[4],
-            a[6]
-        ].find((e)=>Ie.eql(e, c));
-        if (!f) throw new Error("No root");
-        const r = a.indexOf(f), n = a[r / 2];
+        if (Pe.eql(e, Pe.ZERO)) return Pe.ZERO;
+        const t = Pe.pow(e, (Pe.ORDER + xe) / Ee), c = Pe.div(Pe.sqr(t), e), f = Ae, a = [
+            f[0],
+            f[2],
+            f[4],
+            f[6]
+        ].find((e)=>Pe.eql(e, c));
+        if (!a) throw new Error("No root");
+        const r = f.indexOf(a), n = f[r / 2];
         if (!n) throw new Error("Invalid root");
-        const d = Ie.div(t, n), i = Ie.neg(d), { re: o, im: b } = Ie.reim(d), { re: s, im: u } = Ie.reim(i);
+        const d = Pe.div(t, n), i = Pe.neg(d), { re: o, im: b } = Pe.reim(d), { re: s, im: u } = Pe.reim(i);
         return b > u || b === u && o > s ? d : i;
     },
     isOdd: (e)=>{
-        const { re: t, im: c } = Ie.reim(e);
-        return BigInt(t % se || t === oe && c % se) == be;
+        const { re: t, im: c } = Pe.reim(e);
+        return BigInt(t % ge || t === me && c % ge) == pe;
     },
     fromBytes (e) {
-        if (e.length !== Ie.BYTES) throw new Error(`fromBytes wrong length=${e.length}`);
+        if (e.length !== Pe.BYTES) throw new Error(`fromBytes wrong length=${e.length}`);
         return {
-            c0: ye.fromBytes(e.subarray(0, ye.BYTES)),
-            c1: ye.fromBytes(e.subarray(ye.BYTES))
+            c0: we.fromBytes(e.subarray(0, we.BYTES)),
+            c1: we.fromBytes(e.subarray(we.BYTES))
         };
     },
-    toBytes: ({ c0: e, c1: t })=>B1(ye.toBytes(e), ye.toBytes(t)),
-    cmov: ({ c0: e, c1: t }, { c0: c, c1: a }, f)=>({
-            c0: ye.cmov(e, c, f),
-            c1: ye.cmov(t, a, f)
+    toBytes: ({ c0: e, c1: t })=>v2(we.toBytes(e), we.toBytes(t)),
+    cmov: ({ c0: e, c1: t }, { c0: c, c1: f }, a)=>({
+            c0: we.cmov(e, c, a),
+            c1: we.cmov(t, f, a)
         }),
     reim: ({ c0: e, c1: t })=>({
             re: e,
             im: t
         }),
     mulByNonresidue: ({ c0: e, c1: t })=>({
-            c0: ye.sub(e, t),
-            c1: ye.add(e, t)
+            c0: we.sub(e, t),
+            c1: we.add(e, t)
         }),
     multiplyByB: ({ c0: e, c1: t })=>{
-        let c = ye.mul(e, le), a = ye.mul(t, le);
+        let c = we.mul(e, Be), f = we.mul(t, Be);
         return {
-            c0: ye.sub(c, a),
-            c1: ye.add(c, a)
+            c0: we.sub(c, f),
+            c1: we.add(c, f)
         };
     },
     fromBigTuple: (e)=>{
         if (2 !== e.length) throw new Error("Invalid tuple");
-        const t = e.map((e)=>ye.create(e));
+        const t = e.map((e)=>we.create(e));
         return {
             c0: t[0],
             c1: t[1]
@@ -34426,168 +34448,168 @@ const oe = BigInt(0), be = BigInt(1), se = BigInt(2), ue = BigInt(3), le = BigIn
     },
     frobeniusMap: ({ c0: e, c1: t }, c)=>({
             c0: e,
-            c1: ye.mul(t, Oe[c % 2])
+            c1: we.mul(t, Ne[c % 2])
         })
-}, Oe = [
+}, Ne = [
     BigInt("0x1"),
     BigInt("0x1a0111ea397fe69a4b1ba7b6434bacd764774b84f38512bf6730d2a0f6b0f6241eabfffeb153ffffb9feffffffffaaaa")
-].map((e)=>ye.create(e)), Se = BigInt("0x6af0e0437ff400b6831e36d6bd17ffe48395dabc2d3435e77f76e17009241c5ee67992f72ec05f4c81084fbede3cc09"), Re = [
+].map((e)=>we.create(e)), Te = BigInt("0x6af0e0437ff400b6831e36d6bd17ffe48395dabc2d3435e77f76e17009241c5ee67992f72ec05f4c81084fbede3cc09"), Ae = [
     [
-        be,
-        oe
+        pe,
+        me
     ],
     [
-        Se,
-        -Se
+        Te,
+        -Te
     ],
     [
-        oe,
-        be
+        me,
+        pe
     ],
     [
-        Se,
-        Se
+        Te,
+        Te
     ],
     [
-        -be,
-        oe
+        -pe,
+        me
     ],
     [
-        -Se,
-        Se
+        -Te,
+        Te
     ],
     [
-        oe,
-        -be
+        me,
+        -pe
     ],
     [
-        -Se,
-        -Se
+        -Te,
+        -Te
     ]
-].map((e)=>Ie.fromBigTuple(e)), qe = ({ c0: e, c1: t, c2: c }, { c0: a, c1: f, c2: r })=>({
-        c0: Ie.add(e, a),
-        c1: Ie.add(t, f),
-        c2: Ie.add(c, r)
-    }), Pe = ({ c0: e, c1: t, c2: c }, { c0: a, c1: f, c2: r })=>({
-        c0: Ie.sub(e, a),
-        c1: Ie.sub(t, f),
-        c2: Ie.sub(c, r)
-    }), Te = ({ c0: e, c1: t, c2: c }, a)=>{
-    if ("bigint" == typeof a) return {
-        c0: Ie.mul(e, a),
-        c1: Ie.mul(t, a),
-        c2: Ie.mul(c, a)
+].map((e)=>Pe.fromBigTuple(e)), Ze = ({ c0: e, c1: t, c2: c }, { c0: f, c1: a, c2: r })=>({
+        c0: Pe.add(e, f),
+        c1: Pe.add(t, a),
+        c2: Pe.add(c, r)
+    }), je = ({ c0: e, c1: t, c2: c }, { c0: f, c1: a, c2: r })=>({
+        c0: Pe.sub(e, f),
+        c1: Pe.sub(t, a),
+        c2: Pe.sub(c, r)
+    }), Fe = ({ c0: e, c1: t, c2: c }, f)=>{
+    if ("bigint" == typeof f) return {
+        c0: Pe.mul(e, f),
+        c1: Pe.mul(t, f),
+        c2: Pe.mul(c, f)
     };
-    const { c0: f, c1: r, c2: n } = a, d = Ie.mul(e, f), i = Ie.mul(t, r), o = Ie.mul(c, n);
+    const { c0: a, c1: r, c2: n } = f, d = Pe.mul(e, a), i = Pe.mul(t, r), o = Pe.mul(c, n);
     return {
-        c0: Ie.add(d, Ie.mulByNonresidue(Ie.sub(Ie.mul(Ie.add(t, c), Ie.add(r, n)), Ie.add(i, o)))),
-        c1: Ie.add(Ie.sub(Ie.mul(Ie.add(e, t), Ie.add(f, r)), Ie.add(d, i)), Ie.mulByNonresidue(o)),
-        c2: Ie.sub(Ie.add(i, Ie.mul(Ie.add(e, c), Ie.add(f, n))), Ie.add(d, o))
+        c0: Pe.add(d, Pe.mulByNonresidue(Pe.sub(Pe.mul(Pe.add(t, c), Pe.add(r, n)), Pe.add(i, o)))),
+        c1: Pe.add(Pe.sub(Pe.mul(Pe.add(e, t), Pe.add(a, r)), Pe.add(d, i)), Pe.mulByNonresidue(o)),
+        c2: Pe.sub(Pe.add(i, Pe.mul(Pe.add(e, c), Pe.add(a, n))), Pe.add(d, o))
     };
-}, Ae = ({ c0: e, c1: t, c2: c })=>{
-    let a = Ie.sqr(e), f = Ie.mul(Ie.mul(e, t), se), r = Ie.mul(Ie.mul(t, c), se), n = Ie.sqr(c);
+}, Ge = ({ c0: e, c1: t, c2: c })=>{
+    let f = Pe.sqr(e), a = Pe.mul(Pe.mul(e, t), ge), r = Pe.mul(Pe.mul(t, c), ge), n = Pe.sqr(c);
     return {
-        c0: Ie.add(Ie.mulByNonresidue(r), a),
-        c1: Ie.add(Ie.mulByNonresidue(n), f),
-        c2: Ie.sub(Ie.sub(Ie.add(Ie.add(f, Ie.sqr(Ie.add(Ie.sub(e, t), c))), r), a), n)
+        c0: Pe.add(Pe.mulByNonresidue(r), f),
+        c1: Pe.add(Pe.mulByNonresidue(n), a),
+        c2: Pe.sub(Pe.sub(Pe.add(Pe.add(a, Pe.sqr(Pe.add(Pe.sub(e, t), c))), r), f), n)
     };
-}, Ne = {
-    ORDER: Ie.ORDER,
-    BITS: 3 * Ie.BITS,
-    BYTES: 3 * Ie.BYTES,
-    MASK: w1(3 * Ie.BITS),
+}, De = {
+    ORDER: Pe.ORDER,
+    BITS: 3 * Pe.BITS,
+    BYTES: 3 * Pe.BYTES,
+    MASK: R1(3 * Pe.BITS),
     ZERO: {
-        c0: Ie.ZERO,
-        c1: Ie.ZERO,
-        c2: Ie.ZERO
+        c0: Pe.ZERO,
+        c1: Pe.ZERO,
+        c2: Pe.ZERO
     },
     ONE: {
-        c0: Ie.ONE,
-        c1: Ie.ZERO,
-        c2: Ie.ZERO
+        c0: Pe.ONE,
+        c1: Pe.ZERO,
+        c2: Pe.ZERO
     },
     create: (e)=>e,
-    isValid: ({ c0: e, c1: t, c2: c })=>Ie.isValid(e) && Ie.isValid(t) && Ie.isValid(c),
-    is0: ({ c0: e, c1: t, c2: c })=>Ie.is0(e) && Ie.is0(t) && Ie.is0(c),
+    isValid: ({ c0: e, c1: t, c2: c })=>Pe.isValid(e) && Pe.isValid(t) && Pe.isValid(c),
+    is0: ({ c0: e, c1: t, c2: c })=>Pe.is0(e) && Pe.is0(t) && Pe.is0(c),
     neg: ({ c0: e, c1: t, c2: c })=>({
-            c0: Ie.neg(e),
-            c1: Ie.neg(t),
-            c2: Ie.neg(c)
+            c0: Pe.neg(e),
+            c1: Pe.neg(t),
+            c2: Pe.neg(c)
         }),
-    eql: ({ c0: e, c1: t, c2: c }, { c0: a, c1: f, c2: r })=>Ie.eql(e, a) && Ie.eql(t, f) && Ie.eql(c, r),
+    eql: ({ c0: e, c1: t, c2: c }, { c0: f, c1: a, c2: r })=>Pe.eql(e, f) && Pe.eql(t, a) && Pe.eql(c, r),
     sqrt: ()=>{
         throw new Error("Not implemented");
     },
-    div: (e, t)=>Ne.mul(e, "bigint" == typeof t ? ye.inv(ye.create(t)) : Ne.inv(t)),
-    pow: (e, t)=>D1(Ne, e, t),
-    invertBatch: (e)=>V2(Ne, e),
-    add: qe,
-    sub: Pe,
-    mul: Te,
-    sqr: Ae,
-    addN: qe,
-    subN: Pe,
-    mulN: Te,
-    sqrN: Ae,
+    div: (e, t)=>De.mul(e, "bigint" == typeof t ? we.inv(we.create(t)) : De.inv(t)),
+    pow: (e, t)=>Y1(De, e, t),
+    invertBatch: (e)=>L2(De, e),
+    add: Ze,
+    sub: je,
+    mul: Fe,
+    sqr: Ge,
+    addN: Ze,
+    subN: je,
+    mulN: Fe,
+    sqrN: Ge,
     inv: ({ c0: e, c1: t, c2: c })=>{
-        let a = Ie.sub(Ie.sqr(e), Ie.mulByNonresidue(Ie.mul(c, t))), f = Ie.sub(Ie.mulByNonresidue(Ie.sqr(c)), Ie.mul(e, t)), r = Ie.sub(Ie.sqr(t), Ie.mul(e, c)), n = Ie.inv(Ie.add(Ie.mulByNonresidue(Ie.add(Ie.mul(c, f), Ie.mul(t, r))), Ie.mul(e, a)));
+        let f = Pe.sub(Pe.sqr(e), Pe.mulByNonresidue(Pe.mul(c, t))), a = Pe.sub(Pe.mulByNonresidue(Pe.sqr(c)), Pe.mul(e, t)), r = Pe.sub(Pe.sqr(t), Pe.mul(e, c)), n = Pe.inv(Pe.add(Pe.mulByNonresidue(Pe.add(Pe.mul(c, a), Pe.mul(t, r))), Pe.mul(e, f)));
         return {
-            c0: Ie.mul(n, a),
-            c1: Ie.mul(n, f),
-            c2: Ie.mul(n, r)
+            c0: Pe.mul(n, f),
+            c1: Pe.mul(n, a),
+            c2: Pe.mul(n, r)
         };
     },
     fromBytes: (e)=>{
-        if (e.length !== Ne.BYTES) throw new Error(`fromBytes wrong length=${e.length}`);
+        if (e.length !== De.BYTES) throw new Error(`fromBytes wrong length=${e.length}`);
         return {
-            c0: Ie.fromBytes(e.subarray(0, Ie.BYTES)),
-            c1: Ie.fromBytes(e.subarray(Ie.BYTES, 2 * Ie.BYTES)),
-            c2: Ie.fromBytes(e.subarray(2 * Ie.BYTES))
+            c0: Pe.fromBytes(e.subarray(0, Pe.BYTES)),
+            c1: Pe.fromBytes(e.subarray(Pe.BYTES, 2 * Pe.BYTES)),
+            c2: Pe.fromBytes(e.subarray(2 * Pe.BYTES))
         };
     },
-    toBytes: ({ c0: e, c1: t, c2: c })=>B1(Ie.toBytes(e), Ie.toBytes(t), Ie.toBytes(c)),
-    cmov: ({ c0: e, c1: t, c2: c }, { c0: a, c1: f, c2: r }, n)=>({
-            c0: Ie.cmov(e, a, n),
-            c1: Ie.cmov(t, f, n),
-            c2: Ie.cmov(c, r, n)
+    toBytes: ({ c0: e, c1: t, c2: c })=>v2(Pe.toBytes(e), Pe.toBytes(t), Pe.toBytes(c)),
+    cmov: ({ c0: e, c1: t, c2: c }, { c0: f, c1: a, c2: r }, n)=>({
+            c0: Pe.cmov(e, f, n),
+            c1: Pe.cmov(t, a, n),
+            c2: Pe.cmov(c, r, n)
         }),
     fromBigSix: (e)=>{
         if (!Array.isArray(e) || 6 !== e.length) throw new Error("Invalid Fp6 usage");
         return {
-            c0: Ie.fromBigTuple(e.slice(0, 2)),
-            c1: Ie.fromBigTuple(e.slice(2, 4)),
-            c2: Ie.fromBigTuple(e.slice(4, 6))
+            c0: Pe.fromBigTuple(e.slice(0, 2)),
+            c1: Pe.fromBigTuple(e.slice(2, 4)),
+            c2: Pe.fromBigTuple(e.slice(4, 6))
         };
     },
-    frobeniusMap: ({ c0: e, c1: t, c2: c }, a)=>({
-            c0: Ie.frobeniusMap(e, a),
-            c1: Ie.mul(Ie.frobeniusMap(t, a), Ze[a % 6]),
-            c2: Ie.mul(Ie.frobeniusMap(c, a), _e[a % 6])
+    frobeniusMap: ({ c0: e, c1: t, c2: c }, f)=>({
+            c0: Pe.frobeniusMap(e, f),
+            c1: Pe.mul(Pe.frobeniusMap(t, f), _e[f % 6]),
+            c2: Pe.mul(Pe.frobeniusMap(c, f), Ve[f % 6])
         }),
     mulByNonresidue: ({ c0: e, c1: t, c2: c })=>({
-            c0: Ie.mulByNonresidue(c),
+            c0: Pe.mulByNonresidue(c),
             c1: e,
             c2: t
         }),
-    multiplyBy1: ({ c0: e, c1: t, c2: c }, a)=>({
-            c0: Ie.mulByNonresidue(Ie.mul(c, a)),
-            c1: Ie.mul(e, a),
-            c2: Ie.mul(t, a)
+    multiplyBy1: ({ c0: e, c1: t, c2: c }, f)=>({
+            c0: Pe.mulByNonresidue(Pe.mul(c, f)),
+            c1: Pe.mul(e, f),
+            c2: Pe.mul(t, f)
         }),
-    multiplyBy01 ({ c0: e, c1: t, c2: c }, a, f) {
-        let r = Ie.mul(e, a), n = Ie.mul(t, f);
+    multiplyBy01 ({ c0: e, c1: t, c2: c }, f, a) {
+        let r = Pe.mul(e, f), n = Pe.mul(t, a);
         return {
-            c0: Ie.add(Ie.mulByNonresidue(Ie.sub(Ie.mul(Ie.add(t, c), f), n)), r),
-            c1: Ie.sub(Ie.sub(Ie.mul(Ie.add(a, f), Ie.add(e, t)), r), n),
-            c2: Ie.add(Ie.sub(Ie.mul(Ie.add(e, c), a), r), n)
+            c0: Pe.add(Pe.mulByNonresidue(Pe.sub(Pe.mul(Pe.add(t, c), a), n)), r),
+            c1: Pe.sub(Pe.sub(Pe.mul(Pe.add(f, a), Pe.add(e, t)), r), n),
+            c2: Pe.add(Pe.sub(Pe.mul(Pe.add(e, c), f), r), n)
         };
     },
-    multiplyByFp2: ({ c0: e, c1: t, c2: c }, a)=>({
-            c0: Ie.mul(e, a),
-            c1: Ie.mul(t, a),
-            c2: Ie.mul(c, a)
+    multiplyByFp2: ({ c0: e, c1: t, c2: c }, f)=>({
+            c0: Pe.mul(e, f),
+            c1: Pe.mul(t, f),
+            c2: Pe.mul(c, f)
         })
-}, Ze = [
+}, _e = [
     [
         BigInt("0x1"),
         BigInt("0x0")
@@ -34612,7 +34634,7 @@ const oe = BigInt(0), be = BigInt(1), se = BigInt(2), ue = BigInt(3), le = BigIn
         BigInt("0x0"),
         BigInt("0x00000000000000005f19672fdf76ce51ba69c6076a0f77eaddb3a93be6f89688de17d813620a00022e01fffffffefffe")
     ]
-].map((e)=>Ie.fromBigTuple(e)), _e = [
+].map((e)=>Pe.fromBigTuple(e)), Ve = [
     [
         BigInt("0x1"),
         BigInt("0x0")
@@ -34637,146 +34659,146 @@ const oe = BigInt(0), be = BigInt(1), se = BigInt(2), ue = BigInt(3), le = BigIn
         BigInt("0x00000000000000005f19672fdf76ce51ba69c6076a0f77eaddb3a93be6f89688de17d813620a00022e01fffffffeffff"),
         BigInt("0x0")
     ]
-].map((e)=>Ie.fromBigTuple(e)), je = BigInt("0xd201000000010000"), Fe = E1(je), Ge = ({ c0: e, c1: t }, { c0: c, c1: a })=>({
-        c0: Ne.add(e, c),
-        c1: Ne.add(t, a)
-    }), De = ({ c0: e, c1: t }, { c0: c, c1: a })=>({
-        c0: Ne.sub(e, c),
-        c1: Ne.sub(t, a)
-    }), Ve = ({ c0: e, c1: t }, c)=>{
+].map((e)=>Pe.fromBigTuple(e)), Me = BigInt("0xd201000000010000"), Ue = O1(Me), Ce = ({ c0: e, c1: t }, { c0: c, c1: f })=>({
+        c0: De.add(e, c),
+        c1: De.add(t, f)
+    }), Ye = ({ c0: e, c1: t }, { c0: c, c1: f })=>({
+        c0: De.sub(e, c),
+        c1: De.sub(t, f)
+    }), Le = ({ c0: e, c1: t }, c)=>{
     if ("bigint" == typeof c) return {
-        c0: Ne.mul(e, c),
-        c1: Ne.mul(t, c)
+        c0: De.mul(e, c),
+        c1: De.mul(t, c)
     };
-    let { c0: a, c1: f } = c, r = Ne.mul(e, a), n = Ne.mul(t, f);
+    let { c0: f, c1: a } = c, r = De.mul(e, f), n = De.mul(t, a);
     return {
-        c0: Ne.add(r, Ne.mulByNonresidue(n)),
-        c1: Ne.sub(Ne.mul(Ne.add(e, t), Ne.add(a, f)), Ne.add(r, n))
+        c0: De.add(r, De.mulByNonresidue(n)),
+        c1: De.sub(De.mul(De.add(e, t), De.add(f, a)), De.add(r, n))
     };
-}, Me = ({ c0: e, c1: t })=>{
-    let c = Ne.mul(e, t);
+}, ze = ({ c0: e, c1: t })=>{
+    let c = De.mul(e, t);
     return {
-        c0: Ne.sub(Ne.sub(Ne.mul(Ne.add(Ne.mulByNonresidue(t), e), Ne.add(e, t)), c), Ne.mulByNonresidue(c)),
-        c1: Ne.add(c, c)
+        c0: De.sub(De.sub(De.mul(De.add(De.mulByNonresidue(t), e), De.add(e, t)), c), De.mulByNonresidue(c)),
+        c1: De.add(c, c)
     };
 };
-function Ue(e, t) {
-    const c = Ie.sqr(e), a = Ie.sqr(t);
+function $e(e, t) {
+    const c = Pe.sqr(e), f = Pe.sqr(t);
     return {
-        first: Ie.add(Ie.mulByNonresidue(a), c),
-        second: Ie.sub(Ie.sub(Ie.sqr(Ie.add(e, t)), c), a)
+        first: Pe.add(Pe.mulByNonresidue(f), c),
+        second: Pe.sub(Pe.sub(Pe.sqr(Pe.add(e, t)), c), f)
     };
 }
-const Ce = {
-    ORDER: Ie.ORDER,
-    BITS: 2 * Ie.BITS,
-    BYTES: 2 * Ie.BYTES,
-    MASK: w1(2 * Ie.BITS),
+const Ke = {
+    ORDER: Pe.ORDER,
+    BITS: 2 * Pe.BITS,
+    BYTES: 2 * Pe.BYTES,
+    MASK: R1(2 * Pe.BITS),
     ZERO: {
-        c0: Ne.ZERO,
-        c1: Ne.ZERO
+        c0: De.ZERO,
+        c1: De.ZERO
     },
     ONE: {
-        c0: Ne.ONE,
-        c1: Ne.ZERO
+        c0: De.ONE,
+        c1: De.ZERO
     },
     create: (e)=>e,
-    isValid: ({ c0: e, c1: t })=>Ne.isValid(e) && Ne.isValid(t),
-    is0: ({ c0: e, c1: t })=>Ne.is0(e) && Ne.is0(t),
+    isValid: ({ c0: e, c1: t })=>De.isValid(e) && De.isValid(t),
+    is0: ({ c0: e, c1: t })=>De.is0(e) && De.is0(t),
     neg: ({ c0: e, c1: t })=>({
-            c0: Ne.neg(e),
-            c1: Ne.neg(t)
+            c0: De.neg(e),
+            c1: De.neg(t)
         }),
-    eql: ({ c0: e, c1: t }, { c0: c, c1: a })=>Ne.eql(e, c) && Ne.eql(t, a),
+    eql: ({ c0: e, c1: t }, { c0: c, c1: f })=>De.eql(e, c) && De.eql(t, f),
     sqrt: ()=>{
         throw new Error("Not implemented");
     },
     inv: ({ c0: e, c1: t })=>{
-        let c = Ne.inv(Ne.sub(Ne.sqr(e), Ne.mulByNonresidue(Ne.sqr(t))));
+        let c = De.inv(De.sub(De.sqr(e), De.mulByNonresidue(De.sqr(t))));
         return {
-            c0: Ne.mul(e, c),
-            c1: Ne.neg(Ne.mul(t, c))
+            c0: De.mul(e, c),
+            c1: De.neg(De.mul(t, c))
         };
     },
-    div: (e, t)=>Ce.mul(e, "bigint" == typeof t ? ye.inv(ye.create(t)) : Ce.inv(t)),
-    pow: (e, t)=>D1(Ce, e, t),
-    invertBatch: (e)=>V2(Ce, e),
-    add: Ge,
-    sub: De,
-    mul: Ve,
-    sqr: Me,
-    addN: Ge,
-    subN: De,
-    mulN: Ve,
-    sqrN: Me,
+    div: (e, t)=>Ke.mul(e, "bigint" == typeof t ? we.inv(we.create(t)) : Ke.inv(t)),
+    pow: (e, t)=>Y1(Ke, e, t),
+    invertBatch: (e)=>L2(Ke, e),
+    add: Ce,
+    sub: Ye,
+    mul: Le,
+    sqr: ze,
+    addN: Ce,
+    subN: Ye,
+    mulN: Le,
+    sqrN: ze,
     fromBytes: (e)=>{
-        if (e.length !== Ce.BYTES) throw new Error(`fromBytes wrong length=${e.length}`);
+        if (e.length !== Ke.BYTES) throw new Error(`fromBytes wrong length=${e.length}`);
         return {
-            c0: Ne.fromBytes(e.subarray(0, Ne.BYTES)),
-            c1: Ne.fromBytes(e.subarray(Ne.BYTES))
+            c0: De.fromBytes(e.subarray(0, De.BYTES)),
+            c1: De.fromBytes(e.subarray(De.BYTES))
         };
     },
-    toBytes: ({ c0: e, c1: t })=>B1(Ne.toBytes(e), Ne.toBytes(t)),
-    cmov: ({ c0: e, c1: t }, { c0: c, c1: a }, f)=>({
-            c0: Ne.cmov(e, c, f),
-            c1: Ne.cmov(t, a, f)
+    toBytes: ({ c0: e, c1: t })=>v2(De.toBytes(e), De.toBytes(t)),
+    cmov: ({ c0: e, c1: t }, { c0: c, c1: f }, a)=>({
+            c0: De.cmov(e, c, a),
+            c1: De.cmov(t, f, a)
         }),
     fromBigTwelve: (e)=>({
-            c0: Ne.fromBigSix(e.slice(0, 6)),
-            c1: Ne.fromBigSix(e.slice(6, 12))
+            c0: De.fromBigSix(e.slice(0, 6)),
+            c1: De.fromBigSix(e.slice(6, 12))
         }),
     frobeniusMap (e, t) {
-        const c = Ne.frobeniusMap(e.c0, t), { c0: a, c1: f, c2: r } = Ne.frobeniusMap(e.c1, t), n = Ye[t % 12];
+        const c = De.frobeniusMap(e.c0, t), { c0: f, c1: a, c2: r } = De.frobeniusMap(e.c1, t), n = ke[t % 12];
         return {
             c0: c,
-            c1: Ne.create({
-                c0: Ie.mul(a, n),
-                c1: Ie.mul(f, n),
-                c2: Ie.mul(r, n)
+            c1: De.create({
+                c0: Pe.mul(f, n),
+                c1: Pe.mul(a, n),
+                c2: Pe.mul(r, n)
             })
         };
     },
-    multiplyBy014: ({ c0: e, c1: t }, c, a, f)=>{
-        let r = Ne.multiplyBy01(e, c, a), n = Ne.multiplyBy1(t, f);
+    multiplyBy014: ({ c0: e, c1: t }, c, f, a)=>{
+        let r = De.multiplyBy01(e, c, f), n = De.multiplyBy1(t, a);
         return {
-            c0: Ne.add(Ne.mulByNonresidue(n), r),
-            c1: Ne.sub(Ne.sub(Ne.multiplyBy01(Ne.add(t, e), c, Ie.add(a, f)), r), n)
+            c0: De.add(De.mulByNonresidue(n), r),
+            c1: De.sub(De.sub(De.multiplyBy01(De.add(t, e), c, Pe.add(f, a)), r), n)
         };
     },
     multiplyByFp2: ({ c0: e, c1: t }, c)=>({
-            c0: Ne.multiplyByFp2(e, c),
-            c1: Ne.multiplyByFp2(t, c)
+            c0: De.multiplyByFp2(e, c),
+            c1: De.multiplyByFp2(t, c)
         }),
     conjugate: ({ c0: e, c1: t })=>({
             c0: e,
-            c1: Ne.neg(t)
+            c1: De.neg(t)
         }),
     _cyclotomicSquare: ({ c0: e, c1: t })=>{
-        const { c0: c, c1: a, c2: f } = e, { c0: r, c1: n, c2: d } = t, { first: i, second: o } = Ue(c, n), { first: b, second: s } = Ue(r, f), { first: u, second: l } = Ue(a, d);
-        let m = Ie.mulByNonresidue(l);
+        const { c0: c, c1: f, c2: a } = e, { c0: r, c1: n, c2: d } = t, { first: i, second: o } = $e(c, n), { first: b, second: s } = $e(r, a), { first: u, second: l } = $e(f, d);
+        let m = Pe.mulByNonresidue(l);
         return {
-            c0: Ne.create({
-                c0: Ie.add(Ie.mul(Ie.sub(i, c), se), i),
-                c1: Ie.add(Ie.mul(Ie.sub(b, a), se), b),
-                c2: Ie.add(Ie.mul(Ie.sub(u, f), se), u)
+            c0: De.create({
+                c0: Pe.add(Pe.mul(Pe.sub(i, c), ge), i),
+                c1: Pe.add(Pe.mul(Pe.sub(b, f), ge), b),
+                c2: Pe.add(Pe.mul(Pe.sub(u, a), ge), u)
             }),
-            c1: Ne.create({
-                c0: Ie.add(Ie.mul(Ie.add(m, r), se), m),
-                c1: Ie.add(Ie.mul(Ie.add(o, n), se), o),
-                c2: Ie.add(Ie.mul(Ie.add(s, d), se), s)
+            c1: De.create({
+                c0: Pe.add(Pe.mul(Pe.add(m, r), ge), m),
+                c1: Pe.add(Pe.mul(Pe.add(o, n), ge), o),
+                c2: Pe.add(Pe.mul(Pe.add(s, d), ge), s)
             })
         };
     },
     _cyclotomicExp (e, t) {
-        let c = Ce.ONE;
-        for(let a = Fe - 1; a >= 0; a--)c = Ce._cyclotomicSquare(c), h2(t, a) && (c = Ce.mul(c, e));
+        let c = Ke.ONE;
+        for(let f = Ue - 1; f >= 0; f--)c = Ke._cyclotomicSquare(c), S3(t, f) && (c = Ke.mul(c, e));
         return c;
     },
     finalExponentiate: (e)=>{
-        const t = je, c = Ce.div(Ce.frobeniusMap(e, 6), e), a = Ce.mul(Ce.frobeniusMap(c, 2), c), f = Ce.conjugate(Ce._cyclotomicExp(a, t)), r = Ce.mul(Ce.conjugate(Ce._cyclotomicSquare(a)), f), n = Ce.conjugate(Ce._cyclotomicExp(r, t)), d = Ce.conjugate(Ce._cyclotomicExp(n, t)), i = Ce.mul(Ce.conjugate(Ce._cyclotomicExp(d, t)), Ce._cyclotomicSquare(f)), o = Ce.conjugate(Ce._cyclotomicExp(i, t)), b = Ce.frobeniusMap(Ce.mul(f, d), 2), s = Ce.frobeniusMap(Ce.mul(n, a), 3), u = Ce.frobeniusMap(Ce.mul(i, Ce.conjugate(a)), 1), l = Ce.mul(Ce.mul(o, Ce.conjugate(r)), a);
-        return Ce.mul(Ce.mul(Ce.mul(b, s), u), l);
+        const t = Me, c = Ke.div(Ke.frobeniusMap(e, 6), e), f = Ke.mul(Ke.frobeniusMap(c, 2), c), a = Ke.conjugate(Ke._cyclotomicExp(f, t)), r = Ke.mul(Ke.conjugate(Ke._cyclotomicSquare(f)), a), n = Ke.conjugate(Ke._cyclotomicExp(r, t)), d = Ke.conjugate(Ke._cyclotomicExp(n, t)), i = Ke.mul(Ke.conjugate(Ke._cyclotomicExp(d, t)), Ke._cyclotomicSquare(a)), o = Ke.conjugate(Ke._cyclotomicExp(i, t)), b = Ke.frobeniusMap(Ke.mul(a, d), 2), s = Ke.frobeniusMap(Ke.mul(n, f), 3), u = Ke.frobeniusMap(Ke.mul(i, Ke.conjugate(f)), 1), l = Ke.mul(Ke.mul(o, Ke.conjugate(r)), f);
+        return Ke.mul(Ke.mul(Ke.mul(b, s), u), l);
     }
-}, Ye = [
+}, ke = [
     [
         BigInt("0x1"),
         BigInt("0x0")
@@ -34825,7 +34847,7 @@ const Ce = {
         BigInt("0x05b2cfd9013a5fd8df47fa6b48b1e045f39816240c0b8fee8beadf4d8e9c0566c63a3e6e257f87329b18fae980078116"),
         BigInt("0x144e4211384586c16bd3ad4afa99cc9170df3560e77982d0db45f3536814f0bd5871c1908bd478cd1ee605167ff82995")
     ]
-].map((e)=>Ie.fromBigTuple(e)), Le = H1(Ie, [
+].map((e)=>Pe.fromBigTuple(e)), He = ee(Pe, [
     [
         [
             "0x5c759507e8e333ebb5b7a9a47d7ed8532c52d39fd3a042a88b58423c50ae15d5c2638e343d9c71c6238aaaaaaaa97d6",
@@ -34894,7 +34916,7 @@ const Ce = {
             "0x0"
         ]
     ]
-].map((e)=>e.map((e)=>Ie.fromBigTuple(e.map(BigInt))))), $e = H1(ye, [
+].map((e)=>e.map((e)=>Pe.fromBigTuple(e.map(BigInt))))), We = ee(we, [
     [
         "0x11a05f2b1e833340b809101dd99815856b303e88a2d7005ff2627b56cdb4e2c85610c2d5f2e62d6eaeac1662734649b7",
         "0x17294ed3e943ab2f0588bab22147a81c7c17e75b2f6a8417f565e33c70d1e86b4838f2a6f318c356e834eef1b3cb83bb",
@@ -34958,132 +34980,132 @@ const Ce = {
         "0xe0fa1d816ddc03e6b24255e0d7819c171c40f65e273b853324efcd6356caa205ca2f570f13497804415473a1d634b8f",
         "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001"
     ]
-].map((e)=>e.map((e)=>BigInt(e)))), ze = ne(Ie, {
-    A: Ie.create({
-        c0: ye.create(oe),
-        c1: ye.create(BigInt(240))
+].map((e)=>e.map((e)=>BigInt(e)))), Xe = se(Pe, {
+    A: Pe.create({
+        c0: we.create(me),
+        c1: we.create(BigInt(240))
     }),
-    B: Ie.create({
-        c0: ye.create(BigInt(1012)),
-        c1: ye.create(BigInt(1012))
+    B: Pe.create({
+        c0: we.create(BigInt(1012)),
+        c1: we.create(BigInt(1012))
     }),
-    Z: Ie.create({
-        c0: ye.create(BigInt(-2)),
-        c1: ye.create(BigInt(-1))
+    Z: Pe.create({
+        c0: we.create(BigInt(-2)),
+        c1: we.create(BigInt(-1))
     })
-}), Ke = ne(ye, {
-    A: ye.create(BigInt("0x144698a3b8e9433d693a02c96d4982b0ea985383ee66a8d8e8981aefd881ac98936f8da0e0f97f5cf428082d584c1d")),
-    B: ye.create(BigInt("0x12e2908d11688030018b12e8753eee3b2016c1f0f24f4070a0b9c14fcef35ef55a23215a316ceaa5d1cc48e98e172be0")),
-    Z: ye.create(BigInt(11))
-}), ke = Ne.create({
-    c0: Ie.ZERO,
-    c1: Ie.ONE,
-    c2: Ie.ZERO
-}), He = Ce.create({
-    c0: ke,
-    c1: Ne.ZERO
-}), We = Ce.create({
-    c0: Ne.ZERO,
-    c1: ke
-}), [Xe, Je] = Ce.invertBatch([
-    He,
-    We
+}), Je = se(we, {
+    A: we.create(BigInt("0x144698a3b8e9433d693a02c96d4982b0ea985383ee66a8d8e8981aefd881ac98936f8da0e0f97f5cf428082d584c1d")),
+    B: we.create(BigInt("0x12e2908d11688030018b12e8753eee3b2016c1f0f24f4070a0b9c14fcef35ef55a23215a316ceaa5d1cc48e98e172be0")),
+    Z: we.create(BigInt(11))
+}), Qe = De.create({
+    c0: Pe.ZERO,
+    c1: Pe.ONE,
+    c2: Pe.ZERO
+}), et1 = Ke.create({
+    c0: Qe,
+    c1: De.ZERO
+}), tt1 = Ke.create({
+    c0: De.ZERO,
+    c1: Qe
+}), [ct1, ft1] = Ke.invertBatch([
+    et1,
+    tt1
 ]);
-function Qe(e, t) {
-    const c = t.toAffine(), a = (f = c.x, r = c.y, [
-        Ce.mul(Ce.frobeniusMap(Ce.multiplyByFp2(Xe, f), 1), He).c0.c0,
-        Ce.mul(Ce.frobeniusMap(Ce.multiplyByFp2(Je, r), 1), We).c0.c0
+function at1(e, t) {
+    const c = t.toAffine(), f = (a = c.x, r = c.y, [
+        Ke.mul(Ke.frobeniusMap(Ke.multiplyByFp2(ct1, a), 1), et1).c0.c0,
+        Ke.mul(Ke.frobeniusMap(Ke.multiplyByFp2(ft1, r), 1), tt1).c0.c0
     ]);
-    var f, r;
-    return new e(a[0], a[1], Ie.ONE);
+    var a, r;
+    return new e(f[0], f[1], Pe.ONE);
 }
-const et1 = BigInt("0x1a0111ea397fe699ec02408663d4de85aa0d857d89759ad4897d29650fb85f9b409427eb4f49fffd8bfd00000000aaac");
-function tt1(e, t) {
-    const c = t.toAffine(), a = (f = c.x, r = c.y, [
-        Ie.mul(f, et1),
-        Ie.neg(r)
+const rt1 = BigInt("0x1a0111ea397fe699ec02408663d4de85aa0d857d89759ad4897d29650fb85f9b409427eb4f49fffd8bfd00000000aaac");
+function nt1(e, t) {
+    const c = t.toAffine(), f = (a = c.x, r = c.y, [
+        Pe.mul(a, rt1),
+        Pe.neg(r)
     ]);
-    var f, r;
-    return new e(a[0], a[1], Ie.ONE);
+    var a, r;
+    return new e(f[0], f[1], Pe.ONE);
 }
-const ct1 = Object.freeze({
+const dt1 = Object.freeze({
     DST: "BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_NUL_",
     encodeDST: "BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_NUL_",
-    p: ye.ORDER,
+    p: we.ORDER,
     m: 2,
     k: 128,
     expand: "xmd",
     hash: d1
-}), at1 = rt1(ye.toBytes(oe), {
+}), it1 = bt1(we.toBytes(me), {
     infinity: !0,
     compressed: !0
 });
-function ft1(e) {
-    const t = 224 & (e = e.slice())[0], c = !!(t >> 7 & 1), a = !!(t >> 6 & 1), f = !!(t >> 5 & 1);
+function ot1(e) {
+    const t = 224 & (e = e.slice())[0], c = !!(t >> 7 & 1), f = !!(t >> 6 & 1), a = !!(t >> 5 & 1);
     return e[0] &= 31, {
         compressed: c,
-        infinity: a,
-        sort: f,
+        infinity: f,
+        sort: a,
         value: e
     };
 }
-function rt1(e, t) {
+function bt1(e, t) {
     if (224 & e[0]) throw new Error("setMask: non-empty mask");
     return t.compressed && (e[0] |= 128), t.infinity && (e[0] |= 64), t.sort && (e[0] |= 32), e;
 }
-function nt1(e) {
+function st1(e) {
     e.assertValidity();
-    const t = e.equals(it1.G1.ProjectivePoint.ZERO), { x: c, y: a } = e.toAffine();
-    if (t) return at1.slice();
-    const f = ye.ORDER, r = Boolean(a * se / f);
-    return rt1(p2(c, ye.BYTES), {
+    const t = e.equals(lt1.G1.ProjectivePoint.ZERO), { x: c, y: f } = e.toAffine();
+    if (t) return it1.slice();
+    const a = we.ORDER, r = Boolean(f * ge / a);
+    return bt1(E1(c, we.BYTES), {
         compressed: !0,
         sort: r
     });
 }
-function dt1(e) {
+function ut2(e) {
     e.assertValidity();
-    const t = ye.BYTES;
-    if (e.equals(it1.G2.ProjectivePoint.ZERO)) return B1(at1, p2(oe, t));
-    const { x: c, y: a } = e.toAffine(), { re: f, im: r } = Ie.reim(c), { re: n, im: d } = Ie.reim(a), i = Boolean((d > oe ? d * se : n * se) / ye.ORDER & be), o = f;
-    return B1(rt1(p2(r, t), {
+    const t = we.BYTES;
+    if (e.equals(lt1.G2.ProjectivePoint.ZERO)) return v2(it1, E1(me, t));
+    const { x: c, y: f } = e.toAffine(), { re: a, im: r } = Pe.reim(c), { re: n, im: d } = Pe.reim(f), i = Boolean((d > me ? d * ge : n * ge) / we.ORDER & pe), o = a;
+    return v2(bt1(E1(r, t), {
         sort: i,
         compressed: !0
-    }), p2(o, t));
+    }), E1(o, t));
 }
-const it1 = function(e) {
-    const { Fp: t, Fr: c, Fp2: a, Fp6: f, Fp12: r } = e.fields, n = E1(e.params.x);
+const lt1 = function(e) {
+    const { Fp: t, Fr: c, Fp2: f, Fp6: a, Fp12: r } = e.fields, n = O1(e.params.x);
     function d(t) {
-        const { x: c, y: f } = t, r = c, d = f;
-        let i = r, o = d, b = a.ONE, s = [];
+        const { x: c, y: a } = t, r = c, d = a;
+        let i = r, o = d, b = f.ONE, s = [];
         for(let t = n - 2; t >= 0; t--){
-            let c = a.sqr(o), f = a.sqr(b), n = a.multiplyByB(a.mul(f, ie)), u = a.mul(n, ie), l = a.sub(a.sub(a.sqr(a.add(o, b)), f), c);
+            let c = f.sqr(o), a = f.sqr(b), n = f.multiplyByB(f.mul(a, le)), u = f.mul(n, le), l = f.sub(f.sub(f.sqr(f.add(o, b)), a), c);
             if (s.push([
-                a.sub(n, c),
-                a.mul(a.sqr(i), ie),
-                a.neg(l)
-            ]), i = a.div(a.mul(a.mul(a.sub(c, u), i), o), de), o = a.sub(a.sqr(a.div(a.add(c, u), de)), a.mul(a.sqr(n), ie)), b = a.mul(c, l), h2(e.params.x, t)) {
-                let e = a.sub(o, a.mul(d, b)), t = a.sub(i, a.mul(r, b));
+                f.sub(n, c),
+                f.mul(f.sqr(i), le),
+                f.neg(l)
+            ]), i = f.div(f.mul(f.mul(f.sub(c, u), i), o), ue), o = f.sub(f.sqr(f.div(f.add(c, u), ue)), f.mul(f.sqr(n), le)), b = f.mul(c, l), S3(e.params.x, t)) {
+                let e = f.sub(o, f.mul(d, b)), t = f.sub(i, f.mul(r, b));
                 s.push([
-                    a.sub(a.mul(e, r), a.mul(t, d)),
-                    a.neg(e),
+                    f.sub(f.mul(e, r), f.mul(t, d)),
+                    f.neg(e),
                     t
                 ]);
-                let c = a.sqr(t), f = a.mul(c, t), n = a.mul(c, i), u = a.add(a.sub(f, a.mul(n, de)), a.mul(a.sqr(e), b));
-                i = a.mul(t, u), o = a.sub(a.mul(a.sub(n, u), e), a.mul(f, o)), b = a.mul(b, f);
+                let c = f.sqr(t), a = f.mul(c, t), n = f.mul(c, i), u = f.add(f.sub(a, f.mul(n, ue)), f.mul(f.sqr(e), b));
+                i = f.mul(t, u), o = f.sub(f.mul(f.sub(n, u), e), f.mul(a, o)), b = f.mul(b, a);
             }
         }
         return s;
     }
     function i(t, c) {
-        const { x: f } = e.params, d = c[0], i = c[1];
+        const { x: a } = e.params, d = c[0], i = c[1];
         let o = r.ONE;
         for(let e = 0, c = n - 2; c >= 0; c--, e++){
             const n = t[e];
-            if (o = r.multiplyBy014(o, n[0], a.mul(n[1], d), a.mul(n[2], i)), h2(f, c)) {
+            if (o = r.multiplyBy014(o, n[0], f.mul(n[1], d), f.mul(n[2], i)), S3(a, c)) {
                 e += 1;
                 const c = t[e];
-                o = r.multiplyBy014(o, c[0], a.mul(c[1], d), a.mul(c[2], i));
+                o = r.multiplyBy014(o, c[0], f.mul(c[1], d), f.mul(c[2], i));
             }
             0 !== c && (o = r.sqr(o));
         }
@@ -35091,122 +35113,122 @@ const it1 = function(e) {
     }
     const o = {
         randomPrivateKey: ()=>{
-            const t = Y1(c.ORDER);
+            const t = k1(c.ORDER);
             return function(e, t, c = !1) {
-                const a = e.length, f = C1(t), r = Y1(t);
-                if (a < 16 || a < r || a > 1024) throw new Error(`expected ${r}-1024 bytes of input, got ${a}`);
-                const n = N10(c ? l2(e) : m2(e), t - S3) + S3;
-                return c ? g2(n, f) : p2(n, f);
+                const f = e.length, a = K1(t), r = k1(t);
+                if (f < 16 || f < r || f > 1024) throw new Error(`expected ${r}-1024 bytes of input, got ${f}`);
+                const n = D1(c ? B1(e) : x1(e), t - T9) + T9;
+                return c ? h2(n, a) : E1(n, a);
             }(e.randomBytes(t), c.ORDER);
         },
         calcPairingPrecomputes: d
-    }, b = re({
+    }, b = be({
         n: c.ORDER,
         ...e.G1
-    }), s = Object.assign(b, W1(b.ProjectivePoint, e.G1.mapToCurve, {
+    }), s = Object.assign(b, te(b.ProjectivePoint, e.G1.mapToCurve, {
         ...e.htfDefaults,
         ...e.G1.htfDefaults
-    })), u = re({
+    })), u = be({
         n: c.ORDER,
         ...e.G2
-    }), B = Object.assign(u, W1(u.ProjectivePoint, e.G2.mapToCurve, {
+    }), l = Object.assign(u, te(u.ProjectivePoint, e.G2.mapToCurve, {
         ...e.htfDefaults,
         ...e.G2.htfDefaults
-    })), { ShortSignature: x } = e.G1, { Signature: w } = e.G2;
-    function v(e, t, c = !0) {
-        if (e.equals(s.ProjectivePoint.ZERO) || t.equals(B.ProjectivePoint.ZERO)) throw new Error("pairing is not available for ZERO point");
+    })), { ShortSignature: m } = e.G1, { Signature: p } = e.G2;
+    function g(e, t, c = !0) {
+        if (e.equals(s.ProjectivePoint.ZERO) || t.equals(l.ProjectivePoint.ZERO)) throw new Error("pairing is not available for ZERO point");
         e.assertValidity(), t.assertValidity();
-        const a = e.toAffine(), f = i(function(e) {
+        const f = e.toAffine(), a = i(function(e) {
             const t = e;
             return t._PPRECOMPUTES || (t._PPRECOMPUTES = d(e.toAffine())), t._PPRECOMPUTES;
         }(t), [
-            a.x,
-            a.y
+            f.x,
+            f.y
         ]);
-        return c ? r.finalExponentiate(f) : f;
+        return c ? r.finalExponentiate(a) : a;
     }
-    function I(e) {
+    function y(e) {
         return e instanceof s.ProjectivePoint ? e : s.ProjectivePoint.fromHex(e);
     }
-    function O(e, t) {
-        return e instanceof s.ProjectivePoint ? e : s.hashToCurve(y1("point", e), t);
+    function v(e, t) {
+        return e instanceof s.ProjectivePoint ? e : s.hashToCurve(w1("point", e), t);
     }
-    function R(e) {
-        return e instanceof B.ProjectivePoint ? e : w.fromHex(e);
+    function I(e) {
+        return e instanceof l.ProjectivePoint ? e : p.fromHex(e);
     }
-    function q(e, t) {
-        return e instanceof B.ProjectivePoint ? e : B.hashToCurve(y1("point", e), t);
+    function R(e, t) {
+        return e instanceof l.ProjectivePoint ? e : l.hashToCurve(w1("point", e), t);
     }
     return s.ProjectivePoint.BASE._setWindowSize(4), {
         getPublicKey: function(e) {
             return s.ProjectivePoint.fromPrivateKey(e).toRawBytes(!0);
         },
         getPublicKeyForShortSignatures: function(e) {
-            return B.ProjectivePoint.fromPrivateKey(e).toRawBytes(!0);
+            return l.ProjectivePoint.fromPrivateKey(e).toRawBytes(!0);
         },
         sign: function(e, t, c) {
-            const a = q(e, c);
-            a.assertValidity();
-            const f = a.multiply(s.normPrivateKeyToScalar(t));
-            return e instanceof B.ProjectivePoint ? f : w.toRawBytes(f);
+            const f = R(e, c);
+            f.assertValidity();
+            const a = f.multiply(s.normPrivateKeyToScalar(t));
+            return e instanceof l.ProjectivePoint ? a : p.toRawBytes(a);
         },
         signShortSignature: function(e, t, c) {
-            const a = O(e, c);
-            a.assertValidity();
-            const f = a.multiply(s.normPrivateKeyToScalar(t));
-            return e instanceof s.ProjectivePoint ? f : x.toRawBytes(f);
+            const f = v(e, c);
+            f.assertValidity();
+            const a = f.multiply(s.normPrivateKeyToScalar(t));
+            return e instanceof s.ProjectivePoint ? a : m.toRawBytes(a);
         },
-        verify: function(e, t, c, a) {
-            const f = I(c), n = q(t, a), d = s.ProjectivePoint.BASE, i = R(e), o = v(f.negate(), n, !1), b = v(d, i, !1), u = r.finalExponentiate(r.mul(b, o));
+        verify: function(e, t, c, f) {
+            const a = y(c), n = R(t, f), d = s.ProjectivePoint.BASE, i = I(e), o = g(a.negate(), n, !1), b = g(d, i, !1), u = r.finalExponentiate(r.mul(b, o));
             return r.eql(u, r.ONE);
         },
-        verifyBatch: function(e, t, c, a) {
+        verifyBatch: function(e, t, c, f) {
             if (!t.length) throw new Error("Expected non-empty messages array");
             if (c.length !== t.length) throw new Error("Pubkey count should equal msg count");
-            const f = R(e), n = t.map((e)=>q(e, a)), d = c.map(I);
+            const a = I(e), n = t.map((e)=>R(e, f)), d = c.map(y);
             try {
                 const e = [];
                 for (const t of new Set(n)){
-                    const c = n.reduce((e, c, a)=>c === t ? e.add(d[a]) : e, s.ProjectivePoint.ZERO);
-                    e.push(v(c, t, !1));
+                    const c = n.reduce((e, c, f)=>c === t ? e.add(d[f]) : e, s.ProjectivePoint.ZERO);
+                    e.push(g(c, t, !1));
                 }
-                e.push(v(s.ProjectivePoint.BASE.negate(), f, !1));
+                e.push(g(s.ProjectivePoint.BASE.negate(), a, !1));
                 const t = e.reduce((e, t)=>r.mul(e, t), r.ONE), c = r.finalExponentiate(t);
                 return r.eql(c, r.ONE);
             } catch  {
                 return !1;
             }
         },
-        verifyShortSignature: function(e, t, c, a) {
-            const f = R(c), n = O(t, a), d = B.ProjectivePoint.BASE, i = I(e), o = v(n, f, !1), b = v(i, d.negate(), !1), s = r.finalExponentiate(r.mul(b, o));
+        verifyShortSignature: function(e, t, c, f) {
+            const a = I(c), n = v(t, f), d = l.ProjectivePoint.BASE, i = y(e), o = g(n, a, !1), b = g(i, d.negate(), !1), s = r.finalExponentiate(r.mul(b, o));
             return r.eql(s, r.ONE);
         },
         aggregatePublicKeys: function(e) {
             if (!e.length) throw new Error("Expected non-empty array");
-            const t = e.map(I).reduce((e, t)=>e.add(t), s.ProjectivePoint.ZERO);
+            const t = e.map(y).reduce((e, t)=>e.add(t), s.ProjectivePoint.ZERO);
             return e[0] instanceof s.ProjectivePoint ? (t.assertValidity(), t) : t.toRawBytes(!0);
         },
         aggregateSignatures: function(e) {
             if (!e.length) throw new Error("Expected non-empty array");
-            const t = e.map(R).reduce((e, t)=>e.add(t), B.ProjectivePoint.ZERO);
-            return e[0] instanceof B.ProjectivePoint ? (t.assertValidity(), t) : w.toRawBytes(t);
+            const t = e.map(I).reduce((e, t)=>e.add(t), l.ProjectivePoint.ZERO);
+            return e[0] instanceof l.ProjectivePoint ? (t.assertValidity(), t) : p.toRawBytes(t);
         },
         aggregateShortSignatures: function(e) {
             if (!e.length) throw new Error("Expected non-empty array");
-            const t = e.map(I).reduce((e, t)=>e.add(t), s.ProjectivePoint.ZERO);
-            return e[0] instanceof s.ProjectivePoint ? (t.assertValidity(), t) : x.toRawBytes(t);
+            const t = e.map(y).reduce((e, t)=>e.add(t), s.ProjectivePoint.ZERO);
+            return e[0] instanceof s.ProjectivePoint ? (t.assertValidity(), t) : m.toRawBytes(t);
         },
         millerLoop: i,
-        pairing: v,
+        pairing: g,
         G1: s,
-        G2: B,
-        Signature: w,
-        ShortSignature: x,
+        G2: l,
+        Signature: p,
+        ShortSignature: m,
         fields: {
             Fr: c,
             Fp: t,
-            Fp2: a,
-            Fp6: f,
+            Fp2: f,
+            Fp6: a,
             Fp12: r
         },
         params: {
@@ -35219,234 +35241,234 @@ const it1 = function(e) {
     };
 }({
     fields: {
-        Fp: ye,
-        Fp2: Ie,
-        Fp6: Ne,
-        Fp12: Ce,
-        Fr: Be
+        Fp: we,
+        Fp2: Pe,
+        Fp6: De,
+        Fp12: Ke,
+        Fr: ve
     },
     G1: {
-        Fp: ye,
+        Fp: we,
         h: BigInt("0x396c8c005555e1568c00aaab0000aaab"),
         Gx: BigInt("0x17f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb"),
         Gy: BigInt("0x08b3f481e3aaa0f1a09e30ed741d8ae4fcf5e095d5d00af600db18cb2c04b3edd03cc744a2888ae40caa232946c5e7e1"),
-        a: ye.ZERO,
-        b: le,
+        a: we.ZERO,
+        b: Be,
         htfDefaults: {
-            ...ct1,
+            ...dt1,
             m: 1,
             DST: "BLS_SIG_BLS12381G1_XMD:SHA-256_SSWU_RO_NUL_"
         },
         wrapPrivateKey: !0,
         allowInfinityPoint: !0,
         isTorsionFree: (e, t)=>{
-            const c = BigInt("0x5f19672fdf76ce51ba69c6076a0f77eaddb3a93be6f89688de17d813620a00022e01fffffffefffe"), a = new e(ye.mul(t.px, c), t.py, t.pz);
-            return t.multiplyUnsafe(it1.params.x).negate().multiplyUnsafe(it1.params.x).equals(a);
+            const c = BigInt("0x5f19672fdf76ce51ba69c6076a0f77eaddb3a93be6f89688de17d813620a00022e01fffffffefffe"), f = new e(we.mul(t.px, c), t.py, t.pz);
+            return t.multiplyUnsafe(lt1.params.x).negate().multiplyUnsafe(lt1.params.x).equals(f);
         },
-        clearCofactor: (e, t)=>t.multiplyUnsafe(it1.params.x).add(t),
+        clearCofactor: (e, t)=>t.multiplyUnsafe(lt1.params.x).add(t),
         mapToCurve: (e)=>{
-            const { x: t, y: c } = Ke(ye.create(e[0]));
-            return $e(t, c);
+            const { x: t, y: c } = Je(we.create(e[0]));
+            return We(t, c);
         },
         fromBytes: (e)=>{
-            const { compressed: t, infinity: c, sort: a, value: f } = ft1(e);
-            if (48 === f.length && t) {
-                const e = ye.ORDER, t = l2(f), r = ye.create(t & ye.MASK);
+            const { compressed: t, infinity: c, sort: f, value: a } = ot1(e);
+            if (48 === a.length && t) {
+                const e = we.ORDER, t = B1(a), r = we.create(t & we.MASK);
                 if (c) {
-                    if (r !== oe) throw new Error("G1: non-empty compressed point at infinity");
+                    if (r !== me) throw new Error("G1: non-empty compressed point at infinity");
                     return {
-                        x: oe,
-                        y: oe
+                        x: me,
+                        y: me
                     };
                 }
-                const n = ye.add(ye.pow(r, ue), ye.create(it1.params.G1b));
-                let d = ye.sqrt(n);
+                const n = we.add(we.pow(r, ye), we.create(lt1.params.G1b));
+                let d = we.sqrt(n);
                 if (!d) throw new Error("Invalid compressed G1 point");
-                return d * se / e !== BigInt(a) && (d = ye.neg(d)), {
-                    x: ye.create(r),
-                    y: ye.create(d)
+                return d * ge / e !== BigInt(f) && (d = we.neg(d)), {
+                    x: we.create(r),
+                    y: we.create(d)
                 };
             }
-            if (96 !== f.length || t) throw new Error("Invalid point G1, expected 48/96 bytes");
+            if (96 !== a.length || t) throw new Error("Invalid point G1, expected 48/96 bytes");
             {
-                const e = l2(f.subarray(0, ye.BYTES)), t = l2(f.subarray(ye.BYTES));
+                const e = B1(a.subarray(0, we.BYTES)), t = B1(a.subarray(we.BYTES));
                 if (c) {
-                    if (e !== oe || t !== oe) throw new Error("G1: non-empty point at infinity");
-                    return it1.G1.ProjectivePoint.ZERO.toAffine();
+                    if (e !== me || t !== me) throw new Error("G1: non-empty point at infinity");
+                    return lt1.G1.ProjectivePoint.ZERO.toAffine();
                 }
                 return {
-                    x: ye.create(e),
-                    y: ye.create(t)
+                    x: we.create(e),
+                    y: we.create(t)
                 };
             }
         },
         toBytes: (e, t, c)=>{
-            const a = t.equals(e.ZERO), { x: f, y: r } = t.toAffine();
+            const f = t.equals(e.ZERO), { x: a, y: r } = t.toAffine();
             if (c) {
-                if (a) return at1.slice();
-                const e = ye.ORDER, t = Boolean(r * se / e);
-                return rt1(p2(f, ye.BYTES), {
+                if (f) return it1.slice();
+                const e = we.ORDER, t = Boolean(r * ge / e);
+                return bt1(E1(a, we.BYTES), {
                     compressed: !0,
                     sort: t
                 });
             }
-            if (a) {
-                return B1(new Uint8Array([
+            if (f) {
+                return v2(new Uint8Array([
                     64
-                ]), new Uint8Array(2 * ye.BYTES - 1));
+                ]), new Uint8Array(2 * we.BYTES - 1));
             }
-            return B1(p2(f, ye.BYTES), p2(r, ye.BYTES));
+            return v2(E1(a, we.BYTES), E1(r, we.BYTES));
         },
         ShortSignature: {
             fromHex (e) {
-                const { infinity: t, sort: c, value: a } = ft1(y1("signatureHex", e, 48)), f = ye.ORDER, r = l2(a);
-                if (t) return it1.G1.ProjectivePoint.ZERO;
-                const n = ye.create(r & ye.MASK), d = ye.add(ye.pow(n, ue), ye.create(it1.params.G1b));
-                let i = ye.sqrt(d);
+                const { infinity: t, sort: c, value: f } = ot1(w1("signatureHex", e, 48)), a = we.ORDER, r = B1(f);
+                if (t) return lt1.G1.ProjectivePoint.ZERO;
+                const n = we.create(r & we.MASK), d = we.add(we.pow(n, ye), we.create(lt1.params.G1b));
+                let i = we.sqrt(d);
                 if (!i) throw new Error("Invalid compressed G1 point");
                 const o = BigInt(c);
-                i * se / f !== o && (i = ye.neg(i));
-                const b = it1.G1.ProjectivePoint.fromAffine({
+                i * ge / a !== o && (i = we.neg(i));
+                const b = lt1.G1.ProjectivePoint.fromAffine({
                     x: n,
                     y: i
                 });
                 return b.assertValidity(), b;
             },
-            toRawBytes: (e)=>nt1(e),
-            toHex: (e)=>i3(nt1(e))
+            toRawBytes: (e)=>st1(e),
+            toHex: (e)=>i3(st1(e))
         }
     },
     G2: {
-        Fp: Ie,
+        Fp: Pe,
         h: BigInt("0x5d543a95414e7f1091d50792876a202cd91de4547085abaa68a205b2e5a7ddfa628f1cb4d9e82ef21537e293a6691ae1616ec6e786f0c70cf1c38e31c7238e5"),
-        Gx: Ie.fromBigTuple([
+        Gx: Pe.fromBigTuple([
             BigInt("0x024aa2b2f08f0a91260805272dc51051c6e47ad4fa403b02b4510b647ae3d1770bac0326a805bbefd48056c8c121bdb8"),
             BigInt("0x13e02b6052719f607dacd3a088274f65596bd0d09920b61ab5da61bbdc7f5049334cf11213945d57e5ac7d055d042b7e")
         ]),
-        Gy: Ie.fromBigTuple([
+        Gy: Pe.fromBigTuple([
             BigInt("0x0ce5d527727d6e118cc9cdc6da2e351aadfd9baa8cbdd3a76d429a695160d12c923ac9cc3baca289e193548608b82801"),
             BigInt("0x0606c4a02ea734cc32acd2b02bc28b99cb3e287e85a763af267492ab572e99ab3f370d275cec1da1aaa9075ff05f79be")
         ]),
-        a: Ie.ZERO,
-        b: Ie.fromBigTuple([
-            le,
-            le
+        a: Pe.ZERO,
+        b: Pe.fromBigTuple([
+            Be,
+            Be
         ]),
         hEff: BigInt("0xbc69f08f2ee75b3584c6a0ea91b352888e2a8e9145ad7689986ff031508ffe1329c2f178731db956d82bf015d1212b02ec0ec69d7477c1ae954cbc06689f6a359894c0adebbf6b4e8020005aaa95551"),
         htfDefaults: {
-            ...ct1
+            ...dt1
         },
         wrapPrivateKey: !0,
         allowInfinityPoint: !0,
         mapToCurve: (e)=>{
-            const { x: t, y: c } = ze(Ie.fromBigTuple(e));
-            return Le(t, c);
+            const { x: t, y: c } = Xe(Pe.fromBigTuple(e));
+            return He(t, c);
         },
-        isTorsionFree: (e, t)=>t.multiplyUnsafe(it1.params.x).negate().equals(Qe(e, t)),
+        isTorsionFree: (e, t)=>t.multiplyUnsafe(lt1.params.x).negate().equals(at1(e, t)),
         clearCofactor: (e, t)=>{
-            const c = it1.params.x;
-            let a = t.multiplyUnsafe(c).negate(), f = Qe(e, t), r = t.double();
-            r = tt1(e, r), r = r.subtract(f), f = a.add(f), f = f.multiplyUnsafe(c).negate(), r = r.add(f), r = r.subtract(a);
+            const c = lt1.params.x;
+            let f = t.multiplyUnsafe(c).negate(), a = at1(e, t), r = t.double();
+            r = nt1(e, r), r = r.subtract(a), a = f.add(a), a = a.multiplyUnsafe(c).negate(), r = r.add(a), r = r.subtract(f);
             return r.subtract(t);
         },
         fromBytes: (e)=>{
-            const { compressed: t, infinity: c, sort: a, value: f } = ft1(e);
-            if (!t && !c && a || !t && c && a || a && c && t) throw new Error("Invalid encoding flag: " + (224 & e[0]));
-            const r = ye.BYTES, n = (e, t, c)=>l2(e.slice(t, c));
-            if (96 === f.length && t) {
-                const e = it1.params.G2b, t = ye.ORDER;
+            const { compressed: t, infinity: c, sort: f, value: a } = ot1(e);
+            if (!t && !c && f || !t && c && f || f && c && t) throw new Error("Invalid encoding flag: " + (224 & e[0]));
+            const r = we.BYTES, n = (e, t, c)=>B1(e.slice(t, c));
+            if (96 === a.length && t) {
+                const e = lt1.params.G2b, t = we.ORDER;
                 if (c) {
-                    if (f.reduce((e, t)=>0 !== e ? t + 1 : t, 0) > 0) throw new Error("Invalid compressed G2 point");
+                    if (a.reduce((e, t)=>0 !== e ? t + 1 : t, 0) > 0) throw new Error("Invalid compressed G2 point");
                     return {
-                        x: Ie.ZERO,
-                        y: Ie.ZERO
+                        x: Pe.ZERO,
+                        y: Pe.ZERO
                     };
                 }
-                const d = n(f, 0, r), i = n(f, r, 2 * r), o = Ie.create({
-                    c0: ye.create(i),
-                    c1: ye.create(d)
-                }), b = Ie.add(Ie.pow(o, ue), e);
-                let s = Ie.sqrt(b);
-                const u = s.c1 === oe ? s.c0 * se / t : s.c1 * se / t ? be : oe;
-                return s = a && u > 0 ? s : Ie.neg(s), {
+                const d = n(a, 0, r), i = n(a, r, 2 * r), o = Pe.create({
+                    c0: we.create(i),
+                    c1: we.create(d)
+                }), b = Pe.add(Pe.pow(o, ye), e);
+                let s = Pe.sqrt(b);
+                const u = s.c1 === me ? s.c0 * ge / t : s.c1 * ge / t ? pe : me;
+                return s = f && u > 0 ? s : Pe.neg(s), {
                     x: o,
                     y: s
                 };
             }
-            if (192 !== f.length || t) throw new Error("Invalid point G2, expected 96/192 bytes");
+            if (192 !== a.length || t) throw new Error("Invalid point G2, expected 96/192 bytes");
             {
                 if (c) {
-                    if (f.reduce((e, t)=>0 !== e ? t + 1 : t, 0) > 0) throw new Error("Invalid uncompressed G2 point");
+                    if (a.reduce((e, t)=>0 !== e ? t + 1 : t, 0) > 0) throw new Error("Invalid uncompressed G2 point");
                     return {
-                        x: Ie.ZERO,
-                        y: Ie.ZERO
+                        x: Pe.ZERO,
+                        y: Pe.ZERO
                     };
                 }
-                const e = n(f, 0, r), t = n(f, r, 2 * r), a = n(f, 2 * r, 3 * r), d = n(f, 3 * r, 4 * r);
+                const e = n(a, 0, r), t = n(a, r, 2 * r), f = n(a, 2 * r, 3 * r), d = n(a, 3 * r, 4 * r);
                 return {
-                    x: Ie.fromBigTuple([
+                    x: Pe.fromBigTuple([
                         t,
                         e
                     ]),
-                    y: Ie.fromBigTuple([
+                    y: Pe.fromBigTuple([
                         d,
-                        a
+                        f
                     ])
                 };
             }
         },
         toBytes: (e, t, c)=>{
-            const { BYTES: a, ORDER: f } = ye, r = t.equals(e.ZERO), { x: n, y: d } = t.toAffine();
+            const { BYTES: f, ORDER: a } = we, r = t.equals(e.ZERO), { x: n, y: d } = t.toAffine();
             if (c) {
-                if (r) return B1(at1, p2(oe, a));
-                const e = Boolean(d.c1 === oe ? d.c0 * se / f : d.c1 * se / f);
-                return B1(rt1(p2(n.c1, a), {
+                if (r) return v2(it1, E1(me, f));
+                const e = Boolean(d.c1 === me ? d.c0 * ge / a : d.c1 * ge / a);
+                return v2(bt1(E1(n.c1, f), {
                     compressed: !0,
                     sort: e
-                }), p2(n.c0, a));
+                }), E1(n.c0, f));
             }
             {
-                if (r) return B1(new Uint8Array([
+                if (r) return v2(new Uint8Array([
                     64
-                ]), new Uint8Array(4 * a - 1));
-                const { re: e, im: t } = Ie.reim(n), { re: c, im: f } = Ie.reim(d);
-                return B1(p2(t, a), p2(e, a), p2(f, a), p2(c, a));
+                ]), new Uint8Array(4 * f - 1));
+                const { re: e, im: t } = Pe.reim(n), { re: c, im: a } = Pe.reim(d);
+                return v2(E1(t, f), E1(e, f), E1(a, f), E1(c, f));
             }
         },
         Signature: {
             fromHex (e) {
-                const { infinity: t, sort: c, value: a } = ft1(y1("signatureHex", e)), f = ye.ORDER, r = a.length / 2;
+                const { infinity: t, sort: c, value: f } = ot1(w1("signatureHex", e)), a = we.ORDER, r = f.length / 2;
                 if (48 !== r && 96 !== r) throw new Error("Invalid compressed signature length, must be 96 or 192");
-                const n = l2(a.slice(0, r)), d = l2(a.slice(r));
-                if (t) return it1.G2.ProjectivePoint.ZERO;
-                const i = ye.create(n & ye.MASK), o = ye.create(d), b = Ie.create({
+                const n = B1(f.slice(0, r)), d = B1(f.slice(r));
+                if (t) return lt1.G2.ProjectivePoint.ZERO;
+                const i = we.create(n & we.MASK), o = we.create(d), b = Pe.create({
                     c0: o,
                     c1: i
-                }), s = Ie.add(Ie.pow(b, ue), it1.params.G2b);
-                let u = Ie.sqrt(s);
+                }), s = Pe.add(Pe.pow(b, ye), lt1.params.G2b);
+                let u = Pe.sqrt(s);
                 if (!u) throw new Error("Failed to find a square root");
-                const { re: m, im: p } = Ie.reim(u), g = BigInt(c);
-                (p > oe && p * se / f !== g || p === oe && m * se / f !== g) && (u = Ie.neg(u));
-                const B = it1.G2.ProjectivePoint.fromAffine({
+                const { re: l, im: m } = Pe.reim(u), p = BigInt(c);
+                (m > me && m * ge / a !== p || m === me && l * ge / a !== p) && (u = Pe.neg(u));
+                const g = lt1.G2.ProjectivePoint.fromAffine({
                     x: b,
                     y: u
                 });
-                return B.assertValidity(), B;
+                return g.assertValidity(), g;
             },
-            toRawBytes: (e)=>dt1(e),
-            toHex: (e)=>i3(dt1(e))
+            toRawBytes: (e)=>ut2(e),
+            toHex: (e)=>i3(ut2(e))
         }
     },
     params: {
-        x: je,
-        r: Be.ORDER
+        x: Me,
+        r: ve.ORDER
     },
-    htfDefaults: ct1,
+    htfDefaults: dt1,
     hash: d1,
-    randomBytes: O1
+    randomBytes: C1
 });
 "object" == typeof globalThis && "crypto" in globalThis ? globalThis.crypto : void 0;
-function t3(t1, ...e) {
+function t4(t1, ...e) {
     if (!((s = t1) instanceof Uint8Array || ArrayBuffer.isView(s) && "Uint8Array" === s.constructor.name)) throw new Error("Uint8Array expected");
     var s;
     if (e.length > 0 && !e.includes(t1.length)) throw new Error("Uint8Array expected of length " + e + ", got length=" + t1.length);
@@ -35455,7 +35477,7 @@ function e5(t, e = !0) {
     if (t.destroyed) throw new Error("Hash instance has been destroyed");
     if (e && t.finished) throw new Error("Hash#digest() has already been called");
 }
-function s5(t) {
+function s4(t) {
     return new DataView(t.buffer, t.byteOffset, t.byteLength);
 }
 function n5(t, e) {
@@ -35465,8 +35487,9 @@ function i4(e) {
     return "string" == typeof e && (e = function(t) {
         if ("string" != typeof t) throw new Error("utf8ToBytes expected string, got " + typeof t);
         return new Uint8Array((new TextEncoder).encode(t));
-    }(e)), t3(e), e;
+    }(e)), t4(e), e;
 }
+"function" == typeof Uint8Array.from([]).toHex && Uint8Array.fromHex;
 class r5 {
     clone() {
         return this._cloneInto();
@@ -35479,9 +35502,9 @@ function o6(t) {
 function h3(t, e, s) {
     return t & e ^ t & s ^ e & s;
 }
-class u4 extends r5 {
+class f4 extends r5 {
     constructor(t, e, n, i){
-        super(), this.blockLen = t, this.outputLen = e, this.padOffset = n, this.isLE = i, this.finished = !1, this.length = 0, this.pos = 0, this.destroyed = !1, this.buffer = new Uint8Array(t), this.view = s5(this.buffer);
+        super(), this.finished = !1, this.length = 0, this.pos = 0, this.destroyed = !1, this.blockLen = t, this.outputLen = e, this.padOffset = n, this.isLE = i, this.buffer = new Uint8Array(t), this.view = s4(this.buffer);
     }
     update(t) {
         e5(this);
@@ -35490,7 +35513,7 @@ class u4 extends r5 {
             const i = Math.min(o - this.pos, h - e);
             if (i !== o) r.set(t.subarray(e, e + i), this.pos), this.pos += i, e += i, this.pos === o && (this.process(n, 0), this.pos = 0);
             else {
-                const n = s5(t);
+                const n = s4(t);
                 for(; o <= h - e; e += o)this.process(n, e);
             }
         }
@@ -35498,24 +35521,24 @@ class u4 extends r5 {
     }
     digestInto(n) {
         e5(this), function(e, s) {
-            t3(e);
+            t4(e);
             const n = s.outputLen;
             if (e.length < n) throw new Error("digestInto() expects output buffer of length at least " + n);
         }(n, this), this.finished = !0;
         const { buffer: i, view: r, blockLen: o, isLE: h } = this;
-        let { pos: u } = this;
-        i[u++] = 128, this.buffer.subarray(u).fill(0), this.padOffset > o - u && (this.process(r, 0), u = 0);
-        for(let t = u; t < o; t++)i[t] = 0;
+        let { pos: f } = this;
+        i[f++] = 128, this.buffer.subarray(f).fill(0), this.padOffset > o - f && (this.process(r, 0), f = 0);
+        for(let t = f; t < o; t++)i[t] = 0;
         !function(t, e, s, n) {
             if ("function" == typeof t.setBigUint64) return t.setBigUint64(e, s, n);
-            const i = BigInt(32), r = BigInt(4294967295), o = Number(s >> i & r), h = Number(s & r), u = n ? 4 : 0, f = n ? 0 : 4;
-            t.setUint32(e + u, o, n), t.setUint32(e + f, h, n);
+            const i = BigInt(32), r = BigInt(4294967295), o = Number(s >> i & r), h = Number(s & r), f = n ? 4 : 0, u = n ? 0 : 4;
+            t.setUint32(e + f, o, n), t.setUint32(e + u, h, n);
         }(r, o - 8, BigInt(8 * this.length), h), this.process(r, 0);
-        const f = s5(n), c = this.outputLen;
+        const u = s4(n), c = this.outputLen;
         if (c % 4) throw new Error("_sha2: outputLen should be aligned to 32bit");
         const l = c / 4, a = this.get();
         if (l > a.length) throw new Error("_sha2: outputLen bigger than state");
-        for(let t = 0; t < l; t++)f.setUint32(4 * t, a[t], h);
+        for(let t = 0; t < l; t++)u.setUint32(4 * t, a[t], h);
     }
     digest() {
         const { buffer: t, outputLen: e } = this;
@@ -35529,7 +35552,7 @@ class u4 extends r5 {
         return t.length = n, t.pos = o, t.finished = i, t.destroyed = r, n % e && t.buffer.set(s), t;
     }
 }
-const f4 = new Uint32Array([
+const u3 = new Uint32Array([
     1116352408,
     1899447441,
     3049323471,
@@ -35603,10 +35626,10 @@ const f4 = new Uint32Array([
     2600822924,
     528734635,
     1541459225
-]), l3 = new Uint32Array(64);
-class a3 extends u4 {
-    constructor(){
-        super(64, 32, 8, !1), this.A = 0 | c3[0], this.B = 0 | c3[1], this.C = 0 | c3[2], this.D = 0 | c3[3], this.E = 0 | c3[4], this.F = 0 | c3[5], this.G = 0 | c3[6], this.H = 0 | c3[7];
+]), l2 = new Uint32Array(64);
+class a3 extends f4 {
+    constructor(t = 32){
+        super(64, t, 8, !1), this.A = 0 | c3[0], this.B = 0 | c3[1], this.C = 0 | c3[2], this.D = 0 | c3[3], this.E = 0 | c3[4], this.F = 0 | c3[5], this.G = 0 | c3[6], this.H = 0 | c3[7];
     }
     get() {
         const { A: t, B: e, C: s, D: n, E: i, F: r, G: o, H: h } = this;
@@ -35625,32 +35648,32 @@ class a3 extends u4 {
         this.A = 0 | t, this.B = 0 | e, this.C = 0 | s, this.D = 0 | n, this.E = 0 | i, this.F = 0 | r, this.G = 0 | o, this.H = 0 | h;
     }
     process(t, e) {
-        for(let s = 0; s < 16; s++, e += 4)l3[s] = t.getUint32(e, !1);
+        for(let s = 0; s < 16; s++, e += 4)l2[s] = t.getUint32(e, !1);
         for(let t = 16; t < 64; t++){
-            const e = l3[t - 15], s = l3[t - 2], i = n5(e, 7) ^ n5(e, 18) ^ e >>> 3, r = n5(s, 17) ^ n5(s, 19) ^ s >>> 10;
-            l3[t] = r + l3[t - 7] + i + l3[t - 16] | 0;
+            const e = l2[t - 15], s = l2[t - 2], i = n5(e, 7) ^ n5(e, 18) ^ e >>> 3, r = n5(s, 17) ^ n5(s, 19) ^ s >>> 10;
+            l2[t] = r + l2[t - 7] + i + l2[t - 16] | 0;
         }
-        let { A: s, B: i, C: r, D: o, E: u, F: c, G: a, H: p } = this;
+        let { A: s, B: i, C: r, D: o, E: f, F: c, G: a, H: p } = this;
         for(let t = 0; t < 64; t++){
-            const e = p + (n5(u, 6) ^ n5(u, 11) ^ n5(u, 25)) + ((d = u) & c ^ ~d & a) + f4[t] + l3[t] | 0, g = (n5(s, 2) ^ n5(s, 13) ^ n5(s, 22)) + h3(s, i, r) | 0;
-            p = a, a = c, c = u, u = o + e | 0, o = r, r = i, i = s, s = e + g | 0;
+            const e = p + (n5(f, 6) ^ n5(f, 11) ^ n5(f, 25)) + ((d = f) & c ^ ~d & a) + u3[t] + l2[t] | 0, g = (n5(s, 2) ^ n5(s, 13) ^ n5(s, 22)) + h3(s, i, r) | 0;
+            p = a, a = c, c = f, f = o + e | 0, o = r, r = i, i = s, s = e + g | 0;
         }
         var d;
-        s = s + this.A | 0, i = i + this.B | 0, r = r + this.C | 0, o = o + this.D | 0, u = u + this.E | 0, c = c + this.F | 0, a = a + this.G | 0, p = p + this.H | 0, this.set(s, i, r, o, u, c, a, p);
+        s = s + this.A | 0, i = i + this.B | 0, r = r + this.C | 0, o = o + this.D | 0, f = f + this.E | 0, c = c + this.F | 0, a = a + this.G | 0, p = p + this.H | 0, this.set(s, i, r, o, f, c, a, p);
     }
     roundClean() {
-        l3.fill(0);
+        l2.fill(0);
     }
     destroy() {
         this.set(0, 0, 0, 0, 0, 0, 0, 0), this.buffer.fill(0);
     }
 }
-class p3 extends a3 {
+class p2 extends a3 {
     constructor(){
-        super(), this.A = -1056596264, this.B = 914150663, this.C = 812702999, this.D = -150054599, this.E = -4191439, this.F = 1750603025, this.G = 1694076839, this.H = -1090891868, this.outputLen = 28;
+        super(28), this.A = -1056596264, this.B = 914150663, this.C = 812702999, this.D = -150054599, this.E = -4191439, this.F = 1750603025, this.G = 1694076839, this.H = -1090891868;
     }
 }
-o6(()=>new a3), o6(()=>new p3);
+o6(()=>new a3), o6(()=>new p2);
 BigInt(0), BigInt(1), BigInt(2);
 Array.from({
     length: 256
@@ -35659,14 +35682,14 @@ var r6 = "undefined" != typeof globalThis ? globalThis : "undefined" != typeof w
 function i5(t) {
     return t && Object.prototype.hasOwnProperty.call(t, "default") ? t.default : t;
 }
-var o7 = {}, a4 = {}, s6 = {}, u5 = {};
-Object.defineProperty(u5, "__esModule", {
+var o7 = {}, a4 = {}, s5 = {}, u4 = {};
+Object.defineProperty(u4, "__esModule", {
     value: !0
-}), u5.LIB_VERSION = void 0, u5.LIB_VERSION = "1.2.6", function(t) {
+}), u4.LIB_VERSION = void 0, u4.LIB_VERSION = "1.2.6", function(t) {
     Object.defineProperty(t, "__esModule", {
         value: !0
     }), t.retryOnError = t.jsonOrError = t.defaultHttpOptions = t.roundTime = t.roundAt = t.sleep = void 0;
-    const e = u5;
+    const e = u4;
     t.sleep = function(t) {
         return new Promise((e)=>{
             t <= 0 && e(), setTimeout(e, t);
@@ -35698,10 +35721,10 @@ Object.defineProperty(u5, "__esModule", {
             return t(e, n - 1);
         }
     };
-}(s6), Object.defineProperty(a4, "__esModule", {
+}(s5), Object.defineProperty(a4, "__esModule", {
     value: !0
 }), a4.HttpChain = void 0;
-const f5 = o7, c4 = s6;
+const f5 = o7, c4 = s5;
 class h4 {
     baseUrl;
     options;
@@ -35730,28 +35753,28 @@ a4.default = class {
         return this.cachedInfo || (this.cachedInfo = await this.chain.info()), this.cachedInfo;
     }
 };
-var l4 = {};
-Object.defineProperty(l4, "__esModule", {
+var l3 = {};
+Object.defineProperty(l3, "__esModule", {
     value: !0
 });
-const d3 = o7, p4 = s6;
-function b3(t, e) {
+const d3 = o7, p3 = s5;
+function b2(t, e) {
     return e.noCache ? `${t}?${Date.now()}` : t;
 }
-l4.default = class {
+l3.default = class {
     someChain;
     options;
     httpOptions;
-    constructor(t, e = d3.defaultChainOptions, n = p4.defaultHttpOptions){
+    constructor(t, e = d3.defaultChainOptions, n = p3.defaultHttpOptions){
         this.someChain = t, this.options = e, this.httpOptions = n;
     }
     async get(t) {
-        const e = b3(`${this.someChain.baseUrl}/public/${t}`, this.options);
-        return await (0, p4.jsonOrError)(e, this.httpOptions);
+        const e = b2(`${this.someChain.baseUrl}/public/${t}`, this.options);
+        return await (0, p3.jsonOrError)(e, this.httpOptions);
     }
     async latest() {
-        const t = b3(`${this.someChain.baseUrl}/public/latest`, this.options);
-        return await (0, p4.jsonOrError)(t, this.httpOptions);
+        const t = b2(`${this.someChain.baseUrl}/public/latest`, this.options);
+        return await (0, p3.jsonOrError)(t, this.httpOptions);
     }
     chain() {
         return this.someChain;
@@ -35828,7 +35851,7 @@ var w2 = r6 && r6.__createBinding || (Object.create ? function(t, e, n, r) {
 Object.defineProperty(g3, "__esModule", {
     value: !0
 });
-const m3 = o7, A2 = v3(a4), C2 = _2, I2 = T10(l4);
+const m2 = o7, A2 = v3(a4), C3 = _2, I2 = T10(l3);
 g3.default = class {
     baseUrls;
     options;
@@ -35837,7 +35860,7 @@ g3.default = class {
     speedTestHttpOptions = {
         userAgent: "drand-web-client-speedtest"
     };
-    constructor(t, e = m3.defaultChainOptions, n = 3e5){
+    constructor(t, e = m2.defaultChainOptions, n = 3e5){
         if (this.baseUrls = t, this.options = e, this.speedTestIntervalMs = n, 0 === t.length) throw Error("Can't optimise an empty `baseUrls` array!");
     }
     async latest() {
@@ -35851,7 +35874,7 @@ g3.default = class {
     }
     start() {
         1 !== this.baseUrls.length ? this.speedTests = this.baseUrls.map((t)=>{
-            const e = (0, C2.createSpeedTest)(async ()=>{
+            const e = (0, C3.createSpeedTest)(async ()=>{
                 await new A2.HttpChain(t, this.options, this.speedTestHttpOptions).info();
             }, this.speedTestIntervalMs);
             return e.start(), {
@@ -35878,11 +35901,11 @@ var N15 = {}, U6 = r6 && r6.__importDefault || function(t) {
 Object.defineProperty(N15, "__esModule", {
     value: !0
 });
-const O3 = o7, R2 = U6(a4), P2 = s6;
+const O2 = o7, R2 = U6(a4), P2 = s5;
 N15.default = class {
     baseUrl;
     options;
-    constructor(t, e = O3.defaultChainOptions){
+    constructor(t, e = O2.defaultChainOptions){
         this.baseUrl = t, this.options = e;
     }
     async chains() {
@@ -36072,7 +36095,7 @@ function it2(t, e, n) {
     var r = t[e];
     t[e] = t[n], t[n] = r;
 }
-function ot1(t, e, n, r, i) {
+function ot2(t, e, n, r, i) {
     if (0 === t.length) return -1;
     if ("string" == typeof n ? (r = n, n = 0) : n > 2147483647 ? n = 2147483647 : n < -2147483648 && (n = -2147483648), n = +n, isNaN(n) && (n = i ? 0 : t.length - 1), n < 0 && (n = t.length + n), n >= t.length) {
         if (i) return -1;
@@ -36110,7 +36133,7 @@ function at2(t, e, n, r, i) {
     }
     return -1;
 }
-function st1(t, e, n, r) {
+function st2(t, e, n, r) {
     n = Number(n) || 0;
     var i = t.length - n;
     r ? (r = Number(r)) > i && (r = i) : r = i;
@@ -36124,7 +36147,7 @@ function st1(t, e, n, r) {
     }
     return a;
 }
-function ut2(t, e, n, r) {
+function ut3(t, e, n, r) {
     return Pt1(Ot1(e, t.length - n), t, n, r);
 }
 function ft2(t, e, n, r) {
@@ -36139,7 +36162,7 @@ function ct2(t, e, n, r) {
 function ht1(t, e, n, r) {
     return Pt1(Rt1(e), t, n, r);
 }
-function lt1(t, e, n, r) {
+function lt2(t, e, n, r) {
     return Pt1(function(t, e) {
         for(var n, r, i, o = [], a = 0; a < t.length && !((e -= 2) < 0); ++a)r = (n = t.charCodeAt(a)) >> 8, i = n % 256, o.push(i), o.push(r);
         return o;
@@ -36169,9 +36192,9 @@ function pt1(t, e, n) {
     }
     return function(t) {
         var e = t.length;
-        if (e <= bt1) return String.fromCharCode.apply(String, t);
+        if (e <= bt2) return String.fromCharCode.apply(String, t);
         var n = "", r = 0;
-        for(; r < e;)n += String.fromCharCode.apply(String, t.slice(r, r += bt1));
+        for(; r < e;)n += String.fromCharCode.apply(String, t.slice(r, r += bt2));
         return n;
     }(r);
 }
@@ -36263,9 +36286,9 @@ q2.poolSize = 8192, q2._augment = function(t) {
 }, q2.prototype.includes = function(t, e, n) {
     return -1 !== this.indexOf(t, e, n);
 }, q2.prototype.indexOf = function(t, e, n) {
-    return ot1(this, t, e, n, !0);
+    return ot2(this, t, e, n, !0);
 }, q2.prototype.lastIndexOf = function(t, e, n) {
-    return ot1(this, t, e, n, !1);
+    return ot2(this, t, e, n, !1);
 }, q2.prototype.write = function(t, e, n, r) {
     if (void 0 === e) r = "utf8", n = this.length, e = 0;
     else if (void 0 === n && "string" == typeof e) r = e, n = this.length, e = 0;
@@ -36278,10 +36301,10 @@ q2.poolSize = 8192, q2._augment = function(t) {
     r || (r = "utf8");
     for(var o = !1;;)switch(r){
         case "hex":
-            return st1(this, t, e, n);
+            return st2(this, t, e, n);
         case "utf8":
         case "utf-8":
-            return ut2(this, t, e, n);
+            return ut3(this, t, e, n);
         case "ascii":
             return ft2(this, t, e, n);
         case "latin1":
@@ -36293,7 +36316,7 @@ q2.poolSize = 8192, q2._augment = function(t) {
         case "ucs-2":
         case "utf16le":
         case "utf-16le":
-            return lt1(this, t, e, n);
+            return lt2(this, t, e, n);
         default:
             if (o) throw new TypeError("Unknown encoding: " + r);
             r = ("" + r).toLowerCase(), o = !0;
@@ -36304,7 +36327,7 @@ q2.poolSize = 8192, q2._augment = function(t) {
         data: Array.prototype.slice.call(this._arr || this, 0)
     };
 };
-var bt1 = 4096;
+var bt2 = 4096;
 function gt1(t, e, n) {
     var r = "";
     n = Math.min(t.length, n);
@@ -36437,7 +36460,7 @@ q2.prototype.slice = function(t, e) {
         vt1(this, t, e, n, i - 1, -i);
     }
     var o = 0, a = 1, s = 0;
-    for(this[e] = 255 & t; ++o < n && (a *= 256);)t < 0 && 0 === s && 0 !== this[e + o - 1] && (s = 1), this[e + o] = (t / a >> 0) - s & 255;
+    for(this[e] = 255 & t; ++o < n && (a *= 256);)t < 0 && 0 === s && 0 !== this[e + o - 1] && (s = 1), this[e + o] = (t / a | 0) - s & 255;
     return e + n;
 }, q2.prototype.writeIntBE = function(t, e, n, r) {
     if (t = +t, e |= 0, !r) {
@@ -36445,7 +36468,7 @@ q2.prototype.slice = function(t, e) {
         vt1(this, t, e, n, i - 1, -i);
     }
     var o = n - 1, a = 1, s = 0;
-    for(this[e + o] = 255 & t; --o >= 0 && (a *= 256);)t < 0 && 0 === s && 0 !== this[e + o + 1] && (s = 1), this[e + o] = (t / a >> 0) - s & 255;
+    for(this[e + o] = 255 & t; --o >= 0 && (a *= 256);)t < 0 && 0 === s && 0 !== this[e + o + 1] && (s = 1), this[e + o] = (t / a | 0) - s & 255;
     return e + n;
 }, q2.prototype.writeInt8 = function(t, e, n) {
     return t = +t, e |= 0, n || vt1(this, t, e, 1, 127, -128), q2.TYPED_ARRAY_SUPPORT || (t = Math.floor(t)), t < 0 && (t = 255 + t + 1), this[e] = 255 & t, e + 1;
@@ -36634,7 +36657,7 @@ var Qt = {};
     Object.defineProperty(t, "__esModule", {
         value: !0
     }), t.testnetQuicknetClient = t.testnetDefaultClient = t.fastnetClient = t.quicknetClient = t.defaultClient = t.TESTNET_QUICKNET_CHAIN_INFO = t.TESTNET_QUICKNET_CHAIN_URL = t.TESTNET_DEFAULT_CHAIN_INFO = t.TESTNET_DEFAULT_CHAIN_URL = t.FASTNET_CHAIN_INFO = t.FASTNET_CHAIN_URL = t.QUICKNET_CHAIN_INFO = t.QUICKNET_CHAIN_URL = t.DEFAULT_CHAIN_INFO = t.DEFAULT_CHAIN_URL = void 0;
-    const n = o7, i = e(l4), s = e(a4);
+    const n = o7, i = e(l3), s = e(a4);
     t.DEFAULT_CHAIN_URL = "https://api.drand.sh", t.DEFAULT_CHAIN_INFO = {
         public_key: "868f005eb8e6e4ca0a47c8a77ceaa5309a47978a7c71bc5cce96366b5d7a569937c529eeda66c7293784a9402801af31",
         period: 30,
@@ -36749,13 +36772,13 @@ var Qt = {};
             return i.HttpChain;
         }
     });
-    const o = e(l4);
+    const o = e(l3);
     t.HttpChainClient = o.default;
     const u = e(g3);
     t.FastestNodeClient = u.default;
     const f = e(N15);
     t.MultiBeaconNode = f.default;
-    const c = s6;
+    const c = s5;
     Object.defineProperty(t, "roundAt", {
         enumerable: !0,
         get: function() {
@@ -36862,3 +36885,4 @@ export { UnsupportedHashError as UnsupportedHashError, HashMismatchError as Hash
 export { ne1 as fetchBeaconByTime, zt1 as HttpChainClient, Vt as HttpCachingChain };
 export { assertOkResponse as assertOkResponse };
 export { pRetry as pRetry };
+export { t as Prando };
