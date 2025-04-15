@@ -7,7 +7,7 @@ import Spark, { getRetrievalUrl } from './lib/spark.js'
 import { getIndexProviderPeerId as defaultGetIndexProvider } from './lib/miner-info.js'
 
 // The task to check, replace with your own values
-const task = {
+const retrievalTask = {
   cid: 'bafkreih25dih6ug3xtj73vswccw423b56ilrwmnos4cbwhrceudopdp5sq',
   minerId: 'f0frisbii',
 }
@@ -19,8 +19,8 @@ const getIndexProviderPeerId = (minerId) =>
 
 // Run the check
 const spark = new Spark({ getIndexProviderPeerId })
-const stats = { ...task, indexerResult: null, statusCode: null, byteLength: 0 }
-await spark.executeRetrievalCheck(task, stats)
+const stats = { ...retrievalTask, indexerResult: null, statusCode: null, byteLength: 0 }
+await spark.executeRetrievalCheck({ retrievalTask, stats })
 console.log('Measurement: %o', stats)
 
 if (stats.providerAddress && stats.statusCode !== 200) {
@@ -31,7 +31,7 @@ if (stats.providerAddress && stats.statusCode !== 200) {
       console.log(
         '  lassie fetch -o /dev/null -vv --dag-scope block --protocols graphsync --providers %s %s',
         JSON.stringify(stats.providerAddress),
-        task.cid,
+        retrievalTask.cid,
       )
       console.log(
         '\nHow to install Lassie: https://github.com/filecoin-project/lassie?tab=readme-ov-file#installation',
@@ -39,7 +39,7 @@ if (stats.providerAddress && stats.statusCode !== 200) {
       break
     case 'http':
       try {
-        const url = getRetrievalUrl(stats.protocol, stats.providerAddress, task.cid)
+        const url = getRetrievalUrl(stats.protocol, stats.providerAddress, retrievalTask.cid)
         console.log('You can get more details by requesting the following URL yourself:\n')
         console.log('  %s', url)
         console.log('\nE.g. using `curl`:')
@@ -48,7 +48,7 @@ if (stats.providerAddress && stats.statusCode !== 200) {
         console.log(
           '  lassie fetch -o /dev/null -vv --dag-scope block --protocols http --providers %s %s',
           JSON.stringify(stats.providerAddress),
-          task.cid,
+          retrievalTask.cid,
         )
         console.log(
           '\nHow to install Lassie: https://github.com/filecoin-project/lassie?tab=readme-ov-file#installation',

@@ -24,7 +24,10 @@ test('retrieval check for our CID', async () => {
     return FRISBEE_PEER_ID
   }
   const spark = new Spark({ getIndexProviderPeerId })
-  spark.getRetrieval = async () => ({ cid: KNOWN_CID, minerId: OUR_FAKE_MINER_ID })
+  spark.getRetrieval = async () => ({
+    retrievalTask: { cid: KNOWN_CID, minerId: OUR_FAKE_MINER_ID },
+    randomness: 0,
+  })
 
   const measurementId = await spark.nextRetrieval()
   const res = await fetch(`https://api.filspark.com/measurements/${measurementId}`)

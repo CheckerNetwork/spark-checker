@@ -53,8 +53,8 @@ test('getRetrieval', async () => {
     }
   }
   const spark = new Spark({ fetch })
-  const retrieval = await spark.getRetrieval()
-  assertArrayIncludes(round.retrievalTasks.map(JSON.stringify), [retrieval].map(JSON.stringify))
+  const { retrievalTask } = await spark.getRetrieval()
+  assertArrayIncludes(round.retrievalTasks.map(JSON.stringify), [retrievalTask].map(JSON.stringify))
   assertEquals(requests, [
     {
       url: 'https://api.filspark.com/rounds/current',
@@ -165,7 +165,7 @@ test('checkRetrievalFromAlternativeProvider - http', async () => {
       return fetch(url)
     },
   })
-  const providers = [
+  const alternativeProviders = [
     {
       address: '/dns/frisbii.fly.dev/tcp/443/https',
       protocol: 'http',
@@ -178,11 +178,31 @@ test('checkRetrievalFromAlternativeProvider - http', async () => {
     },
   ]
 
-  const alternativeProviderRetrievalStats  = await spark.checkRetrievalFromAlternativeProvider(providers, KNOWN_CID)
-  assertEquals(alternativeProviderRetrievalStats.statusCode, 200, 'alternativeProviderRetrievalStats.statusCode')
-  assertEquals(alternativeProviderRetrievalStats.timeout, false, 'alternativeProviderRetrievalStats.timeout')
-  assertInstanceOf(alternativeProviderRetrievalStats.endAt, Date, 'alternativeProviderRetrievalStats.endAt')
-  assertEquals(alternativeProviderRetrievalStats.carTooLarge, false, 'alternativeProviderRetrievalStats.carTooLarge')
+  const alternativeProviderRetrievalStats = await spark.checkRetrievalFromAlternativeProvider({
+    alternativeProviders,
+    cid: KNOWN_CID,
+    randomness: 0,
+  })
+  assertEquals(
+    alternativeProviderRetrievalStats.statusCode,
+    200,
+    'alternativeProviderRetrievalStats.statusCode',
+  )
+  assertEquals(
+    alternativeProviderRetrievalStats.timeout,
+    false,
+    'alternativeProviderRetrievalStats.timeout',
+  )
+  assertInstanceOf(
+    alternativeProviderRetrievalStats.endAt,
+    Date,
+    'alternativeProviderRetrievalStats.endAt',
+  )
+  assertEquals(
+    alternativeProviderRetrievalStats.carTooLarge,
+    false,
+    'alternativeProviderRetrievalStats.carTooLarge',
+  )
 })
 
 test('checkRetrievalFromAlternativeProvider - no providers', async () => {
@@ -193,9 +213,12 @@ test('checkRetrievalFromAlternativeProvider - no providers', async () => {
       return fetch(url)
     },
   })
-  const providers = []
-
-  const alternativeProviderRetrievalStats = await spark.checkRetrievalFromAlternativeProvider(providers, KNOWN_CID)
+  const alternativeProviders = []
+  const alternativeProviderRetrievalStats = await spark.checkRetrievalFromAlternativeProvider({
+    alternativeProviders,
+    cid: KNOWN_CID,
+    randomness: 0,
+  })
   assertEquals(alternativeProviderRetrievalStats, undefined, 'alternativeProviderRetrievalStats')
 })
 
@@ -535,34 +558,36 @@ const mockProviders = [
 ]
 
 test('should prioritize HTTP providers with ContextID starting with "ghsA"', () => {
-  const result = pickRandomProvider(mockProviders)
+  const result = pickRandomProvider(mockProviders, 0)
   assertEquals(result.protocol, 'http')
   assertEquals(result.contextId.startsWith('ghsA'), true)
 })
 
 test('should fall back to Graphsync providers with ContextID starting with "ghsA" if no HTTP providers are available', () => {
   const providers = mockProviders.filter((p) => p.protocol !== 'http')
-  const result = pickRandomProvider(providers)
+  const result = pickRandomProvider(providers, 0)
   assertEquals(result.protocol, 'graphsync')
   assertEquals(result.contextId.startsWith('ghsA'), true)
 })
 
 test('should fall back to HTTP providers if no "ghsA" ContextID providers are available', () => {
   const providers = mockProviders.filter((p) => !p.contextId.startsWith('ghsA'))
-  const result = pickRandomProvider(providers)
+  const result = pickRandomProvider(providers, 0)
   assertEquals(result.protocol, 'http')
   assertEquals(result.contextId.startsWith('ghsA'), false)
 })
 
 test('should fall back to Graphsync providers if no HTTP providers are available', () => {
-  const providers = mockProviders.filter((p) => p.protocol === 'graphsync' && !p.contextId.startsWith('ghsA'))
-  const result = pickRandomProvider(providers)
+  const providers = mockProviders.filter(
+    (p) => p.protocol === 'graphsync' && !p.contextId.startsWith('ghsA'),
+  )
+  const result = pickRandomProvider(providers, 0)
   assertEquals(result.protocol, 'graphsync')
   assertEquals(result.contextId.startsWith('ghsA'), false)
 })
 
 test('should return undefined if no valid providers are available', () => {
   const providers = mockProviders.filter((p) => p.protocol === 'bitswap')
-  const result = pickRandomProvider(providers)
+  const result = pickRandomProvider(providers, 0)
   assertEquals(result, undefined)
 })
