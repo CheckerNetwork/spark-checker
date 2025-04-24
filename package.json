@@ -1,10 +1,13 @@
 {
   "name": "spark-checker",
+  "type": "module",
   "scripts": {
     "lint": "eslint && prettier --check .",
     "lint:fix": "eslint --fix && prettier --write ."
   },
+  "prettier": "@checkernetwork/prettier-config",
   "devDependencies": {
+    "@checkernetwork/prettier-config": "^1.0.0",
     "eslint": "^9.23.0",
     "neostandard": "^0.12.1",
     "prettier": "^3.5.3"

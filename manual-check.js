@@ -39,8 +39,14 @@ if (stats.providerAddress && stats.statusCode !== 200) {
       break
     case 'http':
       try {
-        const url = getRetrievalUrl(stats.protocol, stats.providerAddress, task.cid)
-        console.log('You can get more details by requesting the following URL yourself:\n')
+        const url = getRetrievalUrl(
+          stats.protocol,
+          stats.providerAddress,
+          task.cid,
+        )
+        console.log(
+          'You can get more details by requesting the following URL yourself:\n',
+        )
         console.log('  %s', url)
         console.log('\nE.g. using `curl`:')
         console.log('  curl -i %s', JSON.stringify(url))
