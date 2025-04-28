@@ -1,6 +1,10 @@
 /* global Zinnia */
 
-import Spark, { calculateDelayBeforeNextTask, newStats, pickRandomProvider } from '../lib/spark.js'
+import Spark, {
+  calculateDelayBeforeNextTask,
+  newStats,
+  pickRandomProvider,
+} from '../lib/spark.js'
 import { test } from 'zinnia:test'
 import {
   assertInstanceOf,
@@ -54,7 +58,10 @@ test('getRetrieval', async () => {
   }
   const spark = new Spark({ fetch })
   const { retrievalTask } = await spark.getRetrieval()
-  assertArrayIncludes(round.retrievalTasks.map(JSON.stringify), [retrievalTask].map(JSON.stringify))
+  assertArrayIncludes(
+    round.retrievalTasks.map(JSON.stringify),
+    [retrievalTask].map(JSON.stringify),
+  )
   assertEquals(requests, [
     {
       url: 'https://api.filspark.com/rounds/current',
@@ -203,11 +210,12 @@ test('checkRetrievalFromAlternativeProvider - http', async () => {
     },
   ]
 
-  const alternativeProviderRetrievalStats = await spark.checkRetrievalFromAlternativeProvider({
-    alternativeProviders,
-    cid: KNOWN_CID,
-    randomness: 0,
-  })
+  const alternativeProviderRetrievalStats =
+    await spark.checkRetrievalFromAlternativeProvider({
+      alternativeProviders,
+      cid: KNOWN_CID,
+      randomness: 0,
+    })
   assertEquals(
     alternativeProviderRetrievalStats.statusCode,
     200,
@@ -239,12 +247,17 @@ test('checkRetrievalFromAlternativeProvider - no providers', async () => {
     },
   })
   const alternativeProviders = []
-  const alternativeProviderRetrievalStats = await spark.checkRetrievalFromAlternativeProvider({
-    alternativeProviders,
-    cid: KNOWN_CID,
-    randomness: 0,
-  })
-  assertEquals(alternativeProviderRetrievalStats, undefined, 'alternativeProviderRetrievalStats')
+  const alternativeProviderRetrievalStats =
+    await spark.checkRetrievalFromAlternativeProvider({
+      alternativeProviders,
+      cid: KNOWN_CID,
+      randomness: 0,
+    })
+  assertEquals(
+    alternativeProviderRetrievalStats,
+    undefined,
+    'alternativeProviderRetrievalStats',
+  )
 })
 
 /* Fixme: Find an active deal on a reliable graphsync provider
@@ -602,9 +615,17 @@ test('fetchCAR triggers timeout after long retrieval', async () => {
 
 const mockProviders = [
   { protocol: 'http', contextId: 'ghsA123', address: 'http-provider-1' },
-  { protocol: 'graphsync', contextId: 'ghsA456', address: 'graphsync-provider-1' },
+  {
+    protocol: 'graphsync',
+    contextId: 'ghsA456',
+    address: 'graphsync-provider-1',
+  },
   { protocol: 'http', contextId: 'other123', address: 'http-provider-2' },
-  { protocol: 'graphsync', contextId: 'other456', address: 'graphsync-provider-2' },
+  {
+    protocol: 'graphsync',
+    contextId: 'other456',
+    address: 'graphsync-provider-2',
+  },
   { protocol: 'bitswap', contextId: 'ghsA789', address: 'bitswap-provider-1' },
 ]
 
