@@ -87,7 +87,11 @@ test('testHeadRequest', async () => {
     },
   })
   const stats = {}
-  await spark.testHeadRequest('/dns/frisbii.fly.dev/tcp/443/https', KNOWN_CID, stats)
+  await spark.testHeadRequest(
+    '/dns/frisbii.fly.dev/tcp/443/https',
+    KNOWN_CID,
+    stats,
+  )
   assertEquals(stats.headStatusCode, 200)
   assertEquals(requests, [
     {
@@ -109,10 +113,17 @@ test('testHeadRequest - with statusCode=500', async () => {
     },
   })
   const stats = {}
-  await spark.testHeadRequest('/dns/frisbii.fly.dev/tcp/443/https', KNOWN_CID, stats)
+  await spark.testHeadRequest(
+    '/dns/frisbii.fly.dev/tcp/443/https',
+    KNOWN_CID,
+    stats,
+  )
   assertEquals(stats.headStatusCode, 500)
   assertEquals(requests, [
-    { url: `https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`, method: 'HEAD' },
+    {
+      url: `https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`,
+      method: 'HEAD',
+    },
   ])
 })
 
@@ -125,10 +136,17 @@ test('testHeadRequest - with network failure', async () => {
     },
   })
   const stats = {}
-  await spark.testHeadRequest('/dns/frisbii.fly.dev/tcp/443/https', KNOWN_CID, stats)
+  await spark.testHeadRequest(
+    '/dns/frisbii.fly.dev/tcp/443/https',
+    KNOWN_CID,
+    stats,
+  )
   assertEquals(stats.headStatusCode, 600)
   assertEquals(requests, [
-    { url: `https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`, method: 'HEAD' },
+    {
+      url: `https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`,
+      method: 'HEAD',
+    },
   ])
 })
 
@@ -141,7 +159,12 @@ test('fetchCAR - http', async () => {
     },
   })
   const stats = newStats()
-  await spark.fetchCAR('http', '/dns/frisbii.fly.dev/tcp/443/https', KNOWN_CID, stats)
+  await spark.fetchCAR(
+    'http',
+    '/dns/frisbii.fly.dev/tcp/443/https',
+    KNOWN_CID,
+    stats,
+  )
   assertEquals(stats.statusCode, 200, 'stats.statusCode')
   assertEquals(stats.timeout, false, 'stats.timeout')
   assertInstanceOf(stats.startAt, Date)
@@ -154,7 +177,9 @@ test('fetchCAR - http', async () => {
     '122069f03061f7ad4c14a5691b7e96d3ddd109023a6539a0b4230ea3dc92050e7136',
     'stats.carChecksum',
   )
-  assertEquals(requests, [`https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`])
+  assertEquals(requests, [
+    `https://frisbii.fly.dev/ipfs/${KNOWN_CID}?dag-scope=block`,
+  ])
 })
 
 test('checkRetrievalFromAlternativeProvider - http', async () => {
@@ -313,21 +338,36 @@ test('fetchCAR fails with statusCode=703 (scheme is not supported) - multiaddr w
 test('fetchCAR fails with statusCode=704 (multiaddr has too many parts)', async () => {
   const spark = new Spark()
   const stats = newStats()
-  await spark.fetchCAR('http', '/ip4/1.2.3.4/tcp/80/http/p2p/pubkey', KNOWN_CID, stats)
+  await spark.fetchCAR(
+    'http',
+    '/ip4/1.2.3.4/tcp/80/http/p2p/pubkey',
+    KNOWN_CID,
+    stats,
+  )
   assertEquals(stats.statusCode, 704, 'stats.statusCode')
 })
 
 test('fetchCAR fails with statusCode=705 (multiaddr has invalid http-path)', async () => {
   const spark = new Spark()
   const stats = newStats()
-  await spark.fetchCAR('http', '/dns/meridian.space/http/http-path/invalid%path', KNOWN_CID, stats)
+  await spark.fetchCAR(
+    'http',
+    '/dns/meridian.space/http/http-path/invalid%path',
+    KNOWN_CID,
+    stats,
+  )
   assertEquals(stats.statusCode, 705, 'stats.statusCode')
 })
 
 test('fetchCAR fails with statusCode=801 (DNS error)', async () => {
   const spark = new Spark()
   const stats = newStats()
-  await spark.fetchCAR('http', '/dns/invalid.example.com/tcp/80/http', KNOWN_CID, stats)
+  await spark.fetchCAR(
+    'http',
+    '/dns/invalid.example.com/tcp/80/http',
+    KNOWN_CID,
+    stats,
+  )
   assertEquals(stats.statusCode, 801, 'stats.statusCode')
 })
 
@@ -365,7 +405,12 @@ test('fetchCAR fails with statusCode=902 (hash mismatch)', async () => {
     },
   })
   const stats = newStats()
-  await spark.fetchCAR('http', '/dns/frisbii.fly.dev/tcp/443/https', KNOWN_CID, stats)
+  await spark.fetchCAR(
+    'http',
+    '/dns/frisbii.fly.dev/tcp/443/https',
+    KNOWN_CID,
+    stats,
+  )
   assertEquals(stats.statusCode, 902, 'stats.statusCode')
 })
 
@@ -542,9 +587,15 @@ test('fetchCAR triggers timeout after long retrieval', async () => {
   const spark = new Spark({ fetch })
   const stats = newStats()
 
-  await spark.fetchCAR('http', '/dns/example.com/tcp/80/http', KNOWN_CID, stats, {
-    maxRequestDurationMs: 0,
-  })
+  await spark.fetchCAR(
+    'http',
+    '/dns/example.com/tcp/80/http',
+    KNOWN_CID,
+    stats,
+    {
+      maxRequestDurationMs: 0,
+    },
+  )
 
   assertEquals(stats.timeout, true)
 })

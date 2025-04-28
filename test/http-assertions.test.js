@@ -1,5 +1,9 @@
 import { test } from 'zinnia:test'
-import { AssertionError, assertStringIncludes, assertRejects } from 'zinnia:assert'
+import {
+  AssertionError,
+  assertStringIncludes,
+  assertRejects,
+} from 'zinnia:assert'
 import { assertRedirectResponse } from '../lib/http-assertions.js'
 
 test('assertRedirectResponse - 302', async () => {
@@ -36,7 +40,9 @@ test('assertRedirectResponse - not redirect', async () => {
     },
   }
 
-  const err = await assertRejects(() => assertRedirectResponse(responseMock, 'NOT REDIRECT'))
+  const err = await assertRejects(() =>
+    assertRedirectResponse(responseMock, 'NOT REDIRECT'),
+  )
   assertStringIncludes(err.message, 'NOT REDIRECT')
   assertStringIncludes(err.message, 'RESPONSE BODY')
 })

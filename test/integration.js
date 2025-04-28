@@ -10,7 +10,9 @@ const FRISBEE_PEER_ID = '12D3KooWC8gXxg9LoJ9h3hy3jzBkEAxamyHEQJKtRmAuBuvoMzpr'
 test('integration', async () => {
   const spark = new Spark()
   const measurementId = await spark.nextRetrieval()
-  const res = await fetch(`https://api.filspark.com/measurements/${measurementId}`)
+  const res = await fetch(
+    `https://api.filspark.com/measurements/${measurementId}`,
+  )
   assert(res.ok)
   const retrieval = await res.json()
   assert(retrieval.indexerResult)
@@ -30,10 +32,13 @@ test('retrieval check for our CID', async () => {
   })
 
   const measurementId = await spark.nextRetrieval()
-  const res = await fetch(`https://api.filspark.com/measurements/${measurementId}`)
+  const res = await fetch(
+    `https://api.filspark.com/measurements/${measurementId}`,
+  )
   assert(res.ok)
   const m = await res.json()
-  const assertProp = (prop, expectedValue) => assertEquals(m[prop], expectedValue, prop)
+  const assertProp = (prop, expectedValue) =>
+    assertEquals(m[prop], expectedValue, prop)
 
   assertEquals(minersChecked, [OUR_FAKE_MINER_ID])
 
