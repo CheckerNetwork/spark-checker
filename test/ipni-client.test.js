@@ -10,7 +10,7 @@ test('query advertised CID', async () => {
   assertEquals(result, {
     indexerResult: 'OK',
     provider: {
-      id: FRISBEE_PEER_ID,
+      peerId: FRISBEE_PEER_ID,
       address: '/dns/frisbii.fly.dev/tcp/443/https',
       protocol: 'http',
       contextId: 'ZnJpc2JpaQ==',

@@ -332,42 +332,6 @@ async function pRetry(input, options) {
         });
     });
 }
-var t = function() {
-    function t(e) {
-        this._value = NaN, this._seed = "string" == typeof e ? this.hashCode(e) : "number" == typeof e ? this.getSafeSeed(e) : this.getSafeSeed(t.MIN + Math.floor((t.MAX - t.MIN) * Math.random())), this.reset();
-    }
-    return t.prototype.next = function(e, o) {
-        return void 0 === e && (e = 0), void 0 === o && (o = 1), this.recalculate(), this.map(this._value, t.MIN, t.MAX, e, o);
-    }, t.prototype.nextInt = function(e, o) {
-        return void 0 === e && (e = 10), void 0 === o && (o = 100), this.recalculate(), Math.floor(this.map(this._value, t.MIN, t.MAX, e, o + 1));
-    }, t.prototype.nextString = function(t, e) {
-        void 0 === t && (t = 16), void 0 === e && (e = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
-        for(var o = ""; o.length < t;)o += this.nextChar(e);
-        return o;
-    }, t.prototype.nextChar = function(t) {
-        return void 0 === t && (t = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"), t.substr(this.nextInt(0, t.length - 1), 1);
-    }, t.prototype.nextArrayItem = function(t) {
-        return t[this.nextInt(0, t.length - 1)];
-    }, t.prototype.nextBoolean = function() {
-        return this.recalculate(), this._value > .5;
-    }, t.prototype.skip = function(t) {
-        for(void 0 === t && (t = 1); t-- > 0;)this.recalculate();
-    }, t.prototype.reset = function() {
-        this._value = this._seed;
-    }, t.prototype.recalculate = function() {
-        this._value = this.xorshift(this._value);
-    }, t.prototype.xorshift = function(t) {
-        return t ^= t << 13, t ^= t >> 17, t ^= t << 5;
-    }, t.prototype.map = function(t, e, o, r, n) {
-        return (t - e) / (o - e) * (n - r) + r;
-    }, t.prototype.hashCode = function(t) {
-        var e = 0;
-        if (t) for(var o = t.length, r = 0; r < o; r++)e = (e << 5) - e + t.charCodeAt(r), e |= 0, e = this.xorshift(e);
-        return this.getSafeSeed(e);
-    }, t.prototype.getSafeSeed = function(t) {
-        return 0 === t ? 1 : t;
-    }, t.MIN = -2147483648, t.MAX = 2147483647, t;
-}();
 const encoder = new TextEncoder();
 function getTypeName(value) {
     const type = typeof value;
@@ -23982,7 +23946,7 @@ var ethers = Object.freeze({
     zeroPadBytes: zeroPadBytes,
     zeroPadValue: zeroPadValue
 });
-var t1 = {};
+var t = {};
 function e(t, e) {
     "boolean" == typeof e && (e = {
         forever: e
@@ -24071,9 +24035,9 @@ e.prototype.reset = function() {
             }).bind(e, u), e[s].options = i;
         }
     };
-}(t1);
-var r = t1, o = r.createTimeout, n1 = r.operation, s = r.timeouts, u = r.wrap;
-const e1 = Object.prototype.toString, t2 = new Set([
+}(t);
+var r = t, o = r.createTimeout, n1 = r.operation, s = r.timeouts, u = r.wrap;
+const e1 = Object.prototype.toString, t1 = new Set([
     "network error",
     "Failed to fetch",
     "NetworkError when attempting to fetch resource.",
@@ -24085,7 +24049,7 @@ const e1 = Object.prototype.toString, t2 = new Set([
 ]);
 function r1(r) {
     var o;
-    return !(!r || (o = r, "[object Error]" !== e1.call(o)) || "TypeError" !== r.name || "string" != typeof r.message) && ("Load failed" === r.message ? void 0 === r.stack : t2.has(r.message));
+    return !(!r || (o = r, "[object Error]" !== e1.call(o)) || "TypeError" !== r.name || "string" != typeof r.message) && ("Load failed" === r.message ? void 0 === r.stack : t1.has(r.message));
 }
 class o1 extends Error {
     constructor(r){
@@ -33397,21 +33361,21 @@ function validateBlock(block) {
     compareDigests(result);
 }
 const o3 = "object" == typeof globalThis && "crypto" in globalThis ? globalThis.crypto : void 0;
-function t3(t1, ...e) {
+function t2(t1, ...e) {
     if (!((s = t1) instanceof Uint8Array || null != s && "object" == typeof s && "Uint8Array" === s.constructor.name)) throw new Error("Uint8Array expected");
     var s;
     if (e.length > 0 && !e.includes(t1.length)) throw new Error(`Uint8Array expected of length ${e}, not of length=${t1.length}`);
 }
-function e4(t, e = !0) {
+function e4(t, e1 = !0) {
     if (t.destroyed) throw new Error("Hash instance has been destroyed");
-    if (e && t.finished) throw new Error("Hash#digest() has already been called");
+    if (e1 && t.finished) throw new Error("Hash#digest() has already been called");
 }
 const s3 = (t)=>new DataView(t.buffer, t.byteOffset, t.byteLength), n3 = (t, e)=>t << 32 - e | t >>> e;
 function i2(e) {
     return "string" == typeof e && (e = function(t) {
         if ("string" != typeof t) throw new Error("utf8ToBytes expected string, got " + typeof t);
         return new Uint8Array((new TextEncoder).encode(t));
-    }(e)), t3(e), e;
+    }(e)), t2(e), e;
 }
 new Uint8Array(new Uint32Array([
     287454020
@@ -33445,7 +33409,7 @@ class f2 extends r3 {
     }
     digestInto(n) {
         e4(this), function(e, s) {
-            t3(e);
+            t2(e);
             const n = s.outputLen;
             if (e.length < n) throw new Error(`digestInto() expects output buffer of length at least ${n}`);
         }(n, this), this.finished = !0;
@@ -35468,77 +35432,76 @@ const lt1 = function(e) {
     randomBytes: C1
 });
 "object" == typeof globalThis && "crypto" in globalThis ? globalThis.crypto : void 0;
-function t4(t1, ...e) {
+function t3(t1, ...e) {
     if (!((s = t1) instanceof Uint8Array || ArrayBuffer.isView(s) && "Uint8Array" === s.constructor.name)) throw new Error("Uint8Array expected");
     var s;
     if (e.length > 0 && !e.includes(t1.length)) throw new Error("Uint8Array expected of length " + e + ", got length=" + t1.length);
 }
-function e5(t, e = !0) {
+function e5(t, e1 = !0) {
     if (t.destroyed) throw new Error("Hash instance has been destroyed");
-    if (e && t.finished) throw new Error("Hash#digest() has already been called");
+    if (e1 && t.finished) throw new Error("Hash#digest() has already been called");
 }
-function s4(t) {
+function s4(...t) {
+    for(let e = 0; e < t.length; e++)t[e].fill(0);
+}
+function n5(t) {
     return new DataView(t.buffer, t.byteOffset, t.byteLength);
 }
-function n5(t, e) {
+function i4(t, e) {
     return t << 32 - e | t >>> e;
 }
-function i4(e) {
+function r5(e) {
     return "string" == typeof e && (e = function(t) {
-        if ("string" != typeof t) throw new Error("utf8ToBytes expected string, got " + typeof t);
+        if ("string" != typeof t) throw new Error("string expected");
         return new Uint8Array((new TextEncoder).encode(t));
-    }(e)), t4(e), e;
+    }(e)), t3(e), e;
 }
-"function" == typeof Uint8Array.from([]).toHex && Uint8Array.fromHex;
-class r5 {
-    clone() {
-        return this._cloneInto();
-    }
+class o6 {
 }
-function o6(t) {
-    const e = (e)=>t().update(i4(e)).digest(), s = t();
+function h3(t) {
+    const e = (e)=>t().update(r5(e)).digest(), s = t();
     return e.outputLen = s.outputLen, e.blockLen = s.blockLen, e.create = ()=>t(), e;
 }
-function h3(t, e, s) {
+function f4(t, e, s) {
     return t & e ^ t & s ^ e & s;
 }
-class f4 extends r5 {
-    constructor(t, e, n, i){
-        super(), this.finished = !1, this.length = 0, this.pos = 0, this.destroyed = !1, this.blockLen = t, this.outputLen = e, this.padOffset = n, this.isLE = i, this.buffer = new Uint8Array(t), this.view = s4(this.buffer);
+class u3 extends o6 {
+    constructor(t, e, s, i){
+        super(), this.finished = !1, this.length = 0, this.pos = 0, this.destroyed = !1, this.blockLen = t, this.outputLen = e, this.padOffset = s, this.isLE = i, this.buffer = new Uint8Array(t), this.view = n5(this.buffer);
     }
-    update(t) {
-        e5(this);
-        const { view: n, buffer: r, blockLen: o } = this, h = (t = i4(t)).length;
-        for(let e = 0; e < h;){
-            const i = Math.min(o - this.pos, h - e);
-            if (i !== o) r.set(t.subarray(e, e + i), this.pos), this.pos += i, e += i, this.pos === o && (this.process(n, 0), this.pos = 0);
+    update(s) {
+        e5(this), t3(s = r5(s));
+        const { view: i, buffer: o, blockLen: h } = this, f = s.length;
+        for(let t = 0; t < f;){
+            const e = Math.min(h - this.pos, f - t);
+            if (e !== h) o.set(s.subarray(t, t + e), this.pos), this.pos += e, t += e, this.pos === h && (this.process(i, 0), this.pos = 0);
             else {
-                const n = s4(t);
-                for(; o <= h - e; e += o)this.process(n, e);
+                const e = n5(s);
+                for(; h <= f - t; t += h)this.process(e, t);
             }
         }
-        return this.length += t.length, this.roundClean(), this;
+        return this.length += s.length, this.roundClean(), this;
     }
-    digestInto(n) {
+    digestInto(i) {
         e5(this), function(e, s) {
-            t4(e);
+            t3(e);
             const n = s.outputLen;
             if (e.length < n) throw new Error("digestInto() expects output buffer of length at least " + n);
-        }(n, this), this.finished = !0;
-        const { buffer: i, view: r, blockLen: o, isLE: h } = this;
-        let { pos: f } = this;
-        i[f++] = 128, this.buffer.subarray(f).fill(0), this.padOffset > o - f && (this.process(r, 0), f = 0);
-        for(let t = f; t < o; t++)i[t] = 0;
+        }(i, this), this.finished = !0;
+        const { buffer: r, view: o, blockLen: h, isLE: f } = this;
+        let { pos: u } = this;
+        r[u++] = 128, s4(this.buffer.subarray(u)), this.padOffset > h - u && (this.process(o, 0), u = 0);
+        for(let t = u; t < h; t++)r[t] = 0;
         !function(t, e, s, n) {
             if ("function" == typeof t.setBigUint64) return t.setBigUint64(e, s, n);
             const i = BigInt(32), r = BigInt(4294967295), o = Number(s >> i & r), h = Number(s & r), f = n ? 4 : 0, u = n ? 0 : 4;
             t.setUint32(e + f, o, n), t.setUint32(e + u, h, n);
-        }(r, o - 8, BigInt(8 * this.length), h), this.process(r, 0);
-        const u = s4(n), c = this.outputLen;
-        if (c % 4) throw new Error("_sha2: outputLen should be aligned to 32bit");
-        const l = c / 4, a = this.get();
-        if (l > a.length) throw new Error("_sha2: outputLen bigger than state");
-        for(let t = 0; t < l; t++)u.setUint32(4 * t, a[t], h);
+        }(o, h - 8, BigInt(8 * this.length), f), this.process(o, 0);
+        const c = n5(i), l = this.outputLen;
+        if (l % 4) throw new Error("_sha2: outputLen should be aligned to 32bit");
+        const a = l / 4, d = this.get();
+        if (a > d.length) throw new Error("_sha2: outputLen bigger than state");
+        for(let t = 0; t < a; t++)c.setUint32(4 * t, d[t], f);
     }
     digest() {
         const { buffer: t, outputLen: e } = this;
@@ -35549,10 +35512,31 @@ class f4 extends r5 {
     _cloneInto(t) {
         t || (t = new this.constructor), t.set(...this.get());
         const { blockLen: e, buffer: s, length: n, finished: i, destroyed: r, pos: o } = this;
-        return t.length = n, t.pos = o, t.finished = i, t.destroyed = r, n % e && t.buffer.set(s), t;
+        return t.destroyed = r, t.finished = i, t.length = n, t.pos = o, n % e && t.buffer.set(s), t;
+    }
+    clone() {
+        return this._cloneInto();
     }
 }
-const u3 = new Uint32Array([
+const c3 = Uint32Array.from([
+    1779033703,
+    3144134277,
+    1013904242,
+    2773480762,
+    1359893119,
+    2600822924,
+    528734635,
+    1541459225
+]), l2 = Uint32Array.from([
+    3238371032,
+    914150663,
+    812702999,
+    4144912697,
+    4290775857,
+    1750603025,
+    1694076839,
+    3204075428
+]), a3 = Uint32Array.from([
     1116352408,
     1899447441,
     3049323471,
@@ -35617,17 +35601,8 @@ const u3 = new Uint32Array([
     2756734187,
     3204031479,
     3329325298
-]), c3 = new Uint32Array([
-    1779033703,
-    3144134277,
-    1013904242,
-    2773480762,
-    1359893119,
-    2600822924,
-    528734635,
-    1541459225
-]), l2 = new Uint32Array(64);
-class a3 extends f4 {
+]), d3 = new Uint32Array(64);
+class p2 extends u3 {
     constructor(t = 32){
         super(64, t, 8, !1), this.A = 0 | c3[0], this.B = 0 | c3[1], this.C = 0 | c3[2], this.D = 0 | c3[3], this.E = 0 | c3[4], this.F = 0 | c3[5], this.G = 0 | c3[6], this.H = 0 | c3[7];
     }
@@ -35648,32 +35623,32 @@ class a3 extends f4 {
         this.A = 0 | t, this.B = 0 | e, this.C = 0 | s, this.D = 0 | n, this.E = 0 | i, this.F = 0 | r, this.G = 0 | o, this.H = 0 | h;
     }
     process(t, e) {
-        for(let s = 0; s < 16; s++, e += 4)l2[s] = t.getUint32(e, !1);
+        for(let s = 0; s < 16; s++, e += 4)d3[s] = t.getUint32(e, !1);
         for(let t = 16; t < 64; t++){
-            const e = l2[t - 15], s = l2[t - 2], i = n5(e, 7) ^ n5(e, 18) ^ e >>> 3, r = n5(s, 17) ^ n5(s, 19) ^ s >>> 10;
-            l2[t] = r + l2[t - 7] + i + l2[t - 16] | 0;
+            const e = d3[t - 15], s = d3[t - 2], n = i4(e, 7) ^ i4(e, 18) ^ e >>> 3, r = i4(s, 17) ^ i4(s, 19) ^ s >>> 10;
+            d3[t] = r + d3[t - 7] + n + d3[t - 16] | 0;
         }
-        let { A: s, B: i, C: r, D: o, E: f, F: c, G: a, H: p } = this;
+        let { A: s, B: n, C: r, D: o, E: h, F: u, G: c, H: l } = this;
         for(let t = 0; t < 64; t++){
-            const e = p + (n5(f, 6) ^ n5(f, 11) ^ n5(f, 25)) + ((d = f) & c ^ ~d & a) + u3[t] + l2[t] | 0, g = (n5(s, 2) ^ n5(s, 13) ^ n5(s, 22)) + h3(s, i, r) | 0;
-            p = a, a = c, c = f, f = o + e | 0, o = r, r = i, i = s, s = e + g | 0;
+            const e = l + (i4(h, 6) ^ i4(h, 11) ^ i4(h, 25)) + ((p = h) & u ^ ~p & c) + a3[t] + d3[t] | 0, g = (i4(s, 2) ^ i4(s, 13) ^ i4(s, 22)) + f4(s, n, r) | 0;
+            l = c, c = u, u = h, h = o + e | 0, o = r, r = n, n = s, s = e + g | 0;
         }
-        var d;
-        s = s + this.A | 0, i = i + this.B | 0, r = r + this.C | 0, o = o + this.D | 0, f = f + this.E | 0, c = c + this.F | 0, a = a + this.G | 0, p = p + this.H | 0, this.set(s, i, r, o, f, c, a, p);
+        var p;
+        s = s + this.A | 0, n = n + this.B | 0, r = r + this.C | 0, o = o + this.D | 0, h = h + this.E | 0, u = u + this.F | 0, c = c + this.G | 0, l = l + this.H | 0, this.set(s, n, r, o, h, u, c, l);
     }
     roundClean() {
-        l2.fill(0);
+        s4(d3);
     }
     destroy() {
-        this.set(0, 0, 0, 0, 0, 0, 0, 0), this.buffer.fill(0);
+        this.set(0, 0, 0, 0, 0, 0, 0, 0), s4(this.buffer);
     }
 }
-class p2 extends a3 {
+class g3 extends p2 {
     constructor(){
-        super(28), this.A = -1056596264, this.B = 914150663, this.C = 812702999, this.D = -150054599, this.E = -4191439, this.F = 1750603025, this.G = 1694076839, this.H = -1090891868;
+        super(28), this.A = 0 | l2[0], this.B = 0 | l2[1], this.C = 0 | l2[2], this.D = 0 | l2[3], this.E = 0 | l2[4], this.F = 0 | l2[5], this.G = 0 | l2[6], this.H = 0 | l2[7];
     }
 }
-o6(()=>new a3), o6(()=>new p2);
+h3(()=>new p2), h3(()=>new g3);
 BigInt(0), BigInt(1), BigInt(2);
 Array.from({
     length: 256
@@ -35757,7 +35732,7 @@ var l3 = {};
 Object.defineProperty(l3, "__esModule", {
     value: !0
 });
-const d3 = o7, p3 = s5;
+const d4 = o7, p3 = s5;
 function b2(t, e) {
     return e.noCache ? `${t}?${Date.now()}` : t;
 }
@@ -35765,7 +35740,7 @@ l3.default = class {
     someChain;
     options;
     httpOptions;
-    constructor(t, e = d3.defaultChainOptions, n = p3.defaultHttpOptions){
+    constructor(t, e = d4.defaultChainOptions, n = p3.defaultHttpOptions){
         this.someChain = t, this.options = e, this.httpOptions = n;
     }
     async get(t) {
@@ -35780,7 +35755,7 @@ l3.default = class {
         return this.someChain;
     }
 };
-var g3 = {}, _2 = {};
+var g4 = {}, _2 = {};
 Object.defineProperty(_2, "__esModule", {
     value: !0
 }), _2.createSpeedTest = void 0, _2.createSpeedTest = function(t, e, n = 5) {
@@ -35848,11 +35823,11 @@ var w2 = r6 && r6.__createBinding || (Object.create ? function(t, e, n, r) {
         default: t
     };
 };
-Object.defineProperty(g3, "__esModule", {
+Object.defineProperty(g4, "__esModule", {
     value: !0
 });
 const m2 = o7, A2 = v3(a4), C3 = _2, I2 = T10(l3);
-g3.default = class {
+g4.default = class {
     baseUrls;
     options;
     speedTestIntervalMs;
@@ -36774,7 +36749,7 @@ var Qt = {};
     });
     const o = e(l3);
     t.HttpChainClient = o.default;
-    const u = e(g3);
+    const u = e(g4);
     t.FastestNodeClient = u.default;
     const f = e(N15);
     t.MultiBeaconNode = f.default;
@@ -36885,4 +36860,3 @@ export { UnsupportedHashError as UnsupportedHashError, HashMismatchError as Hash
 export { ne1 as fetchBeaconByTime, zt1 as HttpChainClient, Vt as HttpCachingChain };
 export { assertOkResponse as assertOkResponse };
 export { pRetry as pRetry };
-export { t as Prando };
