@@ -30,8 +30,14 @@ for (const [multiaddr, expectedUri] of HAPPY_CASES) {
 }
 
 const ERROR_CASES = [
-  ['/ip4/127.0.0.1/tcp/80', 'Cannot parse "/ip4/127.0.0.1/tcp/80": unsupported scheme "undefined"'],
-  ['/ip4/127.0.0.1/udp/90', 'Cannot parse "/ip4/127.0.0.1/udp/90": unsupported protocol "udp"'],
+  [
+    '/ip4/127.0.0.1/tcp/80',
+    'Cannot parse "/ip4/127.0.0.1/tcp/80": unsupported scheme "undefined"',
+  ],
+  [
+    '/ip4/127.0.0.1/udp/90',
+    'Cannot parse "/ip4/127.0.0.1/udp/90": unsupported protocol "udp"',
+  ],
   [
     '/ip4/127.0.0.1/tcp/8080/http/p2p/pubkey',
     'Cannot parse "/ip4/127.0.0.1/tcp/8080/http/p2p/pubkey": too many parts',
