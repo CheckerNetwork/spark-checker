@@ -415,6 +415,46 @@ test('submitRetrieval', async () => {
   ])
 })
 
+test('submitMeasurement adds excludeFromRSR for on-demand tasks', async () => {
+  let capturedPayload = null
+
+  const spark = new Spark({
+    fetch: async (url, allOpts) => {
+      if (url.includes('/measurements')) {
+        capturedPayload = JSON.parse(allOpts.body)
+        return {
+          status: 200,
+          ok: true,
+          async json() {
+            return { id: 456 }
+          },
+        }
+      }
+
+      // fallback response for anything else
+      return {
+        status: 200,
+        ok: true,
+        async json() {
+          return {}
+        },
+        headers: new Headers(),
+      }
+    },
+  })
+
+  const task = {
+    cid: 'bafytestondemand',
+    minerId: 't0999',
+    isOnDemand: true,
+  }
+  const stats = {}
+
+  await spark.submitMeasurement(task, stats)
+
+  assertEquals(capturedPayload.excludeFromRSR, true)
+})
+
 test('calculateDelayBeforeNextTask() returns value based on average task duration', () => {
   const delay = calculateDelayBeforeNextTask({
     lastTaskDurationInMs: 3_000,

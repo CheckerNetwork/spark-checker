@@ -2,7 +2,8 @@
 
 import { test } from 'zinnia:test'
 import { assertEquals } from 'zinnia:assert'
-import { getStationKey, getTaskKey, pickTasks } from '../lib/tasker.js'
+import { getStationKey, getTaskKey, pickTasksForNode } from '../lib/tasker.js'
+import { Tasker } from '../lib/tasker.js'
 
 const RANDOMNESS =
   'fc90e50dcdf20886b56c038b30fa921a5e57c532ea448dadcc209e44eec0445e'
@@ -48,4 +49,26 @@ test('pickTasksForNode', async () => {
     { cid: 'bafyone', minerId: 'f010' },
     { cid: 'bafytwo', minerId: 'f020' },
   ])
+})
+test('on-demand tasks are returned before regular tasks', async () => {
+  const dummyFetch = async () => ({
+    status: 302,
+    headers: new Map([['location', '/mock-round']]),
+    json: async () => ({
+      retrievalTasks: [
+        { cid: 'bafyregular', minerId: 't0999' }
+      ],
+      maxTasksPerNode: 1,
+    }),
+  })
+
+  const tasker = new Tasker({ fetch: dummyFetch })
+
+  // Add an on-demand task first
+  const onDemandTask = { cid: 'bafyondemand', minerId: 't01234' }
+  tasker.queueOnDemandTask(onDemandTask)
+
+  const task = await tasker.next()
+  assertEquals(task.cid, onDemandTask.cid)
+  assertEquals(task.minerId, onDemandTask.minerId)
 })
