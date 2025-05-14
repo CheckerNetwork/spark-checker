@@ -2,8 +2,7 @@
 
 import { test } from 'zinnia:test'
 import { assertEquals } from 'zinnia:assert'
-import { getStationKey, getTaskKey, pickTasksForNode } from '../lib/tasker.js'
-import { Tasker } from '../lib/tasker.js'
+import { getStationKey, getTaskKey, pickTasksForNode, Tasker } from '../lib/tasker.js'
 
 const RANDOMNESS =
   'fc90e50dcdf20886b56c038b30fa921a5e57c532ea448dadcc209e44eec0445e'
@@ -37,7 +36,7 @@ test('pickTasksForNode', async () => {
     { cid: 'bafytwo', minerId: 'f040' },
   ]
 
-  const selectedTasks = await pickTasks({
+  const selectedTasks = await pickTasksForNode({
     tasks: allTasks,
     stationId: 'some-station-id',
     randomness: RANDOMNESS,
