@@ -1,6 +1,15 @@
 {
   "name": "spark-checker",
+  "version": "0.1.0",
   "type": "module",
+  "files": [
+    "main.js",
+    "lib/",
+    "vendor/",
+    "README.md",
+    "LICENSE",
+    "deps.ts"
+  ],
   "scripts": {
     "lint": "eslint && prettier --check .",
     "lint:fix": "eslint --fix && prettier --write ."
