@@ -1,3 +1,5 @@
+/* global Zinnia */
+
 Zinnia.activity.error(
   'Filecoin Station and Checker Network programmes ended. You can uninstall your node now. Thank you for your participation!',
 )
