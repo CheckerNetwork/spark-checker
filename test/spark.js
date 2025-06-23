@@ -10,7 +10,7 @@ import {
   assertLessOrEqual,
   assertGreaterOrEqual,
 } from 'zinnia:assert'
-import { SPARK_VERSION } from '../lib/constants.js'
+import { SPARK_VERSION, OFFLINE_RETRY_DELAY_MS } from '../lib/constants.js'
 
 const KNOWN_CID = 'bafkreih25dih6ug3xtj73vswccw423b56ilrwmnos4cbwhrceudopdp5sq'
 
@@ -501,6 +501,22 @@ test('calculateDelayBeforeNextTask() introduces random jitter for zero tasks in 
     Math.abs(delay1 - delay2),
     1_000,
     `expected delay values to be within 1 second of each other. Actual values: ${delay1} <> ${delay2}`,
+  )
+})
+
+test('calculateDelayBeforeNextTask() returns OFFLINE_RETRY_DELAY_MS when offline', () => {
+  const delay = calculateDelayBeforeNextTask({
+    isHealthy: false,
+    roundLengthInMs: 20 * 60_000,
+    maxJitterInMs: 10_000,
+    maxTasksPerRound: 1,
+    lastTaskDurationInMs: 1000,
+  })
+
+  assertEquals(
+    delay,
+    OFFLINE_RETRY_DELAY_MS,
+    `Expected delay to match OFFLINE_RETRY_DELAY_MS (${OFFLINE_RETRY_DELAY_MS}) when offline`,
   )
 })
 
