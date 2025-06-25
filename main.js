@@ -1,7 +1,7 @@
 /* global Zinnia */
 
 Zinnia.activity.error(
-  'Filecoin Station and Checker Network programmes ended. The node is no longer contributing to the network, and there will be no further rewards. Thank you for your participation!',
+  'Spark update: Filecoin Station and Checker Network programmes ended. The node is no longer contributing to the network, and there will be no further rewards. Thank you for your participation!',
 )
 
 while (true) {
